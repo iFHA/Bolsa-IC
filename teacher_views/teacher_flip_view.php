@@ -145,7 +145,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                     <tr><td>DATA INÍCIO</td><td><input id="data_inicio" type="text" size=20 name="data_inicio"></td></tr>
                     <tr><td>DATA FIM</td><td><input id="data_fim" type="text" size=20 name="data_fim"></td></tr>
                     <tr><td>ÚLTIMA TAREFA</td><td><input id="ultima" name="ultima" type="radio" value=1>  SIM&nbsp;&nbsp;&nbsp;<input id="ultima" type="radio" name="ultima" value=0>  NAO</td></tr>
-                    <?php echo var_dump($cmid);echo var_dump($CMID);?>
+                    
                   </table>
                     <input id="action" name="action" type="hidden" value="ad_task"/>
                     <input id="id_curso" name="id_curso" type="hidden" value="<?php echo $COURSE->id ?>"/>
