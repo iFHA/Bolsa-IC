@@ -129,7 +129,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                 </table>
                     
                     <div class="col-md-8">
-                      <button class="btn btn-primary" onclick="document.getElementById('add_task').style.display = 'inherit';"><span class="glyphicon glyphicon-plus"></span> ADICIONAR TAREFA</button>
+                      <button class="btn btn-primary" onclick="document.getElementById('add_task').style.display = 'inherit';"><span class="glyphicon glyphicon-plus"></span> NOVA TAREFA</button>
                     </div>
                     
                     <br><br><br>
@@ -141,11 +141,14 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                 <table class="table table-bordered table-condensed table-hover">
                     <tr><td>NOME DA TAREFA</td><td><input id="nome" type="text" size=67 name="nome"></td></tr>
                     <tr><td>DESCRIÇÃO</td><td><input id="descricao" type="text" size=80 name="descricao"></td></tr> 
+                    <tr><th>ÁREAS DE CONHECIMENTO</th></tr>
+                    <tr><td colspan="3"><textarea id="areaConhecimento" name="knowledge" placeholder="DIGITE AQUI AS ÁREAS DE CONHECIMENTO SEPARADAS POR VÍRGULA (ÁREA 1, ÁREA 2)" style="width:100%; height: 80px"></textarea></td></tr>
+                    <tr><th>PALAVRAS NÃO RELACIONADAS</th></tr>
+                    <tr><td colspan="3"><textarea id="naorelacionadas" name="naorelacionadas" placeholder="DIGITE AQUI AS PALAVRAS NÃO RELACIONADAS À TAREFA SEPARADAS POR VÍRGULA (PALAVRA 1, PALAVRA 2)" style="width:100%; height: 80px"></textarea></td></tr>
                     <tr><td>ARQUIVO</td><td><input id="arq" type="file" name="arq"></td></tr> 
                     <tr><td>DATA INÍCIO</td><td><input id="data_inicio" type="text" size=20 name="data_inicio"></td></tr>
                     <tr><td>DATA FIM</td><td><input id="data_fim" type="text" size=20 name="data_fim"></td></tr>
                     <tr><td>ÚLTIMA TAREFA</td><td><input id="ultima" name="ultima" type="radio" value=1>  SIM&nbsp;&nbsp;&nbsp;<input id="ultima" type="radio" name="ultima" value=0>  NAO</td></tr>
-                    
                   </table>
                     <input id="action" name="action" type="hidden" value="ad_task"/>
                     <input id="id_curso" name="id_curso" type="hidden" value="<?php echo $COURSE->id ?>"/>
@@ -155,7 +158,6 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                 </form>
               </div>
             </div>
-
           </div>
           <!-- ################################################################## -->
 
