@@ -324,7 +324,175 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                     <div role="tabpanel" class="tab-pane" id="perfil">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
-                                <h3 class="panel-title">MEU PERFIL</h3>
+                                <h3 class="panel-title">Horários disponíveis para estudo</h3>
+                            </div>
+                            <div class="panel-body">
+                                <form class="form-inline" action="student_views/studentactions.php" method="POST">
+                                <input id="id" name="id" type="hidden" value="<?php echo $cm->id; ?>">
+                                <input id="action" name="action" type="hidden" value="edit_prefered_times">
+                                <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">
+
+                                <div class="input-group">
+                                    <strong><p class="form-control-static">Domingo: </p></strong>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="sun_m" name="sun_m" value="1" <?php //if($myprofile->prefered_times->sunday{0} == '1'){ echo ' checked'; } ?>> Manhã
+                                    </label>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="sun_t" name="sun_t" value="1" <?php //if($myprofile->prefered_times->sunday{1} == '1'){ echo ' checked'; } ?>> Tarde
+                                    </label>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="sun_n" name="sun_n" value="1" <?php //if($myprofile->prefered_times->sunday{2} == '1'){ echo ' checked'; } ?>> Noite
+                                    </label>
+                                </div>
+                                <div class="input-group">
+                                    <strong><p class="form-control-static">Segunda: </p></strong>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="mon_m" name="mon_m" value="1" <?php //if($myprofile->prefered_times->monday{0} == '1'){ echo ' checked'; } ?>> Manhã
+                                    </label>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="mon_t" name="mon_t" value="1" <?php //if($myprofile->prefered_times->monday{1} == '1'){ echo ' checked'; } ?>> Tarde
+                                    </label>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="mon_n" name="mon_n" value="1" <?php //if($myprofile->prefered_times->monday{2} == '1'){ echo ' checked'; } ?>> Noite
+                                    </label>
+                                </div>
+                                <div class="input-group">
+                                    <strong><p class="form-control-static">Terça: </p></strong>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="tue_m" name="tue_m" value="1" <?php //if($myprofile->prefered_times->tuesday{0} == '1'){ echo ' checked'; } ?>> Manhã
+                                    </label>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="tue_t" name="tue_t" value="1" <?php //if($myprofile->prefered_times->tuesday{1} == '1'){ echo ' checked'; } ?>> Tarde
+                                    </label>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="tue_n" name="tue_n" value="1" <?php //if($myprofile->prefered_times->tuesday{2} == '1'){ echo ' checked'; } ?>> Noite
+                                    </label>
+                                </div>
+                                <div class="input-group">
+                                    <strong><p class="form-control-static">Quarta: </p></strong>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="wed_m" name="wed_m" value="1" <?php //if($myprofile->prefered_times->wednesday{0} == '1'){ echo ' checked'; } ?>> Manhã
+                                    </label>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="wed_t" name="wed_t" value="1" <?php //if($myprofile->prefered_times->wednesday{1} == '1'){ echo ' checked'; } ?>> Tarde
+                                    </label>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="wed_n" name="wed_n" value="1" <?php //if($myprofile->prefered_times->wednesday{2} == '1'){ echo ' checked'; } ?>> Noite
+                                    </label>
+                                </div>
+                                <div class="input-group">
+                                    <strong><p class="form-control-static">Quinta: </p></strong>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="thu_m" name="thu_m" value="1" <?php //if($myprofile->prefered_times->thursday{0} == '1'){ echo ' checked'; } ?>> Manhã
+                                    </label>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="thu_t" name="thu_t" value="1" <?php //if($myprofile->prefered_times->thursday{1} == '1'){ echo ' checked'; } ?>> Tarde
+                                    </label>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="thu_n" name="thu_n" value="1" <?php //if($myprofile->prefered_times->thursday{2} == '1'){ echo ' checked'; } ?>> Noite
+                                    </label>
+                                </div>
+                                <div class="input-group">
+                                    <strong><p class="form-control-static">Sexta: </p></strong>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="fri_m" name="fri_m" value="1" <?php //if($myprofile->prefered_times->friday{0} == '1'){ echo ' checked'; } ?>> Manhã
+                                    </label>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="fri_t" name="fri_t" value="1" <?php //if($myprofile->prefered_times->friday{1} == '1'){ echo ' checked'; } ?>> Tarde
+                                    </label>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="fri_n" name="fri_n" value="1" <?php //if($myprofile->prefered_times->friday{2} == '1'){ echo ' checked'; } ?>> Noite
+                                    </label>
+                                </div>
+                                <div class="input-group">
+                                    <strong><p class="form-control-static">Sábado: </p></strong>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="sat_m" name="sat_m" value="1" <?php //if($myprofile->prefered_times->saturday{0} == '1'){ echo ' checked'; } ?>> Manhã
+                                    </label>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="sat_t" name="sat_t" value="1" <?php //if($myprofile->prefered_times->saturday{1} == '1'){ echo ' checked'; } ?>> Tarde
+                                    </label>
+                                    <label class="checkbox-inline">
+                                    <input type="checkbox" id="sat_n" name="sat_n" value="1" <?php //if($myprofile->prefered_times->saturday{2} == '1'){ echo ' checked'; } ?>> Noite
+                                    </label>
+                                </div>
+                                <hr />
+                                <div class="input-group">
+                                <button id="button2id" name="button2id" class="btn btn-success"><span class="glyphicon glyphicon-floppy-disk"></span> Salvar dados</button>
+                                </div>
+                                </form>
+                            </div>
+                            </div>
+                            
+                            <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Características</h3>
+                            </div>
+                            <div class="panel-body">
+                                <?php if(0/*count($myprofile->features) > 0*/){ ?>
+                                <table class="table table-bordered table-condensed table-hover">
+                                <thead>
+                                    <tr>
+                                    <th>Conhecimento</th>
+                                    <th>Nível</th>
+                                    <th>Deletar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                <?php 
+                                /*
+                                foreach ($myprofile->features as $feature) {
+                                    echo '<tr>';
+                                    echo '<td>'.$feature->description.'</td>';
+                                    echo '<td>'.$feature->value.'</td>';
+                                    echo '<td><a href="student_views/studentactions.php?id='.$cm->id.'&featureid='.$feature->id.'&action=delete_feature&url_local='.urlencode($PAGE->url).'" id="btn-del-cloned-input" name="btn-del-cloned-input" class="btn btn-danger btn-xs"  onclick="return confirm(\'Deseja realmente excluir esse conhecimento?\');"><span class="glyphicon glyphicon-minus"></span> Remover</a></td>';
+                                    echo '</tr>';
+                                }*/
+                                ?>
+
+                                </tbody>
+                                </table>
+                                <?php 
+                                } else {
+                                    echo '<div class="alert alert-danger" role="alert">';
+                                    echo "Nenhuma característica encontrada.";
+                                    echo '</div>';
+                                }
+                                ?>
+                                <h4>Adicionar nova característica</h4>
+                                <hr />
+                                <form action="student_views/studentactions.php" method="POST" class="col-md-12">
+                                <input id="id" name="id" type="hidden" value="<?php echo $cm->id; ?>">
+                                <input id="action" name="action" type="hidden" value="<?php echo 'add_feature'; ?>">
+                                <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">
+                                <div class="form-group">
+                                    <div class="col-xs-9">
+                                    <label>Descrição</label>
+                                    <input id="feature_description" name="feature_description" class="form-control" />
+                                    </div>
+                                    <div class="col-xs-3">
+                                    <label>Valor</label>
+                                    <select name="level" class="form-control">
+                                        <option value="0" selected>0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12">
+                                    <hr />
+                                </div>
+                                <button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...'; this.disabled='disabled'; this.form.submit();"><span class="glyphicon glyphicon-floppy-disk"></span> Adicionar característica</button>
+                                </form>
                             </div>
                         </div>
                     </div>
