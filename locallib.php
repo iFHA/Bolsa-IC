@@ -519,17 +519,17 @@ function get_user($userid){
 	$uf = $DB->get_records("invertclass_user_features", array("userid" => $userid));
 	$this_user->features = $uf;
 	foreach ($uf as $key => $feature) {
-		$this_user->features[$key]->description = $DB->get_record("invertclass_features", array("id" => $feature->featureid))->description;
+		$this_user->features[$key]->description = $DB->get_record("fpfeatures", array("id" => $feature->featureid))->description;
 	}
 	return $this_user;
 }
 
 function get_requirements($invertclassid){
 	global $DB;
-	$requirements = $DB->get_records('invertclass_requirements', array('invertclassid' => $invertclassid));
+	$requirements = $DB->get_records('fp_requirements', array('invertclassid' => $invertclassid));
 
 	foreach ($requirements as $key => $requirement) {
-		$requirements[$key]->feature = $DB->get_record('invertclass_features', array('id' => $requirement->featureid));
+		$requirements[$key]->feature = $DB->get_record('fpfeatures', array('id' => $requirement->featureid));
 	}
 
 	return $requirements;
@@ -537,7 +537,7 @@ function get_requirements($invertclassid){
 
 function get_invertclass_groups($invertclassid){
 	global $DB;
-	return $DB->get_records('invertclass_group', array('invertclassid' => $invertclassid), '', '*') ;
+	return $DB->get_records('fpgroups', array('invertclassid' => $invertclassid), '', '*') ;
 }
 
 function get_sessions_by_group($groupid, $invertclassid){

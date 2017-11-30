@@ -228,5 +228,19 @@
       </KEYS>
     </TABLE>
 
+    <TABLE NAME="fp_unknown_words" COMMENT="">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="unknown_words" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="fp_group" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="id_userfk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" COMMENT="Foreign key to wiki table"/>
+        <KEY NAME="id_groupfk" TYPE="foreign" FIELDS="invertclass_group" REFTABLE="fpgroups" REFFIELDS="id" COMMENT="Foreign key to wiki table"/>
+      </KEYS>
+    </TABLE>
+
   </TABLES>
 </XMLDB>

@@ -32,6 +32,67 @@ switch($action){
 		$url_local = required_param('url_local', PARAM_TEXT);
 		header("Location: {$url_local}");
 		break;
+
+	case 'add_feature':
+		$feature = $DB->get_record("fpfeatures", array("description" => required_param('feature_description', PARAM_TEXT)));
+
+		if(!$feature->id){
+			$feature->description = required_param('feature_description', PARAM_TEXT);
+			$feature->id = invertclass_save('fpfeatures', $feature);
+		}
+
+		//CRIA UM OBJETO CARACTERÍSTICA
+
+		$uf = $DB->get_record("fp_user_features", array("featureid" => $feature->id));
+
+		$uf->featureid = $feature->id;
+		$uf->value = required_param('level', PARAM_TEXT);
+		$uf->userid = $USER->id;
+		
+		//SALVA OS DADOS DO OBJETO CARACTERÍSTICA NO BANCO DE DADOS
+		invertclass_save('fp_user_features', $uf);
+
+		$url_fp = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
+		echo '<br /><br /><a href="'.$url_fp.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
+
+		break;
+		
+	case 'delete_feature':
+
+		//DELETA A CARACTERÍSTICA DO BANCO DE DADOS
+		$params->featureid = required_param('featureid', PARAM_INT);
+		invertclass_delete('fp_user_features', $params->featureid);
+
+		$url_invertclass = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
+		echo '<br /><br /><a href="'.$url_invertclass.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
+		
+		break;
+
+	case 'edit_prefered_times':
+
+		//CRIA UM OBJETO PERFIL
+		$user_prefered_times = new stdClass();
+		//VERIFICA SE PERFIL JÁ EXISTE, SE SIM PEGA O ID
+		if($pid = $DB->get_record('fp_user_prefered_times', array("userid" => $USER->id))->id)
+			$user_prefered_times->id = $pid;
+
+		$user_prefered_times->sunday = optional_param('sun_m', 0, PARAM_TEXT) . optional_param('sun_t', 0, PARAM_TEXT) . optional_param('sun_n', 0, PARAM_TEXT);
+		$user_prefered_times->monday = optional_param('mon_m', 0, PARAM_TEXT) . optional_param('mon_t', 0, PARAM_TEXT) . optional_param('mon_n', 0, PARAM_TEXT);
+		$user_prefered_times->tuesday = optional_param('tue_m', 0, PARAM_TEXT) . optional_param('tue_t', 0, PARAM_TEXT) . optional_param('tue_n', 0, PARAM_TEXT);
+		$user_prefered_times->wednesday = optional_param('wed_m', 0, PARAM_TEXT) . optional_param('wed_t', 0, PARAM_TEXT) . optional_param('wed_n', 0, PARAM_TEXT);
+		$user_prefered_times->thursday = optional_param('thu_m', 0, PARAM_TEXT) . optional_param('thu_t', 0, PARAM_TEXT) . optional_param('thu_n', 0, PARAM_TEXT);
+		$user_prefered_times->friday = optional_param('fri_m', 0, PARAM_TEXT) . optional_param('fri_t', 0, PARAM_TEXT) . optional_param('fri_n', 0, PARAM_TEXT);
+		$user_prefered_times->saturday = optional_param('sat_m', 0, PARAM_TEXT) . optional_param('sat_t', 0, PARAM_TEXT) . optional_param('sat_n', 0, PARAM_TEXT);
+		$user_prefered_times->userid = $USER->id;
+
+		//SALVA OS DADOS DO OBJETO PERFIL NO BANCO DE DADOS
+		invertclass_save('fp_user_prefered_times', $user_prefered_times);
+
+		$url_invertclass = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
+		echo '<br /><br /><a href="'.$url_invertclass.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
+		
+		break;
+		
 }
 /*function upload_arquivo($pathzin){
     if(isset($_POST['send'])&&isset($_FILES['arq'])){
@@ -71,7 +132,7 @@ function tratar_arquivo_upload($string) {
 	$extensao 	= $partes[count($partes)-1];
 	$nome = "".md5(time()).".".$extensao;
 	return $nome;
- }
+}
 
 ?>
 </div>
