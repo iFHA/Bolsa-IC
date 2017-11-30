@@ -136,5 +136,97 @@
         <KEY NAME="tarefa_idfk" TYPE="foreign" FIELDS="tarefa_id" REFTABLE="fptasks" REFFIELDS="id" COMMENT="Foreign key to wiki_subwiki table"/>
       </KEYS>
     </TABLE>
+    <TABLE NAME="fpfeatures" COMMENT="">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="descricao" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="categoria" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="fp_requirements" COMMENT="">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="value" TYPE="char" LENGTH="1" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="importance" TYPE="float" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="featureid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="invertclassid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="feature_idfk" TYPE="foreign" FIELDS="featureid" REFTABLE="fpfeatures" REFFIELDS="id" COMMENT="Foreign key to feature table"/>
+        <KEY NAME="invertclass_idfk" TYPE="foreign" FIELDS="invertclassid" REFTABLE="invertclass" REFFIELDS="id" COMMENT="Foreign key to invertclass table"/>
+      </KEYS>
+    </TABLE>
+
+    <TABLE NAME="fp_goals" COMMENT="">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="featureid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="invertclassid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="feature_idfk" TYPE="foreign" FIELDS="featureid" REFTABLE="fpfeatures" REFFIELDS="id" COMMENT="Foreign key to feature table"/>
+        <KEY NAME="invertclass_idfk" TYPE="foreign" FIELDS="invertclassid" REFTABLE="invertclass" REFFIELDS="id" COMMENT="Foreign key to invertclass table"/>
+      </KEYS>
+    </TABLE>
+
+    <TABLE NAME="fp_user_prefered_times" COMMENT="">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="sunday" TYPE="char" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="monday" TYPE="char" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="tuesday" TYPE="char" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="wednesday" TYPE="char" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="thursday" TYPE="char" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="friday" TYPE="char" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="saturday" TYPE="char" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="id_userfk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" COMMENT="Foreign key to wiki table"/>
+      </KEYS>
+    </TABLE>
+
+    <TABLE NAME="fp_user_features" COMMENT="">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="value" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="featureid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="feature_idfk" TYPE="foreign" FIELDS="featureid" REFTABLE="fpfeatures" REFFIELDS="id" COMMENT="Foreign key to wiki_subwiki table"/>
+        <KEY NAME="id_userfk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" COMMENT="Foreign key to wiki table"/>
+      </KEYS>
+    </TABLE>
+
+    <TABLE NAME="fp_group_session" COMMENT="">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="timestart" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="timeend" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="finished" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="last" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="report" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="leader" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="reporter" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="invertclass_group" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="leader_evaluation" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="reporter_evaluation" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="group_evaluation" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="eventid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="id_groupfk" TYPE="foreign" FIELDS="invertclass_group" REFTABLE="fpgroups" REFFIELDS="id" COMMENT="Foreign key to wiki table"/>
+      </KEYS>
+    </TABLE>
+
   </TABLES>
 </XMLDB>
