@@ -192,53 +192,52 @@ function invertclass_delete_instance($id) {
 
     # Delete any dependent records here #
     //get invertclass group
-
-    if (! $DB->delete_records('fp_unknown_words') ) {
+    /*
+    if (! $DB->delete_records_sql('delete from mdl_fp_unknown_words') ) {
         $result = false;
     }
-    if (! $DB->delete_records('fp_group_session') ) {
+    if (! $DB->delete_records_sql('delete from mdl_fp_group_session') ) {
         $result = false;
     }
-    if (! $DB->delete_records('fp_user_features') ) {
+    if (! $DB->delete_records_sql('delete from mdl_fp_user_features') ) {
         $result = false;
     }
-    if (! $DB->delete_records('fp_user_prefered_times') ) {
+    if (! $DB->delete_records_sql('delete from mdl_fp_user_prefered_times') ) {
         $result = false;
     }
-    if (! $DB->delete_records('fp_goals') ) {
+    if (! $DB->delete_records_sql('delete from mdl_fp_goals') ) {
         $result = false;
     }
-    if (! $DB->delete_records('fp_requirements') ) {
+    if (! $DB->delete_records_sql('delete from mdl_fp_requirements') ) {
         $result = false;
     }
-    if (! $DB->delete_records('fp_features') ) {
+    if (! $DB->delete_records_sql('delete from mdl_fp_features') ) {
         $result = false;
     }
-    if (! $DB->delete_records('fpanexos') ) {
+    if (! $DB->delete_records_sql('delete from mdl_fpanexos') ) {
         $result = false;
     }
-    if (! $DB->delete_records('fpavaliar') ) {
+    if (! $DB->delete_records_sql('delete from mdl_fpavaliar') ) {
         $result = false;
     }
-    if (! $DB->delete_records('fpfeedback') ) {
+    if (! $DB->delete_records_sql('delete from mdl_fpfeedback') ) {
         $result = false;
     }
-    if (! $DB->delete_records('fpgain') ) {
+    if (! $DB->delete_records_sql('delete from mdl_fpgain') ) {
         $result = false;
     }
-    if (! $DB->delete_records('fpref') ) {
+    if (! $DB->delete_records_sql('delete from mdl_fpref') ) {
         $result = false;
     }
-    if (! $DB->delete_records('fpmembers') ) {
+    if (! $DB->delete_records_sql('delete from mdl_fpmembers') ) {
         $result = false;
     }
-    if (! $DB->delete_records('fptasks') ) {
+    if (! $DB->delete_records_sql('delete from mdl_fptasks') ) {
         $result = false;
     }
-    if (! $DB->delete_records('fpgroups') ) {
+    if (! $DB->delete_records_sql('delete from mdl_fpgroups') ) {
         $result = false;
-    }
-    
+    }*/
     return $result;
 }
 
