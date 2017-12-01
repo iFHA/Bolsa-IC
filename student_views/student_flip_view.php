@@ -51,7 +51,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
             <div class="col-md-12">
                 <div role="tabpanel">
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-home"></i>GRUPOS</a></li>
+                        <li role="presentation" class="active"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-home"></i>GRUPO</a></li>
                         <li role="presentation"><a href="#tarefas" aria-controls="tarefas" role="tab" data-toggle="tab">TAREFA</a></li>
                         <li role="presentation"><a href="#referencias" aria-controls="referencias" role="tab" data-toggle="tab">REFERÊNCIAS</a></li>
                         <li role="presentation"><a href="#notas" aria-controls="notas" role="tab" data-toggle="tab">AVALIAÇÃO</a></li>
@@ -95,14 +95,14 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                     <div role="tabpanel" class="tab-pane active" id="groups">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
-                                <h3 class="panel-title">GRUPOS</h3>
+                                <h3 class="panel-title">GRUPO</h3>
 
                             </div>
                             <div class="panel-body">
                                 <table class="table table-bordered table-condensed table-hover">
                                     <thead>
                                     <tr>
-                                        <th>GRUPOS</th>
+                                        <th>GRUPO</th>
                                     </tr>
                                     </thead>
                                     <tbody>
