@@ -131,14 +131,21 @@ class mod_invertclass_mod_form extends moodleform_mod {
         /*$this->add_intro_editor();
         $mform->addRule('introeditor', null, 'required', null, 'client');*/
 
-        $mform->addElement('textarea', 'knowledge_area', 'OBJETIVOS:', 'wrap="virtual" rows="5" cols="80"');
+        $mform->addElement('textarea', 'descricao', 'Descrição:', 'wrap="virtual" rows="5" cols="80"');
         if (!empty($CFG->formatstringstriptags)) {
-            $mform->setType('knowledge_area', PARAM_TEXT);
+            $mform->setType('descricao', PARAM_TEXT);
         } else {
-            $mform->setType('knowledge_area', PARAM_CLEAN);
+            $mform->setType('descricao', PARAM_CLEAN);
         }
-        $mform->addRule('knowledge_area', null, 'required', null, 'client');
+        $mform->addRule('descricao', null, 'required', null, 'client');
 
+        $mform->addElement('textarea', 'not_related_words', 'Palavras não relacionadas:', 'wrap="virtual" rows="5" cols="80"');
+        if (!empty($CFG->formatstringstriptags)) {
+            $mform->setType('not_related_words', PARAM_TEXT);
+        } else {
+            $mform->setType('not_related_words', PARAM_CLEAN);
+        }
+        $mform->addRule('not_related_words', null, 'required', null, 'client');
     
         $this->standard_hidden_coursemodule_elements();
         $mform->addElement('hidden', 'groupmode', 1);
