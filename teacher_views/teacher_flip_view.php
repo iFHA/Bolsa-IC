@@ -94,68 +94,84 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
           <div role="tabpanel" class="tab-pane active" id="tarefas">
             <div class="panel panel-primary">
               <div class="panel-heading">
-                <h3 class="panel-title">TAREFAS</h3>
-                </div>
-                <div class="panel-body">
-                    
-                 <table class="table table-bordered table-condensed table-hover">
-                  <thead>
-                    <tr>
-                      <th>TAREFA</th>
-                      <th>PRAZO</th>
-                        <th></th>
-                      
-                    </tr>
-                  </thead>
-                  <tbody>
-                      <?php
-                            //$fpgroups = $DB->get_records_sql("select * from mdl_fpgroups where id_curso = {$COURSE->id}");
-                            //echo "id do curso: ".var_dump($COURSE->id);
-                            $tasks = $DB->get_records_sql("select * from mdl_fptasks where id_curso = {$COURSE->id}");
-                            foreach( $tasks as $task){
-                                //echo "<form action='teacher_views/teacheractions_flip.php' method='GET'>";
-                                echo "<tr><td>".$task->nome."</td><td>".$task->data_fim."</td><td>";
-                                echo "<a href='".$PAGE->url."&op=show_task&idt=".$task->id."'><button class='btn btn-info'><span class='glyphicon glyphicon-search'></span></button></a>";
-                                echo "<a href='".$PAGE->url."&op=up_task&id_curso={$COURSE->id}&idt=".$task->id."'><button class='btn btn-success'><span class='glyphicon glyphicon-pencil'></span></button></a>";
-                                echo "<a href='./teacher_views/teacheractions_flip.php?action=rm_task&task_id=".$task->id."&url_local=".$PAGE->url."&task_arquivo=".$task->arquivo."'><button class='btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button></a>";
-                                echo "</td></tr>";
-                            }
-                            //exibirMensagem("testando msg!");
-                        ?>
-                      
-                      
-                    
-                  </tbody>
-                </table>
-                    
-                    <div class="col-md-8">
-                      <button class="btn btn-primary" onclick="document.getElementById('add_task').style.display = 'inherit';"><span class="glyphicon glyphicon-plus"></span> NOVA TAREFA</button>
-                    </div>
-                    
-                    <br><br><br>
-                                     
-                     
-                    <form action="teacher_views/teacheractions_flip.php" method="POST" enctype="multipart/form-data">
-                    
-                <div id="add_task" style="display: none">
-                <table class="table table-bordered table-condensed table-hover">
-                    <tr><td>NOME DA TAREFA</td><td><input id="nome" type="text" size=67 name="nome"></td></tr>
-                    <tr><td>DESCRIÇÃO</td><td><input id="descricao" type="text" size=80 name="descricao"></td></tr> 
-                    <tr><th>ÁREAS DE CONHECIMENTO</th></tr>
-                    <tr><td colspan="3"><textarea id="areaConhecimento" name="knowledge" placeholder="DIGITE AQUI AS ÁREAS DE CONHECIMENTO SEPARADAS POR VÍRGULA (ÁREA 1, ÁREA 2)" style="width:100%; height: 80px"></textarea></td></tr>
-                    <tr><th>PALAVRAS NÃO RELACIONADAS</th></tr>
-                    <tr><td colspan="3"><textarea id="naorelacionadas" name="naorelacionadas" placeholder="DIGITE AQUI AS PALAVRAS NÃO RELACIONADAS À TAREFA SEPARADAS POR VÍRGULA (PALAVRA 1, PALAVRA 2)" style="width:100%; height: 80px"></textarea></td></tr>
-                    <tr><td>ARQUIVO</td><td><input id="arq" type="file" name="arq"></td></tr> 
-                    <tr><td>DATA INÍCIO</td><td><input id="data_inicio" type="text" size=20 name="data_inicio"></td></tr>
-                    <tr><td>DATA FIM</td><td><input id="data_fim" type="text" size=20 name="data_fim"></td></tr>
-                    <tr><td>ÚLTIMA TAREFA</td><td><input id="ultima" name="ultima" type="radio" value=1>  SIM&nbsp;&nbsp;&nbsp;<input id="ultima" type="radio" name="ultima" value=0>  NAO</td></tr>
-                  </table>
+                <h3 class="panel-title">DADOS DA TAREFA</h3>
+              </div>
+              <div class="panel-body">
+                <?php
+                  $invertclass = $DB->get_record_sql('select * from mdl_invertclass where id in(select instance from mdl_course_modules as cm where cm.id = '.$cm->id.');');
+                ?>
+                <form action="teacher_views/teacheractions_flip.php" method="POST" enctype="multipart/form-data">
+                  <div id="add_task"><!-- style="display: none" -->
+                    <table class="table table-bordered table-condensed table-hover">
+                      <tr><td>NOME DA TAREFA</td><td><input id="nome" type="text" size=67 name="nome" value="<?=$invertclass->name?>"></td></tr>
+                      <tr><td>DESCRIÇÃO</td><td><input id="descricao" type="text" size=80 name="descricao" value="<?=$invertclass->descricao?>"></td></tr>
+                      <tr><th>METAS DE APRENDIZAGEM</th></tr>
+                      <tr><td colspan="3"><textarea id="metas" name="metas" style="width:100%; height: 80px"><?=$invertclass->knowledge_area?></textarea></td></tr>
+                      <tr><th>PALAVRAS NÃO RELACIONADAS</th></tr>
+                      <tr><td colspan="3"><textarea id="naorelacionadas" name="naorelacionadas" style="width:100%; height: 80px"><?=$invertclass->not_related_words?></textarea></td></tr> <!-- placeholder="DIGITE AQUI AS PALAVRAS NÃO RELACIONADAS À TAREFA SEPARADAS POR VÍRGULA (PALAVRA 1, PALAVRA 2)"  -->
+                      <tr><td>ARQUIVO</td><td><input id="arq" type="file" name="arq"></td></tr> 
+                      <tr><td>DATA INÍCIO</td><td><input id="data_inicio" type="text" size=20 name="data_inicio"></td></tr>
+                      <tr><td>DATA FIM</td><td><input id="data_fim" type="text" size=20 name="data_fim"></td></tr>
+                    </table>
                     <input id="action" name="action" type="hidden" value="ad_task"/>
                     <input id="id_curso" name="id_curso" type="hidden" value="<?php echo $COURSE->id ?>"/>
                     <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">
-                    <button name="send" class="btn btn-success" onclick="document.getElementById('add_task').style.display = 'inherit'; this.form.submit();"><span class="glyphicon glyphicon-plus"></span> ADICIONAR</button>
-                </div>
+                    <button name="send" class="btn btn-success" onclick="document.getElementById('add_task').style.display = 'inherit'; this.form.submit();"><span class="glyphicon glyphicon-floppy-disk"></span>ATUALIZAR ATIVIDADE</button>
+                  </div>
                 </form>
+              </div>
+              <?php
+                $invertclass->goals = get_goals($invertclass->id);
+              ?>
+              <div class="panel panel-info">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Áreas de conhecimento</h3>
+                </div>
+                <div class="panel-body">
+                  <?php if(0/*count($myprofile->features) > 0*/){ ?>
+                  <table class="table table-bordered table-condensed table-hover">
+                    <thead>
+                      <tr>
+                        <th>DESCRIÇÃO</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php 
+                          foreach ($problem->goals as $goal) {?>
+                            <tr>
+                              <td><?=$goal->feature->description?>
+                                <a href="teacher_views/teacheractions_flip.php?id=<?=$cm->id?>&goalid=<?=$goal->id?>&action=delete_problem_goal&url_local=<?=urlencode($PAGE->url)?>" id="btn-del-cloned-input" name="btn-del-cloned-input" class="btn btn-danger btn-xs pull-right" onclick="return confirm(\'Deseja realmente excluir essa meta de aprendizagem?\');"><span class="glyphicon glyphicon-minus"></span> Remover</a>
+                              </td>
+                            </tr>';
+                            <?php
+                          }
+                      ?>
+                    </tbody>
+                  </table>
+                  <?php 
+                  } else {?>
+                    <div class="alert alert-danger" role="alert">Nenhuma área de conhecimento encontrada.</div>
+                  <?php
+                  }
+                  ?>
+                  <h4>Adicionar área de conhecimento</h4>
+                  <hr />
+                  <form action="student_views/studentactions_flip.php" method="POST" class="col-md-12">
+                    <input id="id" name="id" type="hidden" value="<?php echo $cm->id; ?>">
+                    <input id="action" name="action" type="hidden" value="<?php echo 'add_feature'; ?>">
+                    <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">
+                    <div class="form-group">
+                      <div class="col-xs-12">
+                        <label>Descrição</label>
+                        <input id="feature_description" name="feature_description" class="form-control" />
+                      </div>
+                    </div>
+                    <div class="col-xs-12">
+                      <hr />
+                    </div>
+                    <button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...'; this.disabled='disabled'; this.form.submit();"><span class="glyphicon glyphicon-plus"></span>ADICIONAR</button>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
