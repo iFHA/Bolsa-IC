@@ -40,6 +40,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
       <div role="tabpanel">
         <ul class="nav nav-tabs" role="tablist">
           <li role="presentation"class="active"><a href="#tarefas" aria-controls="tarefas" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-home"></i>TAREFA</a></li>
+          <li role="presentation"><a href="#area" aria-controls="area" role="tab" data-toggle="tab">ÁREAS DE CONHECIMENTO</a></li>
           <li role="presentation"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab">GRUPOS</a></li>
           <li role="presentation"><a href="#referencias" aria-controls="referencias" role="tab" data-toggle="tab">REFERÊNCIAS</a></li>
           <li role="presentation"><a href="#aproveitamento" aria-controls="aproveitamento" role="tab" data-toggle="tab">APROVEITAMENTO</a></li>
@@ -120,61 +121,72 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                   </div>
                 </form>
               </div>
-              <?php
-                $invertclass->goals = get_goals($invertclass->id);
-              ?>
-              <div class="panel panel-info">
-                <div class="panel-heading">
-                  <h3 class="panel-title">Áreas de conhecimento</h3>
-                </div>
-                <div class="panel-body">
-                  <?php if(0/*count($myprofile->features) > 0*/){ ?>
-                  <table class="table table-bordered table-condensed table-hover">
-                    <thead>
-                      <tr>
-                        <th>DESCRIÇÃO</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <?php 
-                          foreach ($problem->goals as $goal) {?>
-                            <tr>
-                              <td><?=$goal->feature->description?>
-                                <a href="teacher_views/teacheractions_flip.php?id=<?=$cm->id?>&goalid=<?=$goal->id?>&action=delete_problem_goal&url_local=<?=urlencode($PAGE->url)?>" id="btn-del-cloned-input" name="btn-del-cloned-input" class="btn btn-danger btn-xs pull-right" onclick="return confirm(\'Deseja realmente excluir essa meta de aprendizagem?\');"><span class="glyphicon glyphicon-minus"></span> Remover</a>
-                              </td>
-                            </tr>';
-                            <?php
-                          }
-                      ?>
-                    </tbody>
-                  </table>
-                  <?php 
-                  } else {?>
-                    <div class="alert alert-danger" role="alert">Nenhuma área de conhecimento encontrada.</div>
-                  <?php
-                  }
-                  ?>
-                  <h4>Adicionar área de conhecimento</h4>
-                  <hr />
-                  <form action="student_views/studentactions_flip.php" method="POST" class="col-md-12">
-                    <input id="id" name="id" type="hidden" value="<?php echo $cm->id; ?>">
-                    <input id="action" name="action" type="hidden" value="<?php echo 'add_feature'; ?>">
-                    <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">
-                    <div class="form-group">
-                      <div class="col-xs-12">
-                        <label>Descrição</label>
-                        <input id="feature_description" name="feature_description" class="form-control" />
-                      </div>
-                    </div>
+            </div>
+          </div>
+          <!-- ################################################################## -->
+
+
+
+
+          <!--                       AREAS DE CONHECIMENTO                        -->
+          <!-- ################################################################## -->
+          
+          <div role="tabpanel" class="tab-pane" id="area">
+            <?php
+              $invertclass->goals = get_goals($invertclass->id);
+            ?>
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">Áreas de conhecimento</h3>
+              </div>
+              <div class="panel-body">
+                <?php if(0/*count($myprofile->features) > 0*/){ ?>
+                <table class="table table-bordered table-condensed table-hover">
+                  <thead>
+                    <tr>
+                      <th>DESCRIÇÃO</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php 
+                        foreach ($problem->goals as $goal) {?>
+                          <tr>
+                            <td><?=$goal->feature->description?>
+                              <a href="teacher_views/teacheractions_flip.php?id=<?=$cm->id?>&goalid=<?=$goal->id?>&action=delete_problem_goal&url_local=<?=urlencode($PAGE->url)?>" id="btn-del-cloned-input" name="btn-del-cloned-input" class="btn btn-danger btn-xs pull-right" onclick="return confirm(\'Deseja realmente excluir essa meta de aprendizagem?\');"><span class="glyphicon glyphicon-minus"></span> Remover</a>
+                            </td>
+                          </tr>';
+                          <?php
+                        }
+                    ?>
+                  </tbody>
+                </table>
+                <?php 
+                } else {?>
+                  <div class="alert alert-danger" role="alert">Nenhuma área de conhecimento encontrada.</div>
+                <?php
+                }
+                ?>
+                <h4>Adicionar área de conhecimento</h4>
+                <hr />
+                <form action="student_views/studentactions_flip.php" method="POST" class="col-md-12">
+                  <input id="id" name="id" type="hidden" value="<?php echo $cm->id; ?>">
+                  <input id="action" name="action" type="hidden" value="<?php echo 'add_feature'; ?>">
+                  <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">
+                  <div class="form-group">
                     <div class="col-xs-12">
-                      <hr />
+                      <label>Descrição</label>
+                      <input id="feature_description" name="feature_description" class="form-control" />
                     </div>
-                    <button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...'; this.disabled='disabled'; this.form.submit();"><span class="glyphicon glyphicon-plus"></span>ADICIONAR</button>
-                  </form>
-                </div>
+                  </div>
+                  <div class="col-xs-12">
+                    <hr />
+                  </div>
+                  <button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...'; this.disabled='disabled'; this.form.submit();"><span class="glyphicon glyphicon-plus"></span>ADICIONAR</button>
+                </form>
               </div>
             </div>
           </div>
+          
           <!-- ################################################################## -->
 
           <!-- ################################################################## -->
