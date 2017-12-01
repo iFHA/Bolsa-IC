@@ -183,7 +183,7 @@ function invertclass_update_instance(stdClass $invertclass, mod_invertclass_mod_
  */
 function invertclass_delete_instance($id) {
     global $DB;
-    /*
+    
     if (!$invertclass = $DB->get_record('invertclass', array('id' => $id))) {
         return false;
     }
@@ -192,35 +192,53 @@ function invertclass_delete_instance($id) {
 
     # Delete any dependent records here #
     //get invertclass group
-    $pgs = $DB->get_records('invertclass_group', array('invertclassid' => $id));
-    foreach ($pgs as $pg) {
-        if (! $DB->delete_records('invertclass_evaluation_measured', array('invertclass_group' => $pg->id)) ) {
-            $result = false;
-        }
-        if (! $DB->delete_records('invertclass_pair_evaluation', array('invertclass_group' => $pg->id)) ) {
-            $result = false;
-        }
-        if (! $DB->delete_records('invertclass_unknown_words', array('invertclass_group' => $pg->id)) ) {
-            $result = false;
-        }
-        if (! $DB->delete_records('invertclass_group_session', array('invertclass_group' => $pg->id)) ) {
-            $result = false;
-        }
-        if (! $DB->delete_records('invertclass_group', array('invertclassid' => $invertclass->id)) ) {
-            $result = false;
-        }
-    }
 
-    if (! $DB->delete_records('invertclass_requirements', array('invertclassid' => $invertclass->id)) ) {
+    if (! $DB->delete_records('fp_unknown_words') ) {
         $result = false;
     }
-    if (! $DB->delete_records('invertclass_goals', array('invertclassid' => $invertclass->id)) ) {
+    if (! $DB->delete_records('fp_group_session') ) {
         $result = false;
     }
-    if (! $DB->delete_records('invertclass', array('id' => $invertclass->id)) ) {
+    if (! $DB->delete_records('fp_user_features') ) {
         $result = false;
     }
-    */
+    if (! $DB->delete_records('fp_user_prefered_times') ) {
+        $result = false;
+    }
+    if (! $DB->delete_records('fp_goals') ) {
+        $result = false;
+    }
+    if (! $DB->delete_records('fp_requirements') ) {
+        $result = false;
+    }
+    if (! $DB->delete_records('fp_features') ) {
+        $result = false;
+    }
+    if (! $DB->delete_records('fpanexos') ) {
+        $result = false;
+    }
+    if (! $DB->delete_records('fpavaliar') ) {
+        $result = false;
+    }
+    if (! $DB->delete_records('fpfeedback') ) {
+        $result = false;
+    }
+    if (! $DB->delete_records('fpgain') ) {
+        $result = false;
+    }
+    if (! $DB->delete_records('fpref') ) {
+        $result = false;
+    }
+    if (! $DB->delete_records('fpmembers') ) {
+        $result = false;
+    }
+    if (! $DB->delete_records('fptasks') ) {
+        $result = false;
+    }
+    if (! $DB->delete_records('fpgroups') ) {
+        $result = false;
+    }
+    
     return $result;
 }
 
