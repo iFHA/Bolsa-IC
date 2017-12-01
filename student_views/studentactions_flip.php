@@ -34,11 +34,11 @@ switch($action){
 		break;
 
 	case 'add_feature':
-		$feature = $DB->get_record("fpfeatures", array("description" => required_param('feature_description', PARAM_TEXT)));
+		$feature = $DB->get_record("fp_features", array("descricao" => required_param('feature_description', PARAM_TEXT)));
 
 		if(!$feature->id){
 			$feature->description = required_param('feature_description', PARAM_TEXT);
-			$feature->id = invertclass_save('fpfeatures', $feature);
+			$feature->id = invertclass_save('fp_features', $feature);
 		}
 
 		//CRIA UM OBJETO CARACTERÍSTICA

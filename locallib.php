@@ -515,11 +515,11 @@ function get_evaluationByMeasured($invertclassgroup, $userid){
 function get_user($userid){
 	global $DB;
 	$this_user = $DB->get_record("user", array("id" => $userid), 'id, CONCAT(firstname, " ", lastname) as name');
-	$this_user->prefered_times = $DB->get_record("invertclass_user_prefered_times", array("userid" => $userid));
-	$uf = $DB->get_records("invertclass_user_features", array("userid" => $userid));
+	$this_user->prefered_times = $DB->get_record("fp_user_prefered_times", array("userid" => $userid));
+	$uf = $DB->get_records("fp_user_features", array("userid" => $userid));
 	$this_user->features = $uf;
 	foreach ($uf as $key => $feature) {
-		$this_user->features[$key]->description = $DB->get_record("fpfeatures", array("id" => $feature->featureid))->description;
+		$this_user->features[$key]->description = $DB->get_record("fp_features", array("id" => $feature->featureid))->description;
 	}
 	return $this_user;
 }
@@ -529,7 +529,7 @@ function get_requirements($invertclassid){
 	$requirements = $DB->get_records('fp_requirements', array('invertclassid' => $invertclassid));
 
 	foreach ($requirements as $key => $requirement) {
-		$requirements[$key]->feature = $DB->get_record('fpfeatures', array('id' => $requirement->featureid));
+		$requirements[$key]->feature = $DB->get_record('fp_features', array('id' => $requirement->featureid));
 	}
 
 	return $requirements;
@@ -544,19 +544,19 @@ function get_sessions_by_group($groupid, $invertclassid){
 	global $DB;
 
 	if($groupid)
-	  $pg = $DB->get_record('invertclass_group', array('invertclassid' => $invertclassid, 'groupid' => $groupid), '*');
+	  $pg = $DB->get_record('fpgroups', array('invertclassid' => $invertclassid, 'groupid' => $groupid), '*');
 	else
 	  die("Não foi possível encontrar o grupo");
 
-	return $DB->get_records('invertclass_group_session', array('invertclass_group' => $pg->id), 'timestart');
+	return $DB->get_records('fp_group_session', array('fp_group' => $pg->id), 'timestart');
 }
 
 function get_goals($invertclassid){
 	global $DB;
-	$goals = $DB->get_records('invertclass_goals', array('invertclassid' => $invertclassid));
+	$goals = $DB->get_records('fp_goals', array('invertclassid' => $invertclassid));
 
 	foreach ($goals as $key => $goal) {
-		$goals[$key]->feature = $DB->get_record('invertclass_features', array('id' => $goal->featureid));
+		$goals[$key]->feature = $DB->get_record('fp_features', array('id' => $goal->featureid));
 	}
 
 	return $goals;
@@ -564,5 +564,5 @@ function get_goals($invertclassid){
 
 function get_features(){
 	global $DB;
-	return $DB->get_records("invertclass_features");
+	return $DB->get_records("fp_features");
 }

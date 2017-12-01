@@ -8,28 +8,42 @@
  */
 
 /*
-$groups = groups_get_all_groups($course->id);
-$groups_enrolled = $DB->get_records('problem_group', array('problemid' => $problem->id), '', '*') ;
+$groups = groups_get_user_groups($cm->course, $USER->id);
 
-$qtn_groups_enrolled = count($groups_enrolled);
-$qnt_groups_not_enrolled = count($groups) - count($groups_enrolled);
+foreach($groups as $g){
+	foreach($g as $gr){ $groupid = $gr; }
+}
 
-$problem->requirements = get_requirements($problem->id);
-$problem->goals = get_goals($problem->id);
-$problem->features = get_features();
+$group = get_group($groupid,$problem->id);
 
+$final_evaluation = get_evaluationByMeasured($group->problemgroup->id, $USER->id);
+if(count($group->sessions) > 0){
 
+  $last = 0;
+  foreach($group->sessions as $session){
+    if($session->timestart > $last){
+      $lastsession = $session;
+      $last = $session->timestart;
+    }
+  }
+}
+*/
+
+$myprofile = get_user($USER->id);
+//$myprofile->unknown_words = $DB->get_record("fp_unknown_words", array("fp_group" => $group->problemgroup->id, "userid" => $USER->id));
+
+$invertclass->features = get_features();
 $sep = "";
 $features_description = "";
-foreach ($problem->features as $feature) {
+foreach ($invertclass->features as $feature) {
   $features_description .= $sep."\"".$feature->description."\"";
   $sep = ', ';
 }
 
-if(problem_is_enrolled($context, "editingteacher")){*/
 require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
 require_once(dirname(dirname(__FILE__)).'/lib.php');
 require_once(dirname(dirname(__FILE__)).'/locallib.php');
+
 ?>
     <div class="container-fluid">
 
@@ -327,7 +341,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                                 <h3 class="panel-title">Horários disponíveis para estudo</h3>
                             </div>
                             <div class="panel-body">
-                                <form class="form-inline" action="student_views/studentactions.php" method="POST">
+                                <form class="form-inline" action="student_views/studentactions_flip.php" method="POST">
                                 <input id="id" name="id" type="hidden" value="<?php echo $cm->id; ?>">
                                 <input id="action" name="action" type="hidden" value="edit_prefered_times">
                                 <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">
@@ -335,85 +349,85 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                                 <div class="input-group">
                                     <strong><p class="form-control-static">Domingo: </p></strong>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="sun_m" name="sun_m" value="1" <?php //if($myprofile->prefered_times->sunday{0} == '1'){ echo ' checked'; } ?>> Manhã
+                                    <input type="checkbox" id="sun_m" name="sun_m" value="1" <?php if($myprofile->prefered_times->sunday{0} == '1'){ echo ' checked'; } ?>> Manhã
                                     </label>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="sun_t" name="sun_t" value="1" <?php //if($myprofile->prefered_times->sunday{1} == '1'){ echo ' checked'; } ?>> Tarde
+                                    <input type="checkbox" id="sun_t" name="sun_t" value="1" <?php if($myprofile->prefered_times->sunday{1} == '1'){ echo ' checked'; } ?>> Tarde
                                     </label>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="sun_n" name="sun_n" value="1" <?php //if($myprofile->prefered_times->sunday{2} == '1'){ echo ' checked'; } ?>> Noite
+                                    <input type="checkbox" id="sun_n" name="sun_n" value="1" <?php if($myprofile->prefered_times->sunday{2} == '1'){ echo ' checked'; } ?>> Noite
                                     </label>
                                 </div>
                                 <div class="input-group">
                                     <strong><p class="form-control-static">Segunda: </p></strong>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="mon_m" name="mon_m" value="1" <?php //if($myprofile->prefered_times->monday{0} == '1'){ echo ' checked'; } ?>> Manhã
+                                    <input type="checkbox" id="mon_m" name="mon_m" value="1" <?php if($myprofile->prefered_times->monday{0} == '1'){ echo ' checked'; } ?>> Manhã
                                     </label>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="mon_t" name="mon_t" value="1" <?php //if($myprofile->prefered_times->monday{1} == '1'){ echo ' checked'; } ?>> Tarde
+                                    <input type="checkbox" id="mon_t" name="mon_t" value="1" <?php if($myprofile->prefered_times->monday{1} == '1'){ echo ' checked'; } ?>> Tarde
                                     </label>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="mon_n" name="mon_n" value="1" <?php //if($myprofile->prefered_times->monday{2} == '1'){ echo ' checked'; } ?>> Noite
+                                    <input type="checkbox" id="mon_n" name="mon_n" value="1" <?php if($myprofile->prefered_times->monday{2} == '1'){ echo ' checked'; } ?>> Noite
                                     </label>
                                 </div>
                                 <div class="input-group">
                                     <strong><p class="form-control-static">Terça: </p></strong>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="tue_m" name="tue_m" value="1" <?php //if($myprofile->prefered_times->tuesday{0} == '1'){ echo ' checked'; } ?>> Manhã
+                                    <input type="checkbox" id="tue_m" name="tue_m" value="1" <?php if($myprofile->prefered_times->tuesday{0} == '1'){ echo ' checked'; } ?>> Manhã
                                     </label>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="tue_t" name="tue_t" value="1" <?php //if($myprofile->prefered_times->tuesday{1} == '1'){ echo ' checked'; } ?>> Tarde
+                                    <input type="checkbox" id="tue_t" name="tue_t" value="1" <?php if($myprofile->prefered_times->tuesday{1} == '1'){ echo ' checked'; } ?>> Tarde
                                     </label>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="tue_n" name="tue_n" value="1" <?php //if($myprofile->prefered_times->tuesday{2} == '1'){ echo ' checked'; } ?>> Noite
+                                    <input type="checkbox" id="tue_n" name="tue_n" value="1" <?php if($myprofile->prefered_times->tuesday{2} == '1'){ echo ' checked'; } ?>> Noite
                                     </label>
                                 </div>
                                 <div class="input-group">
                                     <strong><p class="form-control-static">Quarta: </p></strong>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="wed_m" name="wed_m" value="1" <?php //if($myprofile->prefered_times->wednesday{0} == '1'){ echo ' checked'; } ?>> Manhã
+                                    <input type="checkbox" id="wed_m" name="wed_m" value="1" <?php if($myprofile->prefered_times->wednesday{0} == '1'){ echo ' checked'; } ?>> Manhã
                                     </label>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="wed_t" name="wed_t" value="1" <?php //if($myprofile->prefered_times->wednesday{1} == '1'){ echo ' checked'; } ?>> Tarde
+                                    <input type="checkbox" id="wed_t" name="wed_t" value="1" <?php if($myprofile->prefered_times->wednesday{1} == '1'){ echo ' checked'; } ?>> Tarde
                                     </label>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="wed_n" name="wed_n" value="1" <?php //if($myprofile->prefered_times->wednesday{2} == '1'){ echo ' checked'; } ?>> Noite
+                                    <input type="checkbox" id="wed_n" name="wed_n" value="1" <?php if($myprofile->prefered_times->wednesday{2} == '1'){ echo ' checked'; } ?>> Noite
                                     </label>
                                 </div>
                                 <div class="input-group">
                                     <strong><p class="form-control-static">Quinta: </p></strong>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="thu_m" name="thu_m" value="1" <?php //if($myprofile->prefered_times->thursday{0} == '1'){ echo ' checked'; } ?>> Manhã
+                                    <input type="checkbox" id="thu_m" name="thu_m" value="1" <?php if($myprofile->prefered_times->thursday{0} == '1'){ echo ' checked'; } ?>> Manhã
                                     </label>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="thu_t" name="thu_t" value="1" <?php //if($myprofile->prefered_times->thursday{1} == '1'){ echo ' checked'; } ?>> Tarde
+                                    <input type="checkbox" id="thu_t" name="thu_t" value="1" <?php if($myprofile->prefered_times->thursday{1} == '1'){ echo ' checked'; } ?>> Tarde
                                     </label>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="thu_n" name="thu_n" value="1" <?php //if($myprofile->prefered_times->thursday{2} == '1'){ echo ' checked'; } ?>> Noite
+                                    <input type="checkbox" id="thu_n" name="thu_n" value="1" <?php if($myprofile->prefered_times->thursday{2} == '1'){ echo ' checked'; } ?>> Noite
                                     </label>
                                 </div>
                                 <div class="input-group">
                                     <strong><p class="form-control-static">Sexta: </p></strong>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="fri_m" name="fri_m" value="1" <?php //if($myprofile->prefered_times->friday{0} == '1'){ echo ' checked'; } ?>> Manhã
+                                    <input type="checkbox" id="fri_m" name="fri_m" value="1" <?php if($myprofile->prefered_times->friday{0} == '1'){ echo ' checked'; } ?>> Manhã
                                     </label>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="fri_t" name="fri_t" value="1" <?php //if($myprofile->prefered_times->friday{1} == '1'){ echo ' checked'; } ?>> Tarde
+                                    <input type="checkbox" id="fri_t" name="fri_t" value="1" <?php if($myprofile->prefered_times->friday{1} == '1'){ echo ' checked'; } ?>> Tarde
                                     </label>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="fri_n" name="fri_n" value="1" <?php //if($myprofile->prefered_times->friday{2} == '1'){ echo ' checked'; } ?>> Noite
+                                    <input type="checkbox" id="fri_n" name="fri_n" value="1" <?php if($myprofile->prefered_times->friday{2} == '1'){ echo ' checked'; } ?>> Noite
                                     </label>
                                 </div>
                                 <div class="input-group">
                                     <strong><p class="form-control-static">Sábado: </p></strong>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="sat_m" name="sat_m" value="1" <?php //if($myprofile->prefered_times->saturday{0} == '1'){ echo ' checked'; } ?>> Manhã
+                                    <input type="checkbox" id="sat_m" name="sat_m" value="1" <?php if($myprofile->prefered_times->saturday{0} == '1'){ echo ' checked'; } ?>> Manhã
                                     </label>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="sat_t" name="sat_t" value="1" <?php //if($myprofile->prefered_times->saturday{1} == '1'){ echo ' checked'; } ?>> Tarde
+                                    <input type="checkbox" id="sat_t" name="sat_t" value="1" <?php if($myprofile->prefered_times->saturday{1} == '1'){ echo ' checked'; } ?>> Tarde
                                     </label>
                                     <label class="checkbox-inline">
-                                    <input type="checkbox" id="sat_n" name="sat_n" value="1" <?php //if($myprofile->prefered_times->saturday{2} == '1'){ echo ' checked'; } ?>> Noite
+                                    <input type="checkbox" id="sat_n" name="sat_n" value="1" <?php if($myprofile->prefered_times->saturday{2} == '1'){ echo ' checked'; } ?>> Noite
                                     </label>
                                 </div>
                                 <hr />
@@ -460,7 +474,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                                     echo '</div>';
                                 }
                                 ?>
-                                <h4>Adicionar nova característica</h4>
+                                <h4>Características a serem adicionadas</h4>
                                 <hr />
                                 <form action="student_views/studentactions_flip.php" method="POST" class="col-md-12">
                                 <input id="id" name="id" type="hidden" value="<?php echo $cm->id; ?>">

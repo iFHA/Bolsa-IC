@@ -136,7 +136,7 @@
         <KEY NAME="tarefa_idfk" TYPE="foreign" FIELDS="tarefa_id" REFTABLE="fptasks" REFFIELDS="id" COMMENT="Foreign key to wiki_subwiki table"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="fpfeatures" COMMENT="">
+    <TABLE NAME="fp_features" COMMENT="">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="descricao" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
@@ -156,7 +156,7 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="feature_idfk" TYPE="foreign" FIELDS="featureid" REFTABLE="fpfeatures" REFFIELDS="id" COMMENT="Foreign key to feature table"/>
+        <KEY NAME="feature_idfk" TYPE="foreign" FIELDS="featureid" REFTABLE="fp_features" REFFIELDS="id" COMMENT="Foreign key to feature table"/>
         <KEY NAME="invertclass_idfk" TYPE="foreign" FIELDS="invertclassid" REFTABLE="invertclass" REFFIELDS="id" COMMENT="Foreign key to invertclass table"/>
       </KEYS>
     </TABLE>
@@ -169,7 +169,7 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="feature_idfk" TYPE="foreign" FIELDS="featureid" REFTABLE="fpfeatures" REFFIELDS="id" COMMENT="Foreign key to feature table"/>
+        <KEY NAME="feature_idfk" TYPE="foreign" FIELDS="featureid" REFTABLE="fp_features" REFFIELDS="id" COMMENT="Foreign key to feature table"/>
         <KEY NAME="invertclass_idfk" TYPE="foreign" FIELDS="invertclassid" REFTABLE="invertclass" REFFIELDS="id" COMMENT="Foreign key to invertclass table"/>
       </KEYS>
     </TABLE>
@@ -177,13 +177,13 @@
     <TABLE NAME="fp_user_prefered_times" COMMENT="">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="sunday" TYPE="char" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="monday" TYPE="char" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="tuesday" TYPE="char" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="wednesday" TYPE="char" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="thursday" TYPE="char" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="friday" TYPE="char" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="saturday" TYPE="char" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="sunday" TYPE="text" LENGTH="3" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="monday" TYPE="text" LENGTH="3" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="tuesday" TYPE="text" LENGTH="3" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="wednesday" TYPE="text" LENGTH="3" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="thursday" TYPE="text" LENGTH="3" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="friday" TYPE="text" LENGTH="3" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="saturday" TYPE="text" LENGTH="3" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
@@ -201,7 +201,7 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="feature_idfk" TYPE="foreign" FIELDS="featureid" REFTABLE="fpfeatures" REFFIELDS="id" COMMENT="Foreign key to wiki_subwiki table"/>
+        <KEY NAME="feature_idfk" TYPE="foreign" FIELDS="featureid" REFTABLE="fp_features" REFFIELDS="id" COMMENT="Foreign key to wiki_subwiki table"/>
         <KEY NAME="id_userfk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" COMMENT="Foreign key to wiki table"/>
       </KEYS>
     </TABLE>
@@ -238,7 +238,7 @@
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="id_userfk" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" COMMENT="Foreign key to wiki table"/>
-        <KEY NAME="id_groupfk" TYPE="foreign" FIELDS="invertclass_group" REFTABLE="fpgroups" REFFIELDS="id" COMMENT="Foreign key to wiki table"/>
+        <KEY NAME="id_groupfk" TYPE="foreign" FIELDS="fp_group" REFTABLE="fpgroups" REFFIELDS="id" COMMENT="Foreign key to wiki table"/>
       </KEYS>
     </TABLE>
 

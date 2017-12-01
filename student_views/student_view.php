@@ -422,7 +422,7 @@ if(problem_is_enrolled($context, "student")){
                 ?>
                 <h4>Adicionar nova característica</h4>
                 <hr />
-                <form action="student_views/studentactions.php" method="POST" class="col-md-12">
+                <form action="student_views/studentactions_flip.php" method="POST" class="col-md-12">
                   <input id="id" name="id" type="hidden" value="<?php echo $cm->id; ?>">
                   <input id="action" name="action" type="hidden" value="<?php echo 'add_feature'; ?>">
                   <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">
