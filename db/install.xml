@@ -18,6 +18,9 @@
         <FIELD NAME="not_related_words" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="arquivo" TYPE="text" LENGTH="80" NOTNULL="false" SEQUENCE="false" COMMENT="Wiki activity"/>
+        <FIELD NAME="data_inicio" TYPE="text" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Wiki activity"/>
+        <FIELD NAME="data_fim" TYPE="text" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Wiki activity"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
