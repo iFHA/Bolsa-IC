@@ -137,7 +137,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
             ?>
             <div class="panel panel-primary">
               <div class="panel-heading">
-                <h3 class="panel-title">Áreas de conhecimento</h3>
+                <h3 class="panel-title">ÁREAS DE CONHECIMENTO</h3>
               </div>
               <div class="panel-body">
                 <?php if(0/*count($myprofile->features) > 0*/){ ?>
