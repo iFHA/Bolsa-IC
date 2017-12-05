@@ -3,6 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
+<!-- TODO: ALTERAR A ESTRUTURA DO BANCO DE ACORDO COM A DO SQL, POIS FOI ALTERADO SOMENTE LÁ POR ENQUANTO -->
   <TABLES>
     <TABLE NAME="invertclass" COMMENT="Stores Wiki activity configuration">
       <FIELDS>
