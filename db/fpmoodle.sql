@@ -194,7 +194,6 @@ delete from mdl_fpfeedback;
 delete from mdl_fpgain;
 delete from mdl_fpref;
 delete from mdl_fpmembers;
-delete from mdl_fptasks;
 delete from mdl_fpgroups;
 
 drop table mdl_fp_unknown_words;
@@ -210,7 +209,6 @@ drop table mdl_fpfeedback;
 drop table mdl_fpgain;
 drop table mdl_fpref;
 drop table mdl_fpmembers;
-drop table mdl_fptasks;
 drop table mdl_fpgroups;
 
 */
