@@ -29,7 +29,6 @@ if(problem_is_enrolled($context, "editingteacher")){
 ?>
 
 <div class="container-fluid">
-
   <div class="row"><!-- INÍCIO DA EXIBIÇÃO DO GRUPO -->
     <div class="col-md-12">
       <div role="tabpanel">
@@ -37,11 +36,8 @@ if(problem_is_enrolled($context, "editingteacher")){
           <li role="presentation" class="active"><a href="#problem" aria-controls="problem" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-home"></i> Problema</a></li>
           <li role="presentation"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab">Listagem de grupos</a></li>
         </ul>
-
         <br />
-        
         <div class="tab-content">
-
           <!-- ################################################################## -->
           <!--                       EXIBIÇÃO DO PROBLEMA                         -->
           <!-- ################################################################## -->
@@ -57,7 +53,6 @@ if(problem_is_enrolled($context, "editingteacher")){
                 <p><strong>Áreas de conhecimento:</strong> <?php echo $problem->knowledge_area; ?></p>
               </div>
             </div>
-
             <div class="panel panel-info">
               <div class="panel-heading">
                 <h3 class="panel-title"><span class="glyphicon glyphicon-envelope"></span> Metas de aprendizagem</h3>
@@ -80,7 +75,6 @@ if(problem_is_enrolled($context, "editingteacher")){
                     ?>
                   </tbody>
                 </table>
-
                 <form action="teacher_views/teacheractions.php" method="POST" class="col-md-12">
                   <input id="id" name="id" type="hidden" value="<?php echo $cm->id; ?>">
                   <input id="action" name="action" type="hidden" value="<?php echo 'add_problem_goal'; ?>">
@@ -91,14 +85,8 @@ if(problem_is_enrolled($context, "editingteacher")){
                   </div>
                   <button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...'; this.disabled='disabled'; this.form.submit();"><span class="glyphicon glyphicon-floppy-disk"></span> Adicionar meta de aprendizagem</button>
                 </form>
-
               </div>
             </div>
-
-
-
-
-
             <div class="panel panel-info">
               <div class="panel-heading">
                 <h3 class="panel-title"><span class="glyphicon glyphicon-envelope"></span> Requisitos do problema</h3>
@@ -118,14 +106,12 @@ if(problem_is_enrolled($context, "editingteacher")){
                         foreach ($problem->requirements as $requirement) {
                           echo '<tr>';
                           echo '<td>'.$requirement->feature->description.'</td>';
-
                           if($requirement->value == 'b')
                             echo '<td>Baixo</td>';
                           else if($requirement->value == 'm')
                             echo '<td>Médio</td>';
                           else if($requirement->value == 'a')
                             echo '<td>Alto</td>';
-
                           if($requirement->importance == 0.1)
                             echo '<td>Irrelevante</td>';
                           else if($requirement->importance == 0.2)
@@ -146,14 +132,12 @@ if(problem_is_enrolled($context, "editingteacher")){
                             echo '<td>Extremamente alta</td>';
                           else if($requirement->importance == 1.0)
                             echo '<td>Indispensável</td>';
-
                           echo '<td><a href="teacher_views/teacheractions.php?id='.$cm->id.'&requirementid='.$requirement->id.'&action=delete_problem_requirement&url_local='.urlencode($PAGE->url).'" id="btn-del-cloned-input" name="btn-del-cloned-input" class="btn btn-danger btn-xs" onclick="return confirm(\'Deseja realmente excluir esse requisito?\');"><span class="glyphicon glyphicon-minus"></span> Remover</a></td>';
                           echo '</tr>';
                         }
                     ?>
                   </tbody>
                 </table>
-
                 <form class="form-horizontal" action="teacher_views/teacheractions.php" method="POST">
                   <input id="id" name="id" type="hidden" value="<?php echo $cm->id; ?>">
                   <input id="action" name="action" type="hidden" value="<?php echo 'add_problem_requirement'; ?>">
@@ -165,7 +149,6 @@ if(problem_is_enrolled($context, "editingteacher")){
                         <input id="requirement_description" name="requirement_description" class="form-control" />
                       </div>
                     </div>
-
                     <div class="form-group">
                       <label class="col-md-4 control-label">Nível de conhecimento</label>
                       <div class="col-md-4">
@@ -180,7 +163,6 @@ if(problem_is_enrolled($context, "editingteacher")){
                           </div>
                       </div>
                     </div>
-
                     <div class="form-group">
                       <label class="col-md-4 control-label">Significância</label>
                       <div class="col-md-2">
@@ -204,10 +186,8 @@ if(problem_is_enrolled($context, "editingteacher")){
                     </div>
                   </fieldset>
                 </form>
-
               </div>
             </div>
-
           </div>
           <!-- ################################################################## -->
 

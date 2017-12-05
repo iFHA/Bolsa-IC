@@ -229,6 +229,52 @@ switch($action){
         $nomeArquivo = optional_param('file',null,PARAM_TEXT);
         downloadzin($nomeArquivo);
     break;
+
+    case 'add_invertclass_requirement':
+        $old_feature = $DB->get_record('fp_features', array("descricao" => required_param('requirement_description', PARAM_TEXT)));
+
+        //CRIA UM OBJETO FEATURE
+        $feature = new stdClass();
+        $feature->id = $old_feature->id;
+        $feature->descricao = required_param('requirement_description', PARAM_TEXT);
+        $feature->categoria = 0;
+
+        //SALVA OS DADOS DO OBJETO REQUERIMENTO NO BANCO DE DADOS
+        $feature->id = invertclass_save('fp_features', $feature);
+
+        $old_requirement = $DB->get_record('fp_requirements', array("feataureid" => $feature->id));
+        $invertclass->id = optional_param('id', PARAM_INT);
+        if(!$old_requirement){
+            //CRIA UM OBJETO REQUERIMENTO
+            $pr = new stdClass();
+            $pr->invertclassid = (int) $invertclass->id;
+            $pr->feataureid = $feature->id;
+            $pr->value = required_param('level', PARAM_TEXT);
+            $pr->importance = required_param('importance', PARAM_FLOAT);
+        
+            //SALVA OS DADOS DO OBJETO REQUERIMENTO NO BANCO DE DADOS
+            invertclass_save('fp_requirements', $pr);
+        } else {
+            echo "Já existe um requerimento com essa descrição, exclua-o para inserir outro!";
+            if($url != "") 
+                echo '<br /><br /><a href="'.$url.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
+        }
+
+        $url_problem = new moodle_url('/mod/problem/view.php', array('id' => $id));
+        echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
+
+        break;
+
+    case 'delete_invertclass_requirement':
+
+        //DELETA O REQUERIMENTO DO BANCO DE DADOS
+        $params->requirementid = required_param('requirementid', PARAM_INT);
+        problem_delete('problem_requirements', $params->requirementid);
+
+        $url_problem = new moodle_url('/mod/problem/view.php', array('id' => $id));
+        echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
+
+        break;
 }    
 
 function upload_arquivo($pathzin){

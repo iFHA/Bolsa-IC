@@ -93,7 +93,7 @@ create table mdl_fp_requirements(
 	invertclassid bigint not null default 0,
 	primary key(id),
 	foreign key (feataureid) references mdl_fp_features(id),
-	foreign key (invertclassid) references mdl_invertclass(id)
+	foreign key (invertclassid) references mdl_course_modules(id)
 );
     
 create table mdl_fp_goals(
@@ -102,7 +102,7 @@ create table mdl_fp_goals(
 	invertclassid bigint not null default 0,
 	primary key(id),
 	foreign key (feataureid) references mdl_fp_features(id),
-	foreign key (invertclassid) references mdl_invertclass(id)
+	foreign key (invertclassid) references mdl_course_modules(id)
 );
 
 create table mdl_fp_user_prefered_times(
@@ -143,7 +143,7 @@ create table mdl_fp_unknown_words(
 
 create table mdl_invertclass(
 	id bigint auto_increment,
-	nome varchar(80) not null,
+	name varchar(80) not null,
 	intro varchar(120),
 	introformat smallint(4) not null default 0,
 	knowledge_area varchar(200),
