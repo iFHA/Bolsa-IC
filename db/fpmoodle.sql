@@ -89,19 +89,19 @@ create table mdl_fp_requirements(
 	id bigint auto_increment,
 	value char not null,
 	importance float not null default 0,
-	feataureid bigint not null default 0,
+	featureid bigint not null default 0,
 	invertclassid bigint not null default 0,
 	primary key(id),
-	foreign key (feataureid) references mdl_fp_features(id),
+	foreign key (featureid) references mdl_fp_features(id),
 	foreign key (invertclassid) references mdl_course_modules(id)
 );
     
 create table mdl_fp_goals(
 	id bigint auto_increment,
-	feataureid bigint not null default 0,
+	featureid bigint not null default 0,
 	invertclassid bigint not null default 0,
 	primary key(id),
-	foreign key (feataureid) references mdl_fp_features(id),
+	foreign key (featureid) references mdl_fp_features(id),
 	foreign key (invertclassid) references mdl_course_modules(id)
 );
 
@@ -122,10 +122,10 @@ create table mdl_fp_user_prefered_times(
 create table mdl_fp_user_features(
 	id bigint auto_increment,
   value bigint not null default 0,
-	feataureid bigint not null default 0,
+	featureid bigint not null default 0,
 	userid bigint not null default 0,
 	primary key(id),
-	foreign key (feataureid) references mdl_fp_features(id),
+	foreign key (featureid) references mdl_fp_features(id),
 	foreign key (userid) references mdl_user(id)
 );
 
@@ -162,6 +162,19 @@ create table mdl_invertclass(
 	primary key(id),
 	foreign key(course) references mdl_course(id)
 	);
+
+create table mdl_fp_group_session(
+	id bigint auto_increment,
+	timestart bigint not null default 0,
+	timeend bigint not null default 0,
+	finished tinyint(1) not null default 0,
+	last tinyint(1) not null default 0,
+	leader bigint,
+	invertclass_group bigint,
+	eventid bigint,
+	primary key(id),
+	foreign key(invertclass_group) references mdl_fpgroups(id)
+);
 
 create table mdl_fp_group_session(
 	id bigint auto_increment,

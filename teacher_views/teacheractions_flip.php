@@ -242,13 +242,13 @@ switch($action){
         //SALVA OS DADOS DO OBJETO REQUERIMENTO NO BANCO DE DADOS
         $feature->id = invertclass_save('fp_features', $feature);
 
-        $old_requirement = $DB->get_record('fp_requirements', array("feataureid" => $feature->id));
-        $invertclass->id = optional_param('id', PARAM_INT);
+        $old_requirement = $DB->get_record('fp_requirements', array("featureid" => $feature->id));
+        $invertclassid = required_param('id', PARAM_INT);
         if(!$old_requirement){
             //CRIA UM OBJETO REQUERIMENTO
             $pr = new stdClass();
-            $pr->invertclassid = (int) $invertclass->id;
-            $pr->feataureid = $feature->id;
+            $pr->invertclassid = (int) $invertclassid;
+            $pr->featureid = $feature->id;
             $pr->value = required_param('level', PARAM_TEXT);
             $pr->importance = required_param('importance', PARAM_FLOAT);
         

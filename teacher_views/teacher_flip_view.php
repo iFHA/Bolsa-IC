@@ -134,8 +134,8 @@ $importancia = [0.1=>'Irrelevante',
               </div>
               <div class="panel-body">
                 <?php 
-                $invertclass->id =5;
-                $invertclass->requirements = get_requirements($invertclass->id);
+                //echo var_dump($invertclass->id);
+                $invertclass->requirements = get_requirements($cm->id);
                 if(!empty($invertclass->requirements)){ 
                   ?>
                 <table class="table table-bordered table-condensed table-hover">
@@ -151,7 +151,7 @@ $importancia = [0.1=>'Irrelevante',
                     <?php 
                         foreach ($invertclass->requirements as $requirement) {?>
                           <tr>
-                              <td><?= $requirement->feataure->descricao ?></td>
+                              <td><?= $requirement->feature->descricao ?></td>
                               <td><?= $nivel[$requirement->value] ?></td>
                               <td><?= $importancia[$requirement->importance] ?></td>
                               <td><a href="teacher_views/teacheractions_flip.php?id=<?=$cm->id?>&reqid=<?=$requirement->id?>&action=delete_requirement&url_local=<?=urlencode($PAGE->url)?>" id="btn-del-cloned-input" name="btn-del-cloned-input" class="btn btn-danger btn-xs pull-right" onclick="return confirm(\'Deseja realmente excluir essa meta de aprendizagem?\');"><span class="glyphicon glyphicon-minus"></span>Remover</a></td>

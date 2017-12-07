@@ -529,7 +529,7 @@ function get_requirements($invertclassid){
 	$requirements = $DB->get_records('fp_requirements', array('invertclassid' => $invertclassid));
 
 	foreach ($requirements as $key => $requirement) {
-		$requirements[$key]->feataure = $DB->get_record('fp_features', array('id' => $requirement->feataureid));
+		$requirements[$key]->feature = $DB->get_record('fp_features', array('id' => $requirement->featureid));
 	}
 
 	return $requirements;
