@@ -1,16 +1,23 @@
-/*
-create table mdl_user(
+create table mdl_invertclass(
 	id bigint auto_increment,
-	firstname varchar(80) not null,
-	primary key(id)
-	);
-
-create table mdl_course(
-	id bigint auto_increment,
+	course bigint not null,
+	forum bigint not null,
+	chat bigint not null,
 	name varchar(80) not null,
-	primary key(id));
-*/
-
+	intro varchar(120),
+	introformat smallint(4) not null default 0,
+	knowledge_area varchar(200),
+	product_format varchar(200),
+	not_related_words varchar(200),
+	timecreated bigint,
+	timemodified bigint,
+	arquivo varchar(80),
+	data_inicio varchar(10),
+	data_fim varchar(10),
+	descricao varchar(512),
+	primary key(id),
+	foreign key(course) references mdl_course(id)
+	);
 create table mdl_fpgroups(
 	id bigint auto_increment,
 	nome varchar(80) not null,
