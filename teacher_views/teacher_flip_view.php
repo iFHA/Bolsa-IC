@@ -15,7 +15,7 @@ $nivel = ['b'=>'Baixo',
 'm'=>'Médio',
 'a'=>'Alto'
 ];
-$importancia = [0.1=>'Irrelevante',
+$importancia = ['0.1'=>'Irrelevante',
 '0.2'=>'Dispensável',
 '0.3'=>'Extremamente Baixa',
 '0.4'=>'Muito Baixa',
@@ -26,6 +26,7 @@ $importancia = [0.1=>'Irrelevante',
 '0.9'=>'Extremamente Alta',
 '1.0'=>'Indispensável'
 ];
+
 ?>
 
 <div class="container-fluid">
@@ -103,12 +104,13 @@ $importancia = [0.1=>'Irrelevante',
                       <tr><td>DATA INÍCIO</td><td><input id="data_inicio" type="text" size=20 name="data_inicio"></td></tr>
                       <tr><td>DATA FIM</td><td><input id="data_fim" type="text" size=20 name="data_fim"></td></tr>
                       <tr><th>METAS DE APRENDIZAGEM</th></tr>
-                      <tr><td colspan="3"><textarea id="metas" name="metas" style="width:100%; height: 80px"><?=$invertclass->knowledge_area?></textarea></td></tr>
+                      <tr><td colspan="3"><textarea id="metas" name="knowledge_area" style="width:100%; height: 80px"><?=$invertclass->knowledge_area?></textarea></td></tr>
                       <tr><th>PALAVRAS NÃO RELACIONADAS</th></tr>
-                      <tr><td colspan="3"><textarea id="naorelacionadas" name="naorelacionadas" style="width:100%; height: 80px"><?=$invertclass->not_related_words?></textarea></td></tr> <!-- placeholder="DIGITE AQUI AS PALAVRAS NÃO RELACIONADAS À TAREFA SEPARADAS POR VÍRGULA (PALAVRA 1, PALAVRA 2)"  -->
+                      <tr><td colspan="3"><textarea id="naorelacionadas" name="not_related_words" style="width:100%; height: 80px"><?=$invertclass->not_related_words?></textarea></td></tr> <!-- placeholder="DIGITE AQUI AS PALAVRAS NÃO RELACIONADAS À TAREFA SEPARADAS POR VÍRGULA (PALAVRA 1, PALAVRA 2)"  -->
                     </table>
-                    <input id="action" name="action" type="hidden" value="ad_task"/>
-                    <input id="id_curso" name="id_curso" type="hidden" value="<?php echo $COURSE->id ?>"/>
+                    <input id="action" name="action" type="hidden" value="up_task"/>
+                    <input id="id" name="id" type="hidden" value="<?=$invertclass->id ?>"/>
+                    <input id="tarq" name="task_arq" type="hidden" value="<?=empty($invertclass->arquivo)?"":$invertclass->arquivo ?>"/>
                     <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">
                     <button name="send" class="btn btn-success" onclick="document.getElementById('add_task').style.display = 'inherit'; this.form.submit();"><span class="glyphicon glyphicon-floppy-disk"></span>ATUALIZAR ATIVIDADE</button>
                   </div>
@@ -154,8 +156,8 @@ $importancia = [0.1=>'Irrelevante',
                               <td><?= $requirement->feature->descricao ?></td>
                               <td><?= $nivel[$requirement->value] ?></td>
                               <td><?= $importancia[$requirement->importance] ?></td>
-                              <td><a href="teacher_views/teacheractions_flip.php?id=<?=$cm->id?>&reqid=<?=$requirement->id?>&action=delete_requirement&url_local=<?=urlencode($PAGE->url)?>" id="btn-del-cloned-input" name="btn-del-cloned-input" class="btn btn-danger btn-xs pull-right" onclick="return confirm(\'Deseja realmente excluir essa meta de aprendizagem?\');"><span class="glyphicon glyphicon-minus"></span>Remover</a></td>
-                          </tr>';
+                              <td><a href="teacher_views/teacheractions_flip.php?reqid=<?=$requirement->id?>&id=<?=$cm->id?>&action=delete_requirement&url_local=<?=urlencode($PAGE->url)?>" id="btn-del-cloned-input" name="btn-del-cloned-input" class="btn btn-danger btn-xs pull-right" onclick="return confirm(\'Deseja realmente excluir essa meta de aprendizagem?\');"><span class="glyphicon glyphicon-minus"></span>Remover</a></td>
+                          </tr>
                           <?php
                         }
                     ?>
@@ -171,7 +173,7 @@ $importancia = [0.1=>'Irrelevante',
                 <hr />
                 <form class="form-horizontal" action="teacher_views/teacheractions_flip.php" method="POST">
                 <input id="id" name="id" type="hidden" value="<?php echo $cm->id; ?>">
-                <input id="action" name="action" type="hidden" value="<?php echo 'add_invertclass_requirement'; ?>">
+                <input id="action" name="action" type="hidden" value="add_invertclass_requirement">
                 <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">
                 <fieldset>
                   <div class="form-group">
@@ -246,18 +248,18 @@ $importancia = [0.1=>'Irrelevante',
                     //$fpgroups = $DB->get_records("fpgroups"); 
                     $fpgroups = $DB->get_records_sql('select * from mdl_fpgroups where moduleid = '.$cm->id.';');
                     //if(count($fpgroups)==0) echo ("Sem grupos<br>");
-                    //TODO: JAVASCRIPT PEGAR URL: var url_atual = window.location.href;;
+                    //TODO: dica JAVASCRIPT PEGAR URL: var url_atual = window.location.href;;
                     foreach ($fpgroups as $group){?>
                         <tr>
                           <td><?=$group->nome?></td>
                           <td>
-                            <a href="<?=$PAGE->url?>&op=show_members&idg='<?=$group->id?>'">
+                            <a href="<?=$PAGE->url?>&op=show_members&idg=<?=$group->id?>">
                               <button class='btn btn-info'><span class='glyphicon glyphicon-list'></span></button>
                             </a>
-                            <a href="<?=$PAGE->url?>&moduleid=<?=$cm->id?>&op=up_group&idg='<?=$group->id?>'">
+                            <a href="<?=$PAGE->url?>&moduleid=<?=$cm->id?>&id_curso=<?=$COURSE->id?>&op=up_group&idg=<?=$group->id?>">
                               <button class='btn btn-success'><span class='glyphicon glyphicon-pencil'></span></button>
                             </a>
-                            <a href="./teacher_views/teacheractions_flip.php?action=rm_group&group_id='<?=$group->id?>'&url_local='<?=$PAGE->url?>'">
+                            <a href="./teacher_views/teacheractions_flip.php?action=rm_group&group_id=<?=$group->id?>&url_local=<?=$PAGE->url?>">
                               <button class='btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button>
                             </a>
                           </td>
@@ -286,9 +288,9 @@ $importancia = [0.1=>'Irrelevante',
                 <form class="form-horizontal" action="teacher_views/teacheractions_flip.php" method="POST">
                   <table class="table table-bordered table-condensed table-hover">
                     <tr><td><span style="font-weight: bold;">NOME DO GRUPO</span>&nbsp;&nbsp;<input id="gp_name" name="gp_name" type="text" size=40>&nbsp;&nbsp;<button class="btn btn-primary" onclick="this.form.submit()"><span class="glyphicon glyphicon-arrow-right"></span>  CRIAR</button></td></tr>
-                  </table>
+                  </table><?php echo $cm->id; ?>
                   <input id="action" name="action" type="hidden" value="ad_group"/>
-                  <input id="id_curso" name="id_curso" type="hidden" value="<?php echo $COURSE->id ?>"/>
+                  <input id="moduleid" name="moduleid" type="hidden" value="<?php echo $cm->id; ?>"/>
                   <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">  
                 </form>  
                 <?php } else { ?>
