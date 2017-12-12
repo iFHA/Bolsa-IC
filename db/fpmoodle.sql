@@ -18,6 +18,12 @@ create table mdl_invertclass(
 	primary key(id),
 	foreign key(course) references mdl_course(id)
 	);
+
+create table mdl_fpanexos (
+	id bigint auto_increment primary key,
+	nome_original varchar(80) not null,
+	nome_final varchar(80) not null
+);
 create table mdl_fpgroups(
 	id bigint auto_increment,
 	nome varchar(80) not null,
@@ -70,7 +76,7 @@ create table mdl_fpfeedback(
 create table mdl_fpavaliar(
 	id bigint auto_increment,
 	id_group bigint not null,
-	nota float not null,
+	nota float not null default 0,
 	situacao bigint,
 	feedback varchar(512) not null,
 	moduleid bigint not null,
@@ -78,12 +84,6 @@ create table mdl_fpavaliar(
 	foreign key(id_group) references mdl_fpgroups(id),
 	foreign key(moduleid) references mdl_course_modules(id)
 	);
-
-create table mdl_fpanexos (
-	id bigint auto_increment primary key,
-	nome_original varchar(80) not null,
-	nome_final varchar(80) not null
-);
 
 create table mdl_fp_features(
 	id bigint auto_increment,
