@@ -144,7 +144,30 @@ function invertclass_save($table, stdclass $object, $message = true){
 	
 	return $id;
 }
-
+function invertclass_save_requirement(stdclass $object, $message = true){
+	global $DB;
+	if(!empty($object->id)) {
+		$id = (int) $object->id;
+		if($DB->update_record('fp_requirements', $object, $bulk=false)) {
+			if($message)
+				echo 'Dado(s) alterado(s) com sucesso.<br />';
+		} else {
+			if($message)
+				echo 'N&atilde;o foi poss&iacute;vel alterar o(s) dado(s).<br />';
+		}
+	} else {
+		if($id = $DB->execute("insert into mdl_fp_requirements (invertclassid,featureid,value,importance) VALUES(
+		$object->invertclassid,$object->featureid,'$object->value',$object->importance)")) {
+			if($message)
+				echo 'Dado(s) inserido(s) com sucesso.<br />';
+		} else {
+			if($message)
+				echo 'N&atilde;o foi poss&iacute;vel inserir o(s) dado(s).<br />';
+		}
+	}
+	
+	return $id;
+}
 function invertclass_delete($table, $id, $message = true){
 	global $DB;
 	if(!empty($id)) {
