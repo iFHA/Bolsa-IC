@@ -7,7 +7,6 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
 
 $action = optional_param('action',null,PARAM_TEXT);
 
-echo "Testando..";
 global $DB;
 
 $caminhoTarefas = "../arquivos/tarefas";
@@ -17,10 +16,10 @@ switch($action){
     case 'ad_group':
         $grupo = new stdClass();
         $grupo->nome = required_param('gp_name', PARAM_TEXT);
-        $grupo->id_curso = required_param('id_curso',PARAM_INT);//$COURSE->id;
-        $DB->insert_record('fpgroups ',$grupo);
+        $grupo->moduleid = required_param('moduleid',PARAM_INT);
+        $DB->execute("insert into mdl_fpgroups (nome, moduleid) values ('$grupo->nome',$grupo->moduleid)");
         //$gtemp = $DB->get_record('fpgroups', array("nome" => $grupo->nome));
-        $gtemp = $DB->get_record_sql("select * from mdl_fpgroups where id_curso = {$grupo->id_curso} and nome = '{$grupo->nome}';");
+        $gtemp = $DB->get_record_sql("select * from mdl_fpgroups where moduleid = {$grupo->moduleid} and nome = '{$grupo->nome}';");
         $_SESSION['idgroup']=$gtemp->id;
         $_SESSION['ntgroup']=$gtemp->nome;
         //echo var_dump($gtemp);
@@ -28,18 +27,8 @@ switch($action){
         // ======== populando tabela fp-avaliar ========
         //$group_id = $DB->get_field_sql("select id from mdl_fpgroups where nome='{$grupo->nome}' and id_curso = '{$grupo->id_curso}'");
         $group_id = $gtemp->id;
-        $fptasks = new stdClass();
-        $fptasks = $DB->get_records_sql("select * from mdl_fptasks where id_curso = {$grupo->id_curso}");//("fptasks"); 
-        foreach($fptasks as $task){
-            $temp_avalia = new stdClass();
-            $temp_avalia->id_group = $group_id;
-            $temp_avalia->nota=0;
-            $temp_avalia->situacao=0;
-            $temp_avalia->feedback="";
-            $temp_avalia->id_task=$task->id;
-            $temp_avalia->id_course=$grupo->id_curso;//$COURSE->id;
-            $DB->insert_record('fpavaliar',$temp_avalia);
-        }
+        
+        $DB->execute("insert into mdl_fpavaliar values (default, $group_id, 0, 0, '', $grupo->moduleid)");
         // =============================================
 
         //echo var_dump($temp_avalia);
@@ -110,17 +99,18 @@ switch($action){
         break;
     case 'up_task':
         $teste = new stdClass();
-        $teste->id = required_param('idt', PARAM_TEXT);
-        $teste->nome = required_param('nome', PARAM_TEXT);
+        $teste->id = required_param('id', PARAM_TEXT);
+        $teste->name = required_param('nome', PARAM_TEXT);
         // DELETAR ARQUIVO UNLINK(ARQUIVOPATH/required_param('task_arq', PARAM_TEXT));)
         verificaArquivo($caminhoTarefas, 'task');
         $teste->arquivo = upload_arquivo($caminhoTarefas);//upload_arquivo(caminhodoarquivo/required_param('task_arq', PARAM_TEXT)); :)
         $teste->data_inicio = required_param('data_inicio', PARAM_TEXT);
         $teste->data_fim = required_param('data_fim', PARAM_TEXT);
-        $teste->ultima = required_param('ultima',PARAM_INT);
         $teste->descricao = $_POST['descricao'];
-        $teste->id_curso = required_param('id_curso',PARAM_INT);//$COURSE->id;
-        $DB->update_record('fptasks',$teste);
+        $teste->ultima=0;
+        $teste->knowledge_area = $_POST['knowledge_area'];
+        $teste->not_related_words = $_POST['not_related_words'];
+        $DB->update_record('invertclass',$teste);
         $url_local = required_param('url_local', PARAM_TEXT);
 		header("Location: ".$url_local."#tarefas");
         break;
@@ -128,8 +118,7 @@ switch($action){
         $teste = new stdClass();
         $teste->descricao = required_param('ref_desc', PARAM_TEXT);
         $teste->arquivo = upload_arquivo($caminhoReferencias);//required_param('ref_file', PARAM_TEXT);
-        $teste->id_task = required_param('ref_id_task', PARAM_TEXT);
-        $teste->id_course = required_param('id_curso',PARAM_INT);//$COURSE->id;
+        $teste->moduleid = required_param('moduleid', PARAM_TEXT);
         $DB->insert_record('fpref',$teste);
         $url_local = required_param('url_local', PARAM_TEXT);
 		header("Location: ".$url_local."#referencias");
@@ -238,13 +227,16 @@ switch($action){
         $feature->id = $old_feature->id;
         $feature->descricao = required_param('requirement_description', PARAM_TEXT);
         $feature->categoria = 0;
-
+        
         //SALVA OS DADOS DO OBJETO REQUERIMENTO NO BANCO DE DADOS
         $feature->id = invertclass_save('fp_features', $feature);
-
-        $old_requirement = $DB->get_record('fp_requirements', array("featureid" => $feature->id));
+        
+        if($feature->id)
+            $old_requirement = $DB->get_record_sql('select * from mdl_fp_requirements where featureid = '.$feature->id.';');
         $invertclassid = required_param('id', PARAM_INT);
-        if(!$old_requirement){
+        $url_invertclass = new moodle_url('/mod/invertclass/view.php', array('id' => $invertclassid));
+        
+        if(empty($old_requirement)){
             //CRIA UM OBJETO REQUERIMENTO
             $pr = new stdClass();
             $pr->invertclassid = (int) $invertclassid;
@@ -253,26 +245,23 @@ switch($action){
             $pr->importance = required_param('importance', PARAM_FLOAT);
         
             //SALVA OS DADOS DO OBJETO REQUERIMENTO NO BANCO DE DADOS
-            invertclass_save('fp_requirements', $pr);
+            invertclass_save_requirement($pr);
         } else {
-            echo "Já existe um requerimento com essa descrição, exclua-o para inserir outro!";
-            if($url != "") 
-                echo '<br /><br /><a href="'.$url.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
+            header("Location: ".$url_invertclass);
         }
-
-        $url_problem = new moodle_url('/mod/problem/view.php', array('id' => $id));
-        echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
-
+        
+        header("Location: ".$url_invertclass);
         break;
 
-    case 'delete_invertclass_requirement':
+    case 'delete_requirement':
 
         //DELETA O REQUERIMENTO DO BANCO DE DADOS
-        $params->requirementid = required_param('requirementid', PARAM_INT);
-        problem_delete('problem_requirements', $params->requirementid);
+        $requirementid = required_param('reqid', PARAM_INT);
+        $id = required_param('id', PARAM_INT);
+        invertclass_delete('fp_requirements', $requirementid);
 
-        $url_problem = new moodle_url('/mod/problem/view.php', array('id' => $id));
-        echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
+        $url_invertclass = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
+        header("Location: ".$url_invertclass);
 
         break;
 }    
@@ -302,12 +291,19 @@ function tratar_arquivo_upload($string) {
  }
 
 function verificaArquivo($caminho, $reftask){
+    
     $fileTemp = $caminho."/".required_param($reftask.'_arq', PARAM_TEXT);
     if (file_exists($fileTemp)){
         unlink($fileTemp);
     }
+
 }
 
 ?>
 </div>
-    
+<?php
+function exibirMensagem($msg) { ?>
+  <script type="text/javascript">alert('<?php echo $msg?>')</script>
+<?php 
+}
+?>
