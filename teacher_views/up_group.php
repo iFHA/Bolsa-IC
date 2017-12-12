@@ -37,8 +37,9 @@
           $idg = required_param('idg',PARAM_TEXT);
           $students1 = $DB->get_records_sql("SELECT u.id, u.firstname,u.lastname, u.email FROM mdl_role_assignments rs INNER JOIN mdl_user u ON u.id=rs.userid INNER JOIN mdl_context e ON rs.contextid=e.id INNER JOIN mdl_fpmembers fpm ON u.id=fpm.id_user WHERE e.contextlevel=50 AND rs.roleid=5 AND e.instanceid=2 AND fpm.id_group=".$idg.";");
           foreach($students1 as $student){
+            //echo var_dump($student->id);
               echo '<tr><td>'.$student->firstname.'</td><td>'.$student->lastname.'</td><td>'.$student->email.'</td><td>';
-              echo "<a href='./teacher_views/teacheractions_flip.php?action=rm_gmember&group_id=".$idg."&ids=".$student->id."&url_local=".$PAGE->url."'><button class='btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button></a>";
+              echo "<a href='./teacher_views/teacheractions_flip.php?action=rm_gmember&group_id=$idg&ids=$student->id&url_local=$PAGE->url'><button class='btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button></a>";
               //echo "<a href='$PAGE->url&action=rm_gmember&group_id=".$idg."&id_user=".$student->id."'><button class='btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button></a>";
               echo '</td></tr>';
           }
@@ -48,7 +49,6 @@
           u.id,
           U.lastname,
           u.email
-                                          
           FROM 
           mdl_role_assignments ra 
           JOIN mdl_user u ON u.id = ra.userid
@@ -57,7 +57,6 @@
           JOIN mdl_course c ON c.id = cxt.instanceid
           
           WHERE ra.userid = u.id
-                                          
           AND ra.contextid = cxt.id
           AND cxt.contextlevel =50
           AND cxt.instanceid = c.id
