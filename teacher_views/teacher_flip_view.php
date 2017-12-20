@@ -479,30 +479,27 @@ $importancia = ['0.1'=>'Irrelevante',
             <div class="panel panel-primary">
               <div class="panel-heading">
                 <h3 class="panel-title">AVALIAÇÃO DE GRUPOS</h3>
-                </div>
-                <div class="panel-body">
-                 <form action="teacher_views/teacheractions_flip.php" method="POST">         
-                 
-                    
-                 <div id="avalia_grupo" style="display: none">
-                     <table class="table table-bordered table-condensed table-hover">
-                     
-                     <tr><th>CONSIDERAÇÕES SOBRE A TAREFA</th><th><span id="avagroup_name"></span></th></tr>
-                     <tr><td colspan="2"><textarea id="comments" name="comments" style="width:100%; height: 200px"></textarea></td></tr>
-                     <tr><td>NOTA <input id="nota" name="nota" type="text" size=30></td></tr>
-                     <tr><td><button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...';  this.form.submit();"><span class="glyphicon glyphicon-ok"></span> ENVIAR</button></td></tr>
-                          
-                     </table>
-                     <input type="hidden" id="aval_id" name="aval_id"/>
-                     <input type="hidden" id="avagroup_id" name="avagroup_id"/>
-                     <input type="hidden" id="avatask" name="avatask"/>
-                     <input type="hidden" id="action" name="action" value="add_ava"/>
-                     <input id="id_curso" name="id_curso" type="hidden" value="<?php echo $COURSE->id ?>"/>
-                     <input type="hidden" name="url_local" value="<?php echo $PAGE->url ?>"/>
-                 </div>
-                 </form>     
-                 <br><br>    
-                 <table class="table table-bordered table-condensed table-hover">
+              </div>
+              <div class="panel-body">
+                <form action="teacher_views/teacheractions_flip.php" method="POST">
+                  <div id="avalia_grupo" style="display: none">
+                    <table class="table table-bordered table-condensed table-hover">
+                      <tr><th>CONSIDERAÇÕES SOBRE A TAREFA</th><th><span id="avagroup_name"></span></th></tr>
+                      <tr><td colspan="2"><textarea id="comments" name="comments" style="width:100%; height: 200px"></textarea></td></tr>
+                      <tr><td>NOTA <input id="nota" name="nota" type="text" size=30></td></tr>
+                      <tr><td><button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...';  this.form.submit();"><span class="glyphicon glyphicon-ok"></span> ENVIAR</button></td></tr>
+                    </table>
+                    <input type="hidden" id="aval_id" name="aval_id"/>
+                    <input type="hidden" id="avagroup_id" name="avagroup_id"/>
+                    <input type="hidden" id="avatask" name="avatask"/>
+                    <input type="hidden" id="action" name="action" value="add_ava"/>
+                    <input id="id_curso" name="id_curso" type="hidden" value="<?php echo $COURSE->id ?>"/>
+                    <input type="hidden" name="url_local" value="<?php echo $PAGE->url ?>"/>
+                  </div>
+                </form>
+                <br>
+                <br>    
+                <table class="table table-bordered table-condensed table-hover">
                   <thead>
                     <tr>
                       <th>GRUPO</th>
@@ -515,77 +512,107 @@ $importancia = ['0.1'=>'Irrelevante',
                     </tr>
                   </thead>
                   <tbody>
+                    <?php
+                    // TODO: VERIFICAR SE AS CONSULTAS ESTÃO CORRETAS
+                    $avagroups = $DB->get_records_sql('SELECT a.id, a.id_group, a.nota, a.feedback, a.situacao, a.moduleid,g.nome,i.name as task_name 
+                    from mdl_fpavaliar a inner join mdl_fpgroups g on a.id_group=g.id inner join mdl_course_modules m on m.id=a.moduleid inner join mdl_invertclass i on i.id=m.instance
+                    where m.id= '.$cm->id.';');
+                    foreach($avagroups as $aval){?>
+                    <tr>
+                      <td><?=$aval->nome?></td>
+                      <td><?=$aval->nota?></td>
                       <?php
-                      // TODO: VERIFICAR SE AS CONSULTAS ESTÃO CORRETAS
-                        $avagroups = $DB->get_records_sql('SELECT a.id, a.id_group, a.nota, a.feedback, a.situacao, a.moduleid,g.nome,i.name as task_name 
-                        from mdl_fpavaliar a inner join mdl_fpgroups g on a.id_group=g.id inner join mdl_course_modules m on m.id=a.moduleid inner join mdl_invertclass i on i.id=m.instance
-                        where m.id= '.$cm->id.';');
-                        foreach($avagroups as $aval){?>
-                            <tr><td><?=$aval->nome?></td><td><?=$aval->nota?></td>
-                            <?php
-                            $anexo_grupo = $DB->get_record_sql('SELECT nome_original from mdl_fpanexos a inner join mdl_fpgroups g on g.anexoid=a.id where g.id = '.$aval->id_group.';');
-                            if($anexo_grupo == null){?>
-                              <td>Sem Anexo</td><td></td>
-                            <?php
-                            }else{?>
-                              <td><?=$anexo_grupo->nome_anexo?></td>
-                              <td style=text-align:center;><a href=arquivos/anexos_grupos/<?=$anexo_grupo->nome_anexo?> target=_blank class='btn btn-primary'>Baixar</a></td>
-                              <?php
-                            }
-                            if($aval->situacao==0){?>
-                                <td><span class='btn btn-warning'>PENDENTE</span></td><td><?=$aval->task_name?></td>
-                                <td><button class='btn btn-primary' onclick="document.getElementById('avagroup_name').innerHTML='<?=$aval->nome?>'; document.getElementById('avagroup_id').value='<?=$aval->id_group?>';document.getElementById('aval_id').value='<?=$aval->id?>';document.getElementById('avatask').value='<?=$aval->id_task?>';document.getElementById('avalia_grupo').style.display = 'inherit';"><span class='glyphicon glyphicon-pencil'></span> AVALIAR</button></td></tr>
-                            <?php
-                            }else{?>
-                                <span class='btn btn-success'>AVALIADO</span></td><td><?=$aval->task_name?></td><td></td></tr>
-                            <?php
-                            }
-                        }
-                      ?>
-                      
-                      
-                      
-                    
+                      $anexo_grupo = $DB->get_record_sql('SELECT nome_original from mdl_fpanexos a inner join mdl_fpgroups g on g.anexoid=a.id where g.id = '.$aval->id_group.';');
+                      if($anexo_grupo == null){?>
+                      <td>Sem Anexo</td>
+                      <td></td>
+                      <?php
+                      }else{?>
+                      <td><?=$anexo_grupo->nome_anexo?></td>
+                      <td style=text-align:center;><a href=arquivos/anexos_grupos/<?=$anexo_grupo->nome_anexo?> target=_blank class='btn btn-primary'>Baixar</a></td>
+                      <?php
+                      }
+                      if($aval->situacao==0){?>
+                      <td><span class='btn btn-warning'>PENDENTE</span></td>
+                      <td><?=$aval->task_name?></td>
+                      <td>
+                        <button class='btn btn-primary' onclick="document.getElementById('avagroup_name').innerHTML='<?=$aval->nome?>'; document.getElementById('avagroup_id').value='<?=$aval->id_group?>';document.getElementById('aval_id').value='<?=$aval->id?>';document.getElementById('avatask').value='<?=$aval->id_task?>';document.getElementById('avalia_grupo').style.display = 'inherit';">
+                          <span class='glyphicon glyphicon-pencil'>
+                          </span> 
+                          AVALIAR
+                        </button>
+                      </td>
+                    </tr>
+                      <?php
+                      }else{?>
+                      <td>
+                        <span class='btn btn-success'>AVALIADO</span>
+                      </td>
+                      <td><?=$aval->task_name?></td>
+                      <td></td>
+                    </tr>
+                    <?php
+                      }
+                    }
+                    ?>
                   </tbody>
                 </table>
-                
-                    <br><br><br>
-                
+                <br><br><br>
               </div>
             </div>
-
           </div>
           <!-- ################################################################## -->
           <div role="tabpanel" class="tab-pane" id="feedback">
             <div class="panel panel-primary">
               <div class="panel-heading">
                 <h3 class="panel-title">FEEDBACK</h3>
-                </div>
-                <div class="panel-body">
-                 <div id="feedback_aluno" style="display: none">
-                     <table class="table table-bordered table-condensed table-hover">
-                     <form action="teacher_views/teacheractions_flip.php" method="POST">
-                     <tr><th>CONSIDERAÇÕES SOBRE A TAREFA</th><th><span id="fbaluno" name="fbaluno"></span></th>
-                         <th><select id="taskfb_name" name="taskfb_name">
-                             <?php
-                                $stasks = $DB->get_records_sql('select * from mdl_invertclass where id = '.$cm->id.';');//$DB->get_records("fptasks");//$DB->get_records('fptasks');
-                                foreach( $stasks as $task){?>
-                                    <option value="<?=$task->id?>"><?=$task->name?></option>
-                                <?php
-                                }
-                             ?>
-                            </select>  </th></tr>
-                     <tr><td colspan="3"><textarea id="comments" name="comments" style="width:100%; height: 200px"></textarea></td></tr>
-                     <tr><td colspan="3">
-                         <input type="hidden" id="taskfb_idaluno" name="taskfb_idaluno"/>
-                         <input type="hidden" id="action" name="action" value="add_feedback"/>
-                         <input id="id_curso" name="id_curso" type="hidden" value="<?php echo $COURSE->id ?>"/>
-                         <input type="hidden" name="url_local" value="<?php echo $PAGE->url ?>"/>
-                         <button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...'; this.display:'none'; this.form.submit();"><span class="glyphicon glyphicon-ok"></span> ENVIAR</button></td></tr>
-                         </form>
-                     </table>
-                 </div>        
-                 <table class="table table-bordered table-condensed table-hover">
+              </div>
+              <div class="panel-body">
+                <div id="feedback_aluno" style="display: none">
+                  <table class="table table-bordered table-condensed table-hover">
+                    <form action="teacher_views/teacheractions_flip.php" method="POST">
+                      <tr>
+                        <th>CONSIDERAÇÕES SOBRE A TAREFA</th>
+                        <th>
+                          <span id="fbaluno" name="fbaluno">
+                          </span>
+                        </th>
+                        <th>
+                          <select id="taskfb_name" name="taskfb_name">
+                            <?php
+                            $stasks = $DB->get_records_sql('select * from mdl_invertclass where id = '.$cm->id.';');//$DB->get_records("fptasks");//$DB->get_records('fptasks');
+                            foreach( $stasks as $task){?>
+                            <option value="<?=$task->id?>">
+                              <?=$task->name?>
+                            </option>
+                            <?php
+                            }
+                            ?>
+                          </select>
+                        </th>
+                      </tr>
+                      <tr>
+                        <td colspan="3">
+                          <textarea id="comments" name="comments" style="width:100%; height: 200px">
+                          </textarea>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="3">
+                          <input type="hidden" id="taskfb_idaluno" name="taskfb_idaluno"/>
+                          <input type="hidden" id="action" name="action" value="add_feedback"/>
+                          <input id="id_curso" name="id_curso" type="hidden" value="<?php echo $COURSE->id ?>"/>
+                          <input type="hidden" name="url_local" value="<?php echo $PAGE->url ?>"/>
+                          <button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...'; this.display:'none'; this.form.submit();">
+                            <span class="glyphicon glyphicon-ok">
+                            </span> ENVIAR
+                          </button>
+                        </td>
+                      </tr>
+                    </form>
+                  </table>
+                </div>        
+                <table class="table table-bordered table-condensed table-hover">
                   <thead>
                     <tr>
                       <th>ALUNO</th>
@@ -594,31 +621,41 @@ $importancia = ['0.1'=>'Irrelevante',
                     </tr>
                   </thead>
                   <tbody>
-                      <?php 
-                      //TODO: talvez precise mudar esse sql tb
-                        $students = $DB->get_records_sql("SELECT u.id, firstname, lastname,nome from 
-                        mdl_user u inner join mdl_fpmembers fm ON u.id = fm.id_user inner join mdl_fpgroups fg ON fg.id=fm.id_group 
-                        where fg.moduleid = {$cm->id};");
-                        foreach($students as $student){
-                            echo "<tr><td>".$student->firstname." ".$student->lastname."</td><td>".$student->nome."</td>";
-                            echo "<td><button class=\"btn btn-primary\" onclick=\"document.getElementById('taskfb_idaluno').value='".$student->id."'; document.getElementById('fbaluno').innerHTML='".$student->firstname." ".$student->lastname."'; document.getElementById('feedback_aluno').style.display = 'inherit';\"><span class=\"glyphicon glyphicon-arrow-right\"></span> FEEDBACK</button></td></tr>";
-                        }
-                      ?>
+                    <?php 
+                    //TODO: talvez precise mudar esse sql tb
+                    $students = $DB->get_records_sql("SELECT u.id, firstname, lastname,nome from 
+                    mdl_user u inner join mdl_fpmembers fm ON u.id = fm.id_user inner join mdl_fpgroups fg ON fg.id=fm.id_group 
+                    where fg.moduleid = {$cm->id};");
+                    foreach($students as $student){?>
+                    <tr>
+                      <td>
+                        <?=$student->firstname.$student->lastname?>
+                      </td>
+                      <td>
+                        <?$student->nome?>
+                      </td>
+                      <td>
+                        <button class="btn btn-primary" onclick="document.getElementById('taskfb_idaluno').value=<?=$student->id?>; document.getElementById('fbaluno').innerHTML=<?=$student->firstname.$student->lastname?>; document.getElementById('feedback_aluno').style.display = inherit;">
+                          <span class=\"glyphicon glyphicon-arrow-right\">
+                          </span> 
+                          FEEDBACK
+                        </button>
+                      </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
                   </tbody>
                 </table>
-                
-                    <br><br><br>
-                
+                <br><br><br>
               </div>
             </div>
-
           </div>
           <!-- ################################################################## -->
         </div>
-
       </div>
     </div>
-  </div><!-- FIM DA EXIBIÇÃO DO GRUPO -->
+  </div><!-- FIM DA EXIBIÇÃO DO INVERTCLASS -->
 
   <br />
 
