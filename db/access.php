@@ -58,6 +58,7 @@ $capabilities = array(
                 'editingteacher' => CAP_ALLOW,
                 'coursecreator'  => CAP_ALLOW,
                 'manager'        => CAP_ALLOW
+        )
         ),
     'mod/invertclass:updateinvertclass' => array(
         'riskbitmask' => RISK_XSS | RISK_SPAM,
@@ -68,6 +69,7 @@ $capabilities = array(
                 'editingteacher' => CAP_ALLOW,
                 'coursecreator'  => CAP_ALLOW,
                 'manager'        => CAP_ALLOW
+        )
         ),
     'mod/invertclass:deleteinvertclass' => array(
         'riskbitmask' => RISK_XSS,
@@ -78,6 +80,7 @@ $capabilities = array(
                 'editingteacher' => CAP_ALLOW,
                 'coursecreator'  => CAP_ALLOW,
                 'manager'        => CAP_ALLOW
+        )
         ),
     'mod/invertclass:readinvertclass' => array(
         'captype' => 'read',
@@ -91,8 +94,7 @@ $capabilities = array(
             'manager' => CAP_ALLOW,
         )
     )
-
-
+);
 
 
 
@@ -131,5 +133,3 @@ $capabilities = array(
         )
     ),
 ******************************/
-);
-
