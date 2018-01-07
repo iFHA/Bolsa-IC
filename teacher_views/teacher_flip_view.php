@@ -35,12 +35,13 @@ $importancia = ['0.1'=>'Irrelevante',
       <div role="tabpanel">
         <ul class="nav nav-tabs" role="tablist">
           <li role="presentation"class="active"><a href="#tarefas" aria-controls="tarefas" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-home"></i>TAREFA</a></li>
+          <li role="presentation"><a href="#referencias" aria-controls="referencias" role="tab" data-toggle="tab">REFERÊNCIAS</a></li>
           <li role="presentation"><a href="#area" aria-controls="area" role="tab" data-toggle="tab">ÁREAS DE CONHECIMENTO</a></li>
           <li role="presentation"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab">GRUPOS</a></li>
-          <li role="presentation"><a href="#referencias" aria-controls="referencias" role="tab" data-toggle="tab">REFERÊNCIAS</a></li>
           <li role="presentation"><a href="#aproveitamento" aria-controls="aproveitamento" role="tab" data-toggle="tab">APROVEITAMENTO</a></li>
           <li role="presentation"><a href="#avaliar" aria-controls="avaliar" role="tab" data-toggle="tab">AVALIAR</a></li>
           <li role="presentation"><a href="#feedback" aria-controls="feedback" role="tab" data-toggle="tab">FEEDBACK</a></li>
+          <li role="presentation"><a href="#sessoes" aria-controls="sessoes" role="tab" data-toggle="tab">SESSÕES</a></li>
         </ul>
 
         <br />
@@ -99,10 +100,12 @@ $importancia = ['0.1'=>'Irrelevante',
                   <div id="add_task"><!-- style="display: none" -->
                     <table class="table table-bordered table-condensed table-hover">
                       <tr><td>NOME DA TAREFA</td><td><input id="nome" type="text" size=67 name="nome" value="<?=$invertclass->name?>"></td></tr>
-                      <tr><td>DESCRIÇÃO</td><td><input id="descricao" type="text" size=80 name="descricao" value="<?=$invertclass->descricao?>"></td></tr>
+                      <tr><td>DESCRIÇÃO</td></tr>
+                      <tr><td colspan="3"><textarea name="descricao" style="width:100%; height: 80px"><?=$invertclass->descricao?></textarea></td></tr>
+                      <!--<td><input id="descricao" type="text" size=80 name="descricao" value="descricao"></td>-->
                       <tr><td>ARQUIVO</td><td><input id="arq" type="file" name="arq"></td></tr> 
-                      <tr><td>DATA INÍCIO</td><td><input id="data_inicio" type="text" size=20 name="data_inicio"></td></tr>
-                      <tr><td>DATA FIM</td><td><input id="data_fim" type="text" size=20 name="data_fim"></td></tr>
+                      <tr><td>DATA INÍCIO</td><td><input id="data_inicio" type="date" style="height:30px" name="data_inicio" value="<?=$invertclass->data_inicio?>"></td></tr>
+                      <tr><td>DATA FIM</td><td><input id="data_fim" type="date" style="height:30px" name="data_fim" value="<?=$invertclass->data_fim?>"></td></tr>
                       <tr><th>METAS DE APRENDIZAGEM</th></tr>
                       <tr><td colspan="3"><textarea id="metas" name="knowledge_area" style="width:100%; height: 80px"><?=$invertclass->knowledge_area?></textarea></td></tr>
                       <tr><th>PALAVRAS NÃO RELACIONADAS</th></tr>
@@ -112,7 +115,7 @@ $importancia = ['0.1'=>'Irrelevante',
                     <input id="id" name="id" type="hidden" value="<?=$invertclass->id ?>"/>
                     <input id="tarq" name="task_arq" type="hidden" value="<?=empty($invertclass->arquivo)?"":$invertclass->arquivo ?>"/>
                     <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">
-                    <button name="send" class="btn btn-success" onclick="document.getElementById('add_task').style.display = 'inherit'; this.form.submit();"><span class="glyphicon glyphicon-floppy-disk"></span>ATUALIZAR ATIVIDADE</button>
+                    <button name="send" class="btn btn-success" onclick="document.getElementById('add_task').style.display = 'inherit'; this.form.submit();"><span class="glyphicon glyphicon-floppy-disk"></span>ATUALIZAR TAREFA</button>
                   </div>
                 </form>
               </div>
@@ -349,20 +352,18 @@ $importancia = ['0.1'=>'Irrelevante',
             </div>
           </div>
           <!-- ################################################################## -->
-
+          <!-- ################################REFERÊNCIAS################################## -->
           <div role="tabpanel" class="tab-pane" id="referencias">
             <div class="panel panel-primary">
               <div class="panel-heading">
                 <h3 class="panel-title">REFERÊNCIAS</h3>
-              
               </div>
               <div class="panel-body">
                 <table class="table table-bordered table-condensed table-hover">
                   <thead>
                     <tr>
-                      <th style="width: 70%">REFERÊNCIA</th>
-                      <th>TAREFA</th>
-                      <th></th>
+                      <th style="width: 70%">DESCRIÇÃO</th>
+                      <th>AÇÃO</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -374,7 +375,6 @@ $importancia = ['0.1'=>'Irrelevante',
                     ?>
                     <tr>
                       <td><?=$ref->descricao?></td>
-                      <td><?=$ref->name?></td>
                       <td>
                         <a href="<?=$PAGE->url?>&op=up_ref&moduleid=<?=$cm->id?>&idr=<?=$ref->id?>">
                           <button class='btn btn-success'>
@@ -408,7 +408,8 @@ $importancia = ['0.1'=>'Irrelevante',
                     <div class="col-md-8">
                       <input id="action" name="action" type="hidden" value="ad_ref"/>
                       <input id="id_curso" name="id_curso" type="hidden" value="<?php echo $COURSE->id ?>"/>
-                      <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">    
+                      <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">
+                      <input name="moduleid" type="hidden" value="<?php echo $cm->id; ?>">
                       <!--<button name="send" class="btn btn-success" onclick="javascript:this.value='Enviando...'; this.disabled='disabled'; this.form.submit();"><span class="glyphicon glyphicon-plus"></span> ADICIONAR</button>-->
                       <button name="send" class="btn btn-success" onclick="this.form.submit();"><span class="glyphicon glyphicon-plus"></span> ADICIONAR</button>
                     </div>
@@ -632,7 +633,7 @@ $importancia = ['0.1'=>'Irrelevante',
                         <?=$student->firstname.$student->lastname?>
                       </td>
                       <td>
-                        <?$student->nome?>
+                        <?=$student->nome?>
                       </td>
                       <td>
                         <button class="btn btn-primary" onclick="document.getElementById('taskfb_idaluno').value=<?=$student->id?>; document.getElementById('fbaluno').innerHTML=<?=$student->firstname.$student->lastname?>; document.getElementById('feedback_aluno').style.display = inherit;">

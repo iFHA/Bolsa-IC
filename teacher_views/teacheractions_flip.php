@@ -118,7 +118,7 @@ switch($action){
         $teste = new stdClass();
         $teste->descricao = required_param('ref_desc', PARAM_TEXT);
         $teste->arquivo = upload_arquivo($caminhoReferencias);//required_param('ref_file', PARAM_TEXT);
-        $teste->moduleid = required_param('moduleid', PARAM_TEXT);
+        $teste->moduleid = required_param('moduleid', PARAM_INT);
         $DB->insert_record('fpref',$teste);
         $url_local = required_param('url_local', PARAM_TEXT);
 		header("Location: ".$url_local."#referencias");
