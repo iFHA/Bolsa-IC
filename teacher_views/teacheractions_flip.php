@@ -220,8 +220,6 @@ switch($action){
     break;
 
     case 'add_invertclass_requirement':
-        
-        
         $old_feature = $DB->get_record_sql('select * from mdl_fp_features where descricao = \''.required_param('requirement_description', PARAM_TEXT).'\';');
         //echo var_dump($old_feature->id);
         

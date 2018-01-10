@@ -48,39 +48,45 @@ $importancia = ['0.1'=>'Irrelevante',
         <?php
           $op = optional_param('op',null,PARAM_TEXT);
           switch($op){
-              case 'show_task':  
-                echo "<div>";
-                include(dirname(dirname(__FILE__)).'/teacher_views/su_task.php'); 
-                echo "</div>";
-                echo "<div class='tab-content' style='display: none'>";
-                break;
-              case 'up_task':  
-                echo "<div>";
-                include(dirname(dirname(__FILE__)).'/teacher_views/up_task.php'); 
-                echo "</div>";
-                echo "<div class='tab-content' style='display: none'>";
-                break;
-              case 'up_ref':
-                echo "<div>";
-                include(dirname(dirname(__FILE__)).'/teacher_views/up_ref.php'); 
-                echo "</div>";
-                echo "<div class='tab-content' style='display: none'>";
-                break;
-              case 'show_members':
-                echo "<div>";
-                include(dirname(dirname(__FILE__)).'/teacher_views/su_groups.php'); 
-                echo "</div>";
-                echo "<div class='tab-content' style='display: none'>";
-                break;
+            case 'show_sessions':
+              echo "<div>";
+              include(dirname(dirname(__FILE__)).'/teacher_views/show_sessions.php'); 
+              echo "</div>";
+              echo "<div class='tab-content' style='display: none'>";
+            break;
+            case 'show_task':  
+              echo "<div>";
+              include(dirname(dirname(__FILE__)).'/teacher_views/su_task.php'); 
+              echo "</div>";
+              echo "<div class='tab-content' style='display: none'>";
+              break;
+            case 'up_task':  
+              echo "<div>";
+              include(dirname(dirname(__FILE__)).'/teacher_views/up_task.php'); 
+              echo "</div>";
+              echo "<div class='tab-content' style='display: none'>";
+              break;
+            case 'up_ref':
+              echo "<div>";
+              include(dirname(dirname(__FILE__)).'/teacher_views/up_ref.php'); 
+              echo "</div>";
+              echo "<div class='tab-content' style='display: none'>";
+              break;
+            case 'show_members':
+              echo "<div>";
+              include(dirname(dirname(__FILE__)).'/teacher_views/su_groups.php'); 
+              echo "</div>";
+              echo "<div class='tab-content' style='display: none'>";
+              break;
             case 'up_group':
               echo "<div>";
               include(dirname(dirname(__FILE__)).'/teacher_views/up_group.php'); 
               echo "</div>";
               echo "<div class='tab-content' style='display: none'>";
               break;
-              default: 
-                echo "<div class='tab-content'>";
-                break;
+            default: 
+              echo "<div class='tab-content'>";
+              break;
           }
         ?>
 
@@ -100,15 +106,15 @@ $importancia = ['0.1'=>'Irrelevante',
                   <div id="add_task"><!-- style="display: none" -->
                     <table class="table table-bordered table-condensed table-hover">
                       <tr><td>NOME DA TAREFA</td><td><input id="nome" type="text" size=67 name="nome" value="<?=$invertclass->name?>"></td></tr>
-                      <tr><td>DESCRIÇÃO</td></tr>
+                      <tr><td colspan="3">DESCRIÇÃO</td></tr>
                       <tr><td colspan="3"><textarea name="descricao" style="width:100%; height: 80px"><?=$invertclass->descricao?></textarea></td></tr>
                       <!--<td><input id="descricao" type="text" size=80 name="descricao" value="descricao"></td>-->
                       <tr><td>ARQUIVO</td><td><input id="arq" type="file" name="arq"></td></tr> 
                       <tr><td>DATA INÍCIO</td><td><input id="data_inicio" type="date" style="height:30px" name="data_inicio" value="<?=$invertclass->data_inicio?>"></td></tr>
                       <tr><td>DATA FIM</td><td><input id="data_fim" type="date" style="height:30px" name="data_fim" value="<?=$invertclass->data_fim?>"></td></tr>
-                      <tr><th>METAS DE APRENDIZAGEM</th></tr>
+                      <tr><th colspan="3">METAS DE APRENDIZAGEM</th></tr>
                       <tr><td colspan="3"><textarea id="metas" name="knowledge_area" style="width:100%; height: 80px"><?=$invertclass->knowledge_area?></textarea></td></tr>
-                      <tr><th>PALAVRAS NÃO RELACIONADAS</th></tr>
+                      <tr><th colspan="3">PALAVRAS NÃO RELACIONADAS</th></tr>
                       <tr><td colspan="3"><textarea id="naorelacionadas" name="not_related_words" style="width:100%; height: 80px"><?=$invertclass->not_related_words?></textarea></td></tr> <!-- placeholder="DIGITE AQUI AS PALAVRAS NÃO RELACIONADAS À TAREFA SEPARADAS POR VÍRGULA (PALAVRA 1, PALAVRA 2)"  -->
                     </table>
                     <input id="action" name="action" type="hidden" value="up_task"/>
@@ -653,6 +659,53 @@ $importancia = ['0.1'=>'Irrelevante',
             </div>
           </div>
           <!-- ################################################################## -->
+
+          <!-- ################################################################## -->
+
+          <!-- ################################################################## -->
+          <!--                        SESSOES                                     -->
+          <!-- ################################################################## -->
+          <div role="tabpanel" class="tab-pane" id="sessoes">
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">SESSÕES</h3>
+              </div>
+              <div class="panel-body">
+                <table class="table table-bordered table-condensed table-hover">
+                  <thead>
+                    <tr>
+                      <th>GRUPO</th>
+                      <th>AÇÃO</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php
+                    global $DB;
+                    $fpgroups = new stdClass();
+                    //$fpgroups = $DB->get_records("fpgroups"); 
+                    $fpgroups = $DB->get_records_sql('select * from mdl_fpgroups where moduleid = '.$cm->id.';');
+                    //if(count($fpgroups)==0) echo ("Sem grupos<br>");
+                    //TODO: dica JAVASCRIPT PEGAR URL: var url_atual = window.location.href;;
+                    foreach ($fpgroups as $group){?>
+                        <tr>
+                          <td><?=$group->nome?></td>
+                          <td>
+                            <a href="<?=$PAGE->url?>&op=show_sessions&idg=<?=$group->id?>">
+                              <button class='btn btn-info'><span class='glyphicon glyphicon-list'></span>VISUALIZAR SESSÕES</button>
+                            </a>
+                          </td>
+                        </tr>
+                    <?php
+                    }
+                    ?>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- ################################################################## -->
+
+
         </div>
       </div>
     </div>
