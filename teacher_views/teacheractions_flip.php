@@ -220,8 +220,11 @@ switch($action){
     break;
 
     case 'add_invertclass_requirement':
-        $old_feature = $DB->get_record('fp_features', array("descricao" => required_param('requirement_description', PARAM_TEXT)));
-
+        
+        
+        $old_feature = $DB->get_record_sql('select * from mdl_fp_features where descricao = \''.required_param('requirement_description', PARAM_TEXT).'\';');
+        //echo var_dump($old_feature->id);
+        
         //CRIA UM OBJETO FEATURE
         $feature = new stdClass();
         $feature->id = $old_feature->id;
@@ -251,6 +254,7 @@ switch($action){
         }
         
         header("Location: ".$url_invertclass);
+        
         break;
 
     case 'delete_requirement':
