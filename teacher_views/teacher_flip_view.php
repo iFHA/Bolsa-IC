@@ -291,7 +291,7 @@ $importancia = ['0.1'=>'Irrelevante',
                 <form class="form-horizontal" action="teacher_views/teacheractions_flip.php" method="POST">
                   <table class="table table-bordered table-condensed table-hover">
                     <tr><td><span style="font-weight: bold;">NOME DO GRUPO</span>&nbsp;&nbsp;<input id="gp_name" name="gp_name" type="text" size=40>&nbsp;&nbsp;<button class="btn btn-primary" onclick="this.form.submit()"><span class="glyphicon glyphicon-arrow-right"></span>  CRIAR</button></td></tr>
-                  </table><?php echo $cm->id; ?>
+                  </table>
                   <input id="action" name="action" type="hidden" value="ad_group"/>
                   <input id="moduleid" name="moduleid" type="hidden" value="<?php echo $cm->id; ?>"/>
                   <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">  
