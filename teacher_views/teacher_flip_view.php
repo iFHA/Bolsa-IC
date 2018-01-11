@@ -247,7 +247,7 @@ $importancia = ['0.1'=>'Irrelevante',
                   <thead>
                     <tr>
                       <th>GRUPO</th>
-                      <th></th>
+                      <th>AÇÃO</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -256,23 +256,22 @@ $importancia = ['0.1'=>'Irrelevante',
                     $fpgroups = new stdClass();
                     //$fpgroups = $DB->get_records("fpgroups"); 
                     $fpgroups = $DB->get_records_sql('select * from mdl_fpgroups where moduleid = '.$cm->id.';');
-                    //if(count($fpgroups)==0) echo ("Sem grupos<br>");
-                    //TODO: dica JAVASCRIPT PEGAR URL: var url_atual = window.location.href;;
+                    
                     foreach ($fpgroups as $group){?>
-                        <tr>
-                          <td><?=$group->nome?></td>
-                          <td>
-                            <a href="<?=$PAGE->url?>&op=show_members&idg=<?=$group->id?>">
-                              <button class='btn btn-info'><span class='glyphicon glyphicon-list'></span></button>
-                            </a>
-                            <a href="<?=$PAGE->url?>&moduleid=<?=$cm->id?>&id_curso=<?=$COURSE->id?>&op=up_group&idg=<?=$group->id?>">
-                              <button class='btn btn-success'><span class='glyphicon glyphicon-pencil'></span></button>
-                            </a>
-                            <a href="./teacher_views/teacheractions_flip.php?action=rm_group&group_id=<?=$group->id?>&url_local=<?=$PAGE->url?>">
-                              <button class='btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button>
-                            </a>
-                          </td>
-                        </tr>
+                      <tr>
+                        <td><?=$group->nome?></td>
+                        <td>
+                          <a href="<?=$PAGE->url?>&op=show_members&idg=<?=$group->id?>">
+                            <button class='btn btn-info'><span class='glyphicon glyphicon-list'></span></button>
+                          </a>
+                          <a href="<?=$PAGE->url?>&moduleid=<?=$cm->id?>&id_curso=<?=$COURSE->id?>&op=up_group&idg=<?=$group->id?>">
+                            <button class='btn btn-success'><span class='glyphicon glyphicon-pencil'></span></button>
+                          </a>
+                          <a href="./teacher_views/teacheractions_flip.php?action=rm_group&group_id=<?=$group->id?>&url_local=<?=$PAGE->url?>">
+                            <button class='btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button>
+                          </a>
+                        </td>
+                      </tr>
                     <?php
                     }
                     ?>
@@ -286,29 +285,43 @@ $importancia = ['0.1'=>'Irrelevante',
                 ?>
                 <?php
                 $temp_group = $_SESSION['idgroup'];
-                //echo var_dump($temp_group);
                 if(!isset($temp_group)){  
                 ?>
                 <div class="col-md-8">
-                  <button class="btn btn-primary" onclick="document.getElementById('add_group').style.display = 'inherit';"><span class="glyphicon glyphicon-plus"></span> ADICIONAR GRUPO</button>
+                  <button class="btn btn-primary" onclick="document.getElementById('add_group').style.display = 'inherit';">
+                    <span class="glyphicon glyphicon-plus">
+                    </span>
+                    ADICIONAR GRUPO
+                  </button>
                 </div>
               </div>
               <div id="add_group" class="panel-body" style="display: <?php if(isset($_SESSION['idgroup'])) echo "inherit"; else echo "none";?>">
                 <form class="form-horizontal" action="teacher_views/teacheractions_flip.php" method="POST">
                   <table class="table table-bordered table-condensed table-hover">
-                    <tr><td><span style="font-weight: bold;">NOME DO GRUPO</span>&nbsp;&nbsp;<input id="gp_name" name="gp_name" type="text" size=40>&nbsp;&nbsp;<button class="btn btn-primary" onclick="this.form.submit()"><span class="glyphicon glyphicon-arrow-right"></span>  CRIAR</button></td></tr>
+                    <tr>
+                      <td>
+                        <span style="font-weight: bold;">NOME DO GRUPO
+                        </span>&nbsp;&nbsp;
+                        <input id="gp_name" name="gp_name" type="text" size=40>&nbsp;&nbsp;
+                        <button class="btn btn-primary" onclick="this.form.submit()">
+                          <span class="glyphicon glyphicon-arrow-right">
+                          </span>CRIAR
+                        </button>
+                      </td>
+                    </tr>
                   </table>
                   <input id="action" name="action" type="hidden" value="ad_group"/>
                   <input id="moduleid" name="moduleid" type="hidden" value="<?php echo $cm->id; ?>"/>
                   <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">  
-                </form>  
-                <?php } else { ?>
+                </form>
+                <?php 
+                } else { ?>
                 ADICIONANDO ALUNOS PARA: <?php echo "".$_SESSION['ntgroup']; ?>
                 <table class="table table-bordered table-condensed table-hover">
                   <thead>
                     <tr>
                       <th>ALUNO</th>
-                      <th></th>
+                      <th>AÇÃO</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -329,31 +342,49 @@ $importancia = ['0.1'=>'Irrelevante',
                     AND cxt.instanceid = c.id
                     AND  roleid = 5");
                     //("SELECT u.id, u.firstname,u.lastname, u.email FROM mdl_role_assignments rs INNER JOIN mdl_user u ON u.id=rs.userid INNER JOIN mdl_context e ON rs.contextid=e.id WHERE e.contextlevel=50 AND rs.roleid=5 AND e.instanceid=2");
-                    //echo var_dump($students);
                     foreach($students as $student){
                       // talvez precise mudar a query para procurar somente por membros do curso atual, acho que nao precisa
                       $ismember = $DB->get_record('fpmembers', array("id_user" => $student->id));
-                      // tratando se não existem registros na tabela de membros
-                      if(!$ismember){
-                        echo '<tr><td>'.$student->firstname.'</td><td>';
-                        echo "<a href='./teacher_views/teacheractions_flip.php?action=ad_mmember&member_id=".$student->id."&url_local=".$PAGE->url."'><button class='btn btn-danger' onclick=''><span class='glyphicon glyphicon-bookmark'></span></button></a>";
-                        echo "<a href='./teacher_views/teacheractions_flip.php?action=ad_gmember&member_id=".$student->id."&url_local=".$PAGE->url."'><button class='btn btn-success' onclick=''><span class='glyphicon glyphicon-plus'></span></button></a>";
-                        echo '</td></tr>';
+                      // tratando para o caso de não existirem registros na tabela de membros
+                      if(!$ismember){?>
+                        <tr>
+                          <td>
+                            <?php echo $student->firstname?>
+                          </td>
+                          <td>
+                            <a href="./teacher_views/teacheractions_flip.php?action=ad_mmember&member_id=<?php echo $student->id?>&url_local=<?php echo $PAGE->url?>"><button class='btn btn-danger' onclick=''><span class='glyphicon glyphicon-bookmark'></span></button></a>
+                            <a href="./teacher_views/teacheractions_flip.php?action=ad_gmember&member_id=<?php echo $student->id?>&url_local=<?php echo $PAGE->url?>"><button class='btn btn-success' onclick=''><span class='glyphicon glyphicon-plus'></span></button></a>
+                          </td>
+                        </tr>
+                      <?php
                       }
-                      else if($student->id!=$ismember->id_user){
-                          echo '<tr><td>'.$student->firstname.'</td><td>';
-                          echo "<a href='./teacher_views/teacheractions_flip.php?action=ad_mmember&member_id=".$student->id."&url_local=".$PAGE->url."'><button class='btn btn-danger' onclick=''><span class='glyphicon glyphicon-bookmark'></span></button></a>";
-                          echo "<a href='./teacher_views/teacheractions_flip.php?action=ad_gmember&member_id=".$student->id."&url_local=".$PAGE->url."'><button class='btn btn-success' onclick=''><span class='glyphicon glyphicon-plus'></span></button></a>";
-                          echo '</td></tr>';        
+                      else if($student->id!=$ismember->id_user){?>
+                        <tr>
+                          <td>
+                            <?php echo $student->firstname?>
+                          </td>
+                          <td>
+                            <a href="./teacher_views/teacheractions_flip.php?action=ad_mmember&member_id=<?php echo $student->id?>&url_local=<?php echo $PAGE->url?>"><button class='btn btn-danger' onclick=''><span class='glyphicon glyphicon-bookmark'></span></button></a>
+                            <a href="./teacher_views/teacheractions_flip.php?action=ad_gmember&member_id=<?php echo $student->id?>&url_local=<?php echo $PAGE->url?>"><button class='btn btn-success' onclick=''><span class='glyphicon glyphicon-plus'></span></button></a>
+                          </td>
+                        </tr>
+                      <?php
                       }
                     }
                     ?>
                   </tbody>
                 </table>      
                 <div class="col-md-8">
-                  <a href="<?php echo $PAGE->url?>&op=ok"><button id="button2id" name="button2id" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> CONCLUÍDO</button></a>
+                  <a href="<?php echo $PAGE->url?>&op=ok">
+                    <button id="button2id" name="button2id" class="btn btn-success">
+                      <span class="glyphicon glyphicon-plus">
+                      </span>CONCLUÍDO
+                    </button>
+                  </a>
                 </div>
-                <?php } ?>
+                <?php 
+                }
+                ?>
               </div>
             </div>
           </div>
