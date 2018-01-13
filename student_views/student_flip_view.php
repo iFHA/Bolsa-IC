@@ -522,6 +522,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
 
     </div>
     <script src="https://leaverou.github.io/awesomplete/awesomplete.js"></script>
+    <script src="js/ajax.js"></script>
     <script type="text/javascript">
 
         var goal = document.getElementById("goal_description");

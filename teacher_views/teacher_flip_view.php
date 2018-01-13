@@ -11,6 +11,7 @@ require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
 require_once(dirname(dirname(__FILE__)).'/lib.php');
 require_once(dirname(dirname(__FILE__)).'/locallib.php');
 
+// variávis auxiliares
 $nivel = ['b'=>'Baixo',
 'm'=>'Médio',
 'a'=>'Alto'
