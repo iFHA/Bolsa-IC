@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    /*
     $('#buscar').click(function () {
         buscar($("#palavra").val())
     });
@@ -32,4 +33,9 @@ $(document).ready(function(){
             }
         });
     }
+    */
+    // Exibindo a tab referente ao elemento #tab da url
+    var type = window.location.hash.substr(1);
+    if (type)
+        $('.nav-tabs a[href="#'+type+'"]').tab('show');
 });

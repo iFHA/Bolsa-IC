@@ -33,7 +33,7 @@ switch($action){
 
         //echo var_dump($temp_avalia);
         $url_local = required_param('url_local', PARAM_TEXT);
-		header("Location: ".$url_local."#grupos");
+		header("Location: ".$url_local."#groups");
         break;
     case 'ad_gmember':
         //$member = new stdClass();
@@ -43,7 +43,7 @@ switch($action){
         $DB->execute("insert into mdl_fpmembers values(NULL,".$member->id_user.",".$member->id_group.",".$member->moderador.")");
         $DB->execute("insert into mdl_fpgain values(NULL,".$member->id_user.",0)");
         $url_local = required_param('url_local', PARAM_TEXT);
-		header("Location: ".$url_local."#grupos");
+		header("Location: ".$url_local."#groups");
         break;
     case 'add_gmember':
         //$member = new stdClass();
@@ -53,7 +53,7 @@ switch($action){
         $DB->execute("insert into mdl_fpmembers values(NULL,".$member->id_user.",".$member->id_group.",".$member->moderador.")");
         $DB->execute("insert into mdl_fpgain values(NULL,".$member->id_user.",0)");
         $url_local = required_param('url_local', PARAM_TEXT);
-		header("Location: ".$url_local."#grupos");
+		header("Location: ".$url_local."#groups");
         break;
     case 'ad_mmember':
         //$member = new stdClass();
@@ -64,7 +64,7 @@ switch($action){
         $DB->execute("insert into mdl_fpmembers values(NULL,".$member->id_user.",".$member->id_group.",".$member->moderador.")");
         $DB->execute("insert into mdl_fpgain values(NULL,".$member->id_user.",0)");
         $url_local = required_param('url_local', PARAM_TEXT);
-		header("Location: ".$url_local."#grupos");
+		header("Location: ".$url_local."#groups");
         break;    
     case 'ad_task':
         
@@ -172,7 +172,7 @@ switch($action){
         $DB->delete_records('fpmembers', array("id_group" => $id_group, "id_user" => $ids));
         $DB->delete_records('fpgain', array("id_user" => $ids));
         $url_local = required_param('url_local', PARAM_TEXT);
-        header("Location: ".$url_local."#grupos");
+        header("Location: ".$url_local."#groups");
         break;
     case 'up_mmember':
         $id_group = required_param('group_id',PARAM_TEXT);
