@@ -106,17 +106,18 @@ $importancia = ['0.1'=>'Irrelevante',
                 <form action="teacher_views/teacheractions_flip.php" method="POST" enctype="multipart/form-data">
                   <div id="add_task"><!-- style="display: none" -->
                     <table class="table table-bordered table-condensed table-hover">
-                      <tr><td>NOME DA TAREFA</td><td><input id="nome" type="text" size=67 name="nome" value="<?=$invertclass->name?>"></td></tr>
-                      <tr><td colspan="3">DESCRIÇÃO</td></tr>
+                      <tr><th>NOME DA TAREFA</th><td><input id="nome" type="text" size=67 name="nome" value="<?=$invertclass->name?>"></td></tr>
+                      <tr><th colspan="3">DESCRIÇÃO</th></tr>
                       <tr><td colspan="3"><textarea name="descricao" style="width:100%; height: 80px"><?=$invertclass->descricao?></textarea></td></tr>
                       <!--<td><input id="descricao" type="text" size=80 name="descricao" value="descricao"></td>-->
-                      <tr><td>ARQUIVO</td><td><input id="arq" type="file" name="arq"></td></tr> 
-                      <tr><td>DATA INÍCIO</td><td><input id="data_inicio" type="date" style="height:30px" name="data_inicio" value="<?=$invertclass->data_inicio?>"></td></tr>
-                      <tr><td>DATA FIM</td><td><input id="data_fim" type="date" style="height:30px" name="data_fim" value="<?=$invertclass->data_fim?>"></td></tr>
+                      <!--<tr><td>DATA INÍCIO</td><td><input id="data_inicio" type="date" style="height:30px" name="data_inicio" value="<? echo"";/*$invertclass->data_inicio*/?>"></td></tr>
+                      <tr><td>DATA FIM</td><td><input id="data_fim" type="date" style="height:30px" name="data_fim" value="<? echo"";/* $invertclass->data_fim */?>"></td></tr>
                       <tr><th colspan="3">METAS DE APRENDIZAGEM</th></tr>
-                      <tr><td colspan="3"><textarea id="metas" name="knowledge_area" style="width:100%; height: 80px"><?=$invertclass->knowledge_area?></textarea></td></tr>
+                      <tr><td colspan="3"><textarea id="metas" name="knowledge_area" style="width:100%; height: 80px"><? echo"";/* $invertclass->knowledge_area */?></textarea></td></tr>
+                      -->
                       <tr><th colspan="3">PALAVRAS NÃO RELACIONADAS</th></tr>
                       <tr><td colspan="3"><textarea id="naorelacionadas" name="not_related_words" style="width:100%; height: 80px"><?=$invertclass->not_related_words?></textarea></td></tr> <!-- placeholder="DIGITE AQUI AS PALAVRAS NÃO RELACIONADAS À TAREFA SEPARADAS POR VÍRGULA (PALAVRA 1, PALAVRA 2)"  -->
+                      <tr><th>ARQUIVO</th><td><input id="arq" type="file" name="arq"></td></tr>
                     </table>
                     <input id="action" name="action" type="hidden" value="up_task"/>
                     <input id="id" name="id" type="hidden" value="<?=$invertclass->id ?>"/>
@@ -543,7 +544,7 @@ $importancia = ['0.1'=>'Irrelevante',
                     <tr>
                       <th>GRUPO</th>
                       <th>NOTA</th>
-                      <th>RESPOSTA</th>
+                      <th>SOLUÇÃO</th>
                       <th style="text-align:center;">BAIXAR ANEXO</th>
                       <th>SITUAÇÃO</th>
                       <th>TAREFA</th>
@@ -668,7 +669,7 @@ $importancia = ['0.1'=>'Irrelevante',
                     foreach($students as $student){?>
                     <tr>
                       <td>
-                        <?=$student->firstname.$student->lastname?>
+                        <?=$student->firstname.' '.$student->lastname?>
                       </td>
                       <td>
                         <?=$student->nome?>
