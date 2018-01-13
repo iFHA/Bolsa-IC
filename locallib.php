@@ -30,6 +30,7 @@ date_default_timezone_set('America/Fortaleza');
 defined('MOODLE_INTERNAL') || die();
 
 function invertclass_is_enrolled($context, $rolename, $userid=0){
+	global $USER;
 	$userid = ($userid==0) ? $USER->id : $userid ;
 	$roles = get_user_roles($context, $userid, true);
 
