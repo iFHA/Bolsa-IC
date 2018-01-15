@@ -36,7 +36,7 @@ $invertclass->features = get_features();
 $sep = "";
 $features_description = "";
 foreach ($invertclass->features as $feature) {
-  $features_description .= $sep."\"".$feature->description."\"";
+  $features_description .= $sep."\"".$feature->descricao."\"";
   $sep = ', ';
 }
 
@@ -151,7 +151,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                                 <tbody>
                                 <?php
                                 // mdl_fpgroups = id, id_curso  mdl_fpmembers = id_user id_group mdl_fptasks
-                                $tasks = $DB->get_records_sql("SELECT tarefa.id, tarefa.nome, tarefa.data_fim, tarefa.arquivo, grupin.id as group_id FROM mdl_fptasks as tarefa, mdl_fpgroups as grupin, mdl_fpmembers as membros WHERE grupin.id = membros.id_group and membros.id_user = ".$_SESSION["USER"]->id." and tarefa.id_curso = grupin.id_curso");//$DB->get_records("fptasks");
+                                $tasks = $DB->get_records_sql("SELECT tarefa.id, tarefa.name, tarefa.data_fim, tarefa.arquivo, grupin.id as group_id FROM mdl_invertclass as tarefa, mdl_fpgroups as grupin, mdl_fpmembers as membros WHERE grupin.id = membros.id_group and membros.id_user = ".$_SESSION["USER"]->id." and tarefa.id = grupin.moduleid");//$DB->get_records("fptasks");
                                 foreach( $tasks as $task){
                                     if($task->arquivo!=null){
                                         
