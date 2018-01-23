@@ -72,7 +72,7 @@ if(problem_is_enrolled($context, "student")){
 			//SALVA OS DADOS DO OBJETO PERFIL NO BANCO DE DADOS
 			problem_save('problem_user_prefered_times', $user_prefered_times);
 
-			$url_problem = new moodle_url('/mod/problem/view.php', array('id' => $id));
+			$url_problem = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 			echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
 			
 			break;

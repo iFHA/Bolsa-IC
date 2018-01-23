@@ -33,7 +33,7 @@ switch($action){
 
         //echo var_dump($temp_avalia);
         $url_local = required_param('url_local', PARAM_TEXT);
-		header("Location: ".$url_local."#groups");
+		header("Location: ".$url_local."#grupos");
         break;
     case 'ad_gmember':
         //$member = new stdClass();
@@ -43,7 +43,7 @@ switch($action){
         $DB->execute("insert into mdl_fpmembers values(NULL,".$member->id_user.",".$member->id_group.",".$member->moderador.")");
         $DB->execute("insert into mdl_fpgain values(NULL,".$member->id_user.",0)");
         $url_local = required_param('url_local', PARAM_TEXT);
-		header("Location: ".$url_local."#groups");
+		header("Location: ".$url_local."#grupos");
         break;
     case 'add_gmember':
         //$member = new stdClass();
@@ -53,7 +53,7 @@ switch($action){
         $DB->execute("insert into mdl_fpmembers values(NULL,".$member->id_user.",".$member->id_group.",".$member->moderador.")");
         $DB->execute("insert into mdl_fpgain values(NULL,".$member->id_user.",0)");
         $url_local = required_param('url_local', PARAM_TEXT);
-		header("Location: ".$url_local."#groups");
+		header("Location: ".$url_local."#grupos");
         break;
     case 'ad_mmember':
         //$member = new stdClass();
@@ -64,7 +64,7 @@ switch($action){
         $DB->execute("insert into mdl_fpmembers values(NULL,".$member->id_user.",".$member->id_group.",".$member->moderador.")");
         $DB->execute("insert into mdl_fpgain values(NULL,".$member->id_user.",0)");
         $url_local = required_param('url_local', PARAM_TEXT);
-		header("Location: ".$url_local."#groups");
+		header("Location: ".$url_local."#grupos");
         break;    
     case 'ad_task':
         
@@ -99,18 +99,21 @@ switch($action){
         break;
     case 'up_task':
         $teste = new stdClass();
-        $teste->id = required_param('id', PARAM_TEXT);
+        $teste->id = required_param('id', PARAM_INT);
         $teste->name = required_param('nome', PARAM_TEXT);
         // DELETAR ARQUIVO UNLINK(ARQUIVOPATH/required_param('task_arq', PARAM_TEXT));)
         verificaArquivo($caminhoTarefas, 'task');
         $teste->arquivo = upload_arquivo($caminhoTarefas);//upload_arquivo(caminhodoarquivo/required_param('task_arq', PARAM_TEXT)); :)
-        $teste->data_inicio = required_param('data_inicio', PARAM_TEXT);
-        $teste->data_fim = required_param('data_fim', PARAM_TEXT);
+        //$teste->data_inicio = required_param('data_inicio', PARAM_TEXT);
+        ///$teste->data_fim = required_param('data_fim', PARAM_TEXT);
         $teste->descricao = $_POST['descricao'];
         $teste->ultima=0;
-        $teste->knowledge_area = $_POST['knowledge_area'];
+        //$teste->knowledge_area = $_POST['knowledge_area'];
         $teste->not_related_words = $_POST['not_related_words'];
+        echo var_dump($teste);
         $DB->update_record('invertclass',$teste);
+        $DB->update_record('problem', array('id' => $teste->id, 'not_related_words' => $teste->not_related_words));
+        
         $url_local = required_param('url_local', PARAM_TEXT);
 		header("Location: ".$url_local."#tarefas");
         break;
@@ -172,7 +175,7 @@ switch($action){
         $DB->delete_records('fpmembers', array("id_group" => $id_group, "id_user" => $ids));
         $DB->delete_records('fpgain', array("id_user" => $ids));
         $url_local = required_param('url_local', PARAM_TEXT);
-        header("Location: ".$url_local."#groups");
+        header("Location: ".$url_local."#grupos");
         break;
     case 'up_mmember':
         $id_group = required_param('group_id',PARAM_TEXT);

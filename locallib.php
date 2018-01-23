@@ -21,7 +21,7 @@
  * All the problem specific functions, needed to implement the module
  * logic, should go here. Never include this file from your lib.php!
  *
- * @package    mod_invertclass
+ * @package    mod_problem
  * @copyright  2011 Your Name
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -29,9 +29,9 @@
 date_default_timezone_set('America/Fortaleza');
 defined('MOODLE_INTERNAL') || die();
 
-function invertclass_is_enrolled($context, $rolename, $userid=0){
+function problem_is_enrolled($context, $rolename, $userid=0){
 	global $USER;
-	$userid = ($userid==0) ? $USER->id : $userid ;
+    $userid = ($userid==0) ? $USER->id : $userid ;
 	$roles = get_user_roles($context, $userid, true);
 
 	foreach ($roles as $role) {
@@ -43,18 +43,18 @@ function invertclass_is_enrolled($context, $rolename, $userid=0){
 
 }
 
-function invertclass_create_panel($config){
+function problem_create_panel($config){
 	$panel = '<div class="panel panel-default">';
 	$panel .= '<div class="panel-heading">';
 	$panel .= '<h4 class="panel-title text-left">' . $config->title . '</h4>';
- 	$panel .= '</div>';
+	$panel .= '</div>';
 	$panel .= '<div class="panel-body">' . $config->body . '</div>';
 	if ($config->buttons != null) {
 		$panel .= '<div class="panel-footer"><div class="btn-group">';
-	 	foreach($config->buttons as $button){
+		foreach($config->buttons as $button){
 			$panel .= $button;
-		} 
-	  	$panel .= '</div></div>';
+		}
+		$panel .= '</div></div>';
 	}
 	$panel .= '</div>';
 	return $panel;
@@ -122,7 +122,7 @@ function remover_acentos_com_utf8($str, $enc = "UTF-8"){
 	return preg_replace($acentos, array_keys($acentos), htmlentities($str,ENT_NOQUOTES, $enc));
 }
 
-function invertclass_save($table, stdclass $object, $message = true){
+function problem_save($table, stdclass $object, $message = true){
 	global $DB;
 	if(!empty($object->id)) {
 		$id = (int) $object->id;
@@ -145,7 +145,7 @@ function invertclass_save($table, stdclass $object, $message = true){
 	
 	return $id;
 }
-function invertclass_save_requirement(stdclass $object, $message = true){
+function problem_save_requirement(stdclass $object, $message = true){
 	global $DB;
 	if(!empty($object->id)) {
 		$id = (int) $object->id;
@@ -157,8 +157,8 @@ function invertclass_save_requirement(stdclass $object, $message = true){
 				echo 'N&atilde;o foi poss&iacute;vel alterar o(s) dado(s).<br />';
 		}
 	} else {
-		if($id = $DB->execute("insert into mdl_fp_requirements (invertclassid,featureid,value,importance) VALUES(
-		$object->invertclassid,$object->featureid,'$object->value',$object->importance)")) {
+		if($id = $DB->execute("insert into mdl_fp_requirements (problemid,featureid,value,importance) VALUES(
+		$object->problemid,$object->featureid,'$object->value',$object->importance)")) {
 			if($message)
 				echo 'Dado(s) inserido(s) com sucesso.<br />';
 		} else {
@@ -169,7 +169,7 @@ function invertclass_save_requirement(stdclass $object, $message = true){
 	
 	return $id;
 }
-function invertclass_delete($table, $id, $message = true){
+function problem_delete($table, $id, $message = true){
 	global $DB;
 	if(!empty($id)) {
 		if(is_array($id)){
@@ -193,7 +193,7 @@ function invertclass_delete($table, $id, $message = true){
 }
 
 
-function invertclass_change($table, $id, $field, $value, $message = true){
+function problem_change($table, $id, $field, $value, $message = true){
 	global $DB;
 	if(!empty($id) && is_array($id)){
 		$object = new stdClass();
@@ -227,7 +227,7 @@ function invertclass_change($table, $id, $field, $value, $message = true){
 * @param string $messagetext Plain text of the message
 * @return bool Returns true if mail was sent OK, or false otherwise
 */
-function invertclass_mail($to, $subject, $messagetext) {
+function problem_mail($to, $subject, $messagetext) {
     global $CFG, $FULLME;
 
     // Fetch the PHP mailing functionality
@@ -291,15 +291,15 @@ function invertclass_mail($to, $subject, $messagetext) {
     }
 }
 
-function conversation_invertclass_detection($invertclassid, $groupid){
+function conversation_problem_detection($problemid, $groupid){
 	global $DB;
 	$problematic_students = array();
 	
-	$invertclass = $DB->get_record("invertclass", array("id" => $invertclassid));
+	$problem = $DB->get_record("problem", array("id" => $problemid));
 	
 	$members = $DB->get_records("groups_members", array("groupid" => $groupid));
 	foreach($members as $member){
-		$sessions = $DB->get_records("invertclass_session", array("invertclass" => $invertclass->id, "groupid" => $groupid));
+		$sessions = $DB->get_records("problem_session", array("problem" => $problem->id, "groupid" => $groupid));
 		foreach($sessions as $session) {
 			$count_not_related_words = 0;
 			$count_related_words = 0;
@@ -307,7 +307,7 @@ function conversation_invertclass_detection($invertclassid, $groupid){
 			$messages = $DB->get_records_sql("SELECT * FROM {chat_messages} WHERE system <> 1 AND timestamp > ? AND timestamp < ? AND userid = ?", array($session->timestart, $session->timeend, $member->userid));
 			foreach($messages as $message){
 				
-				$str = trim($invertclass->not_related_words);
+				$str = trim($problem->not_related_words);
 				$str = preg_replace('/\s(?=\s)/', '', $str);
 				$str = preg_replace('/[\n\r\t]/', ' ', $str);
 				$not_related_words = explode(",", str_replace(", ", ",", $str));
@@ -318,7 +318,7 @@ function conversation_invertclass_detection($invertclassid, $groupid){
 					$count_not_related_words += substr_count($a, $b);
 				}
 				
-				$str = trim($invertclass->related_words);
+				$str = trim($problem->related_words);
 				$str = preg_replace('/\s(?=\s)/', '', $str);
 				$str = preg_replace('/[\n\r\t]/', ' ', $str);
 				
@@ -356,8 +356,8 @@ function conversation_invertclass_detection($invertclassid, $groupid){
 function passive_student_detector($cm){
 	global $DB;
 
-   $invertclass = $DB->get_record('invertclass', array('id' => $cm->instance), '*', MUST_EXIST);
-	$groups = $DB->get_records("invertclass_group", array("invertclass" => $invertclass->id));
+   $problem = $DB->get_record('problem', array('id' => $cm->instance), '*', MUST_EXIST);
+	$groups = $DB->get_records("problem_group", array("problem" => $problem->id));
 	
 	foreach($groups as $group) {
 		$students = array();
@@ -369,11 +369,11 @@ function passive_student_detector($cm){
 			$fp = 0;
 			$cp = 0;
 
-			$forum_post = $DB->get_records("log", array("action" => "add post", "module" => "forum", "cmid" => $invertclass->forum, "userid" => $member->userid));
-			$forum_discuss = $DB->get_records("log", array("action" => "add discussion", "module" => "forum", "cmid" => $invertclass->forum, "userid" => $member->userid));
-			$forum_view = $DB->get_records("log", array("action" => "view discussion", "module" => "forum", "cmid" => $invertclass->forum, "userid" => $member->userid));
-			$chat_talk = $DB->get_records("log", array("action" => "talk", "module" => "chat", "cmid" => $invertclass->chat, "userid" => $member->userid));
-			$chat_view = $DB->get_records("log", array("action" => "view", "module" => "chat", "cmid" => $invertclass->chat, "userid" => $member->userid));
+			$forum_post = $DB->get_records("log", array("action" => "add post", "module" => "forum", "cmid" => $problem->forum, "userid" => $member->userid));
+			$forum_discuss = $DB->get_records("log", array("action" => "add discussion", "module" => "forum", "cmid" => $problem->forum, "userid" => $member->userid));
+			$forum_view = $DB->get_records("log", array("action" => "view discussion", "module" => "forum", "cmid" => $problem->forum, "userid" => $member->userid));
+			$chat_talk = $DB->get_records("log", array("action" => "talk", "module" => "chat", "cmid" => $problem->chat, "userid" => $member->userid));
+			$chat_view = $DB->get_records("log", array("action" => "view", "module" => "chat", "cmid" => $problem->chat, "userid" => $member->userid));
 
 			$fp += count($forum_view) * 5;
 			$fp += count($forum_post) * 10;
@@ -387,7 +387,7 @@ function passive_student_detector($cm){
 			$student->forum_points = $fp;
 			$student->chat_points = $cp;
 			$student->group = $group->groupid;
-			$student->invertclass = $invertclass->id;
+			$student->problem = $problem->id;
 			$student->message = "";
 
 			$students[] = $student;
@@ -468,23 +468,23 @@ function in_array_field($needle, $needle_field, $haystack, $strict = false) {
     return false; 
 }
 
-function get_group($groupid, $invertclassid){
+function get_group($groupid, $problemid){
 	global $DB;
 
 	$group = $DB->get_record("groups", array("id" => $groupid), 'id, courseid, name, description');
 	$members = $DB->get_records("groups_members", array("groupid" => $group->id), 'userid');
 	
-	$group->invertclassgroup = $DB->get_record("invertclass_group", array("groupid" => $groupid, "invertclassid" => $invertclassid));
+	$group->problemgroup = $DB->get_record("problem_group", array("groupid" => $groupid, "problemid" => $problemid));
 
-	if($group->invertclassgroup){
+	if($group->problemgroup){
 		foreach ($members as $key => $member) {
 			$group_user = $DB->get_record("user", array("id" => $member->userid), 'id, CONCAT(firstname, " ", lastname) as name');
-			$group_user->prefered_times = $DB->get_record("invertclass_user_prefered_times", array("userid" => $member->userid));
-			$group_user->features = $DB->get_records("invertclass_user_features", array("userid" => $member->userid));
-			$group_user->unknown_words = $DB->get_record("invertclass_unknown_words", array("invertclass_group" => $group->invertclassgroup->id, "userid" => $member->userid));
-			$group_user->evaluations = $DB->get_records("invertclass_pair_evaluation", array("invertclass_group" => $group->invertclassgroup->id));
+			$group_user->prefered_times = $DB->get_record("problem_user_prefered_times", array("userid" => $member->userid));
+			$group_user->features = $DB->get_records("problem_user_features", array("userid" => $member->userid));
+			$group_user->unknown_words = $DB->get_record("problem_unknown_words", array("problem_group" => $group->problemgroup->id, "userid" => $member->userid));
+			$group_user->evaluations = $DB->get_records("problem_pair_evaluation", array("problem_group" => $group->problemgroup->id));
 			foreach ($group_user->evaluations as $key_gu => $evaluation) {
-				$evaluation->description = $DB->get_record("invertclass_features", array("id" => $evaluation->feature), 'description')->description;
+				$evaluation->description = $DB->get_record("problem_features", array("id" => $evaluation->feature), 'description')->description;
 				$evaluation->measured =  $DB->get_record("user", array("id" => $evaluation->measured), 'id, CONCAT(firstname, " ", lastname) as name');
 				$group_user->evaluations[$key_gu] = $evaluation; 
 			}
@@ -499,37 +499,37 @@ function get_group($groupid, $invertclassid){
 
 	$group->members = $members;
 
-	$group->sessions = $DB->get_records("invertclass_group_session", array("invertclass_group" => $group->invertclassgroup->id));
+	$group->sessions = $DB->get_records("problem_group_session", array("problem_group" => $group->problemgroup));
 	
 	return $group;
 }
 
-function get_evaluation($invertclassgroup, $userid){
+function get_evaluation($problemgroup, $userid){
 	global $DB;
 
-	$pg = $DB->get_record("invertclass_group", array("id" => $invertclassgroup));
-	$pg->evaluations = $DB->get_records("invertclass_evaluation_measured", array("invertclass_group" => $invertclassgroup, "measurer" => $userid));
+	$pg = $DB->get_record("problem_group", array("id" => $problemgroup));
+	$pg->evaluations = $DB->get_records("problem_evaluation_measured", array("problem_group" => $problemgroup, "measurer" => $userid));
 	foreach ($pg->evaluations as $key => $ev) {
 		$new_ev = $ev;
 		$new_ev->measured = get_user($ev->measured);
 		$new_ev->measurer = get_user($userid);
-		$new_ev->feature = $DB->get_record("invertclass_features", array("id" => $ev->feature));
+		$new_ev->feature = $DB->get_record("problem_features", array("id" => $ev->feature));
 		$pg->evaluations[$key] = $new_ev;
 	}
 
 	return $pg;
 }
 
-function get_evaluationByMeasured($invertclassgroup, $userid){
+function get_evaluationByMeasured($problemgroup, $userid){
 	global $DB;
 
-	$pg = $DB->get_record("invertclass_group", array("id" => $invertclassgroup));
-	$pg->evaluations = $DB->get_records("invertclass_evaluation_measured", array("invertclass_group" => $invertclassgroup, "measured" => $userid));
+	$pg = $DB->get_record("problem_group", array("id" => $problemgroup));
+	$pg->evaluations = $DB->get_records("problem_evaluation_measured", array("problem_group" => $problemgroup, "measured" => $userid));
 	foreach ($pg->evaluations as $key => $ev) {
 		$new_ev = $ev;
 		$new_ev->measured = get_user($ev->measured);
 		$new_ev->measurer = get_user($userid);
-		$new_ev->feature = $DB->get_record("invertclass_features", array("id" => $ev->feature));
+		$new_ev->feature = $DB->get_record("problem_features", array("id" => $ev->feature));
 		$pg->evaluations[$key] = $new_ev;
 	}
 
@@ -539,48 +539,49 @@ function get_evaluationByMeasured($invertclassgroup, $userid){
 function get_user($userid){
 	global $DB;
 	$this_user = $DB->get_record("user", array("id" => $userid), 'id, CONCAT(firstname, " ", lastname) as name');
-	$this_user->prefered_times = $DB->get_record("fp_user_prefered_times", array("userid" => $userid));
-	$uf = $DB->get_records("fp_user_features", array("userid" => $userid));
+	$this_user->prefered_times = $DB->get_record("problem_user_prefered_times", array("userid" => $userid));
+	$uf = $DB->get_records("problem_user_features", array("userid" => $userid));
 	$this_user->features = $uf;
 	foreach ($uf as $key => $feature) {
-		$this_user->features[$key]->description = $DB->get_record("fp_features", array("id" => $feature->featureid))->description;
+		$this_user->features[$key]->description = $DB->get_record("problem_features", array("id" => $feature->featureid))->description;
 	}
 	return $this_user;
 }
 
-function get_requirements($invertclassid){
+function get_requirements($problemid){
 	global $DB;
-	$requirements = $DB->get_records('fp_requirements', array('invertclassid' => $invertclassid));
+	$requirements = $DB->get_records('problem_requirements', array('problemid' => $problemid));
+	/* $requirements = $DB->get_records('fp_requirements', array('invertclassid' => $problemid)); */
 
 	foreach ($requirements as $key => $requirement) {
-		$requirements[$key]->feature = $DB->get_record('fp_features', array('id' => $requirement->featureid));
+		$requirements[$key]->feature = $DB->get_record('problem_features', array('id' => $requirement->featureid));
 	}
 
 	return $requirements;
 }
 
-function get_invertclass_groups($invertclassid){
+function get_problem_groups($problemid){
 	global $DB;
-	return $DB->get_records('fpgroups', array('invertclassid' => $invertclassid), '', '*') ;
+	return $DB->get_records('fpgroups', array('problemid' => $problemid), '', '*') ;
 }
 
-function get_sessions_by_group($groupid, $invertclassid){
+function get_sessions_by_group($groupid, $problemid){
 	global $DB;
 
 	if($groupid)
-	  $pg = $DB->get_record('fpgroups', array('invertclassid' => $invertclassid, 'groupid' => $groupid), '*');
+	  $pg = $DB->get_record('fpgroups', array('problemid' => $problemid, 'groupid' => $groupid), '*');
 	else
 	  die("Não foi possível encontrar o grupo");
 
 	return $DB->get_records('fp_group_session', array('fp_group' => $pg->id), 'timestart');
 }
 
-function get_goals($invertclassid){
+function get_goals($problemid){
 	global $DB;
-	$goals = $DB->get_records('fp_goals', array('invertclassid' => $invertclassid));
+	$goals = $DB->get_records('problem_goals', array('problemid' => $problemid));
 
 	foreach ($goals as $key => $goal) {
-		$goals[$key]->feature = $DB->get_record('fp_features', array('id' => $goal->featureid));
+		$goals[$key]->feature = $DB->get_record('problem_features', array('id' => $goal->featureid));
 	}
 
 	return $goals;
@@ -588,5 +589,5 @@ function get_goals($invertclassid){
 
 function get_features(){
 	global $DB;
-	return $DB->get_records("fp_features");
+	return $DB->get_records("problem_features");
 }

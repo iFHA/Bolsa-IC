@@ -27,7 +27,7 @@ if(problem_is_enrolled($context, "editingteacher")){
 			//DELETA O OBJETO PROBLEM_GROUP DO BANCO DE DADOS
 			problem_delete('problem_group', $pg->id);
 
-			$url_problem = new moodle_url('/mod/problem/view.php', array('id' => $id));
+			$url_problem = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 			echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
 
 			break;
@@ -44,7 +44,7 @@ if(problem_is_enrolled($context, "editingteacher")){
 			//SALVA OS DADOS DO OBJETO PROBLEM_GROUP NO BANCO DE DADOS
 			problem_save('problem_group', $pg);
 
-			$url_problem = new moodle_url('/mod/problem/view.php', array('id' => $id));
+			$url_problem = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 			echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
 
 			break;
@@ -55,7 +55,7 @@ if(problem_is_enrolled($context, "editingteacher")){
 			$params->sessionid = required_param('sessionid', PARAM_INT);
 			problem_delete('problem_group_session', $params->sessionid);
 
-			$url_problem = new moodle_url('/mod/problem/view.php', array('id' => $id));
+			$url_problem = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 			echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
 		
 			break;
@@ -103,7 +103,7 @@ if(problem_is_enrolled($context, "editingteacher")){
 			//SALVA OS DADOS DO OBJETO SESSÃO NO BANCO DE DADOS
 			problem_save('problem_group_session', $session);
 
-			$url_problem = new moodle_url('/mod/problem/view.php', array('id' => $id));
+			$url_problem = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 			echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
 
 			break;
@@ -154,7 +154,7 @@ if(problem_is_enrolled($context, "editingteacher")){
 			//SALVA OS DADOS DO OBJETO SESSÃO NO BANCO DE DADOS
 			problem_save('problem_group_session', $session);
 
-			$url_problem = new moodle_url('/mod/problem/view.php', array('id' => $id));
+			$url_problem = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 			echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
 
 			break;
@@ -172,7 +172,7 @@ if(problem_is_enrolled($context, "editingteacher")){
 
 			problem_save('problem_group_session', $nsession);
 
-			$url_problem = new moodle_url('/mod/problem/view.php', array('id' => $id));
+			$url_problem = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 			echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
 
 			break;
@@ -193,7 +193,7 @@ if(problem_is_enrolled($context, "editingteacher")){
 			//SALVA OS DADOS DO OBJETO SESSÃO NO BANCO DE DADOS
 			problem_save('problem_group_session', $nsession);
 
-			$url_problem = new moodle_url('/mod/problem/view.php', array('id' => $id));
+			$url_problem = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 			echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
 
 			break;
@@ -228,7 +228,7 @@ if(problem_is_enrolled($context, "editingteacher")){
 					echo '<br /><br /><a href="'.$url.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
 			}
 
-			$url_problem = new moodle_url('/mod/problem/view.php', array('id' => $id));
+			$url_problem = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 			echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
 		
 			break;
@@ -239,20 +239,20 @@ if(problem_is_enrolled($context, "editingteacher")){
 			$params->requirementid = required_param('requirementid', PARAM_INT);
 			problem_delete('problem_requirements', $params->requirementid);
 
-			$url_problem = new moodle_url('/mod/problem/view.php', array('id' => $id));
+			$url_problem = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 			echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
 
 			break;
 
 		case 'add_problem_goal':
-			$old_feature = $DB->get_record('problem_features', array("description" => required_param('goal_description', PARAM_TEXT)));
+			$old_feature = $DB->get_record_sql('SELECT * FROM mdl_problem_features WHERE description = \''.required_param('goal_description', PARAM_TEXT).'\';');
 			
 			//CRIA UM OBJETO FEATURE
 			$feature = new stdClass();
 			$feature->id = $old_feature->id;
 			$feature->description = required_param('goal_description', PARAM_TEXT);
 			$feature->category = 0;
-
+			$id = required_param('id', PARAM_INT);
 			//SALVA OS DADOS DO OBJETO META NO BANCO DE DADOS
 			$feature->id = problem_save('problem_features', $feature);
 
@@ -260,7 +260,7 @@ if(problem_is_enrolled($context, "editingteacher")){
 			if(!$old_goal->id){
 				//CRIA UM OBJETO META
 				$goal = new stdClass();
-				$goal->problemid = $problem->id;
+				$goal->problemid = $id;//$problem->id;
 				$goal->featureid = $feature->id;
 			
 				//SALVA OS DADOS DO OBJETO META NO BANCO DE DADOS
@@ -271,7 +271,7 @@ if(problem_is_enrolled($context, "editingteacher")){
 					echo '<br /><br /><a href="'.$url.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
 			}
 
-			$url_problem = new moodle_url('/mod/problem/view.php', array('id' => $id));
+			$url_problem = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 			echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
 		
 			break;
@@ -279,10 +279,11 @@ if(problem_is_enrolled($context, "editingteacher")){
 		case 'delete_problem_goal':
 
 			//DELETA O META DO BANCO DE DADOS
+			$id = required_param('id', PARAM_INT);
 			$params->goalid = required_param('goalid', PARAM_INT);
 			problem_delete('problem_goals', $params->goalid);
 
-			$url_problem = new moodle_url('/mod/problem/view.php', array('id' => $id));
+			$url_problem = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 			echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
 
 			break;
@@ -300,7 +301,7 @@ if(problem_is_enrolled($context, "editingteacher")){
 			//DELETA O OBJETO PROBLEM_GROUP DO BANCO DE DADOS
 			problem_change('problem_group', $pg->id, 'finished', 1);
 
-			$url_problem = new moodle_url('/mod/problem/view.php', array('id' => $id));
+			$url_problem = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 			echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
 
 			break;
@@ -341,7 +342,7 @@ if(problem_is_enrolled($context, "editingteacher")){
 				problem_save('problem_user_features', $user_feature);
 			}
 		
-			$url_problem = new moodle_url('/mod/problem/view.php', array('id' => $id));
+			$url_problem = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 			echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
 		default:
 			# code...

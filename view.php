@@ -10,10 +10,10 @@
 
 include(dirname(__FILE__).'/head.php');
 
-if(invertclass_is_enrolled($context, "student")){
+if(problem_is_enrolled($context, "student")){
   include(dirname(__FILE__).'/student_views/student_flip_view.php');
 }
-else if(invertclass_is_enrolled($context, "editingteacher")){
+else if(problem_is_enrolled($context, "editingteacher")){
   include(dirname(__FILE__).'/teacher_views/teacher_flip_view.php');
 }
 

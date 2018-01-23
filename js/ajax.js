@@ -38,4 +38,14 @@ $(document).ready(function(){
     var type = window.location.hash.substr(1);
     if (type)
         $('.nav-tabs a[href="#'+type+'"]').tab('show');
+    /*
+    $('.btn-avaliar').click(function (e) { 
+        $('#avalia_grupo').css('display', 'inherit');
+        console.log("valor do aval_id:"+$('#aval_id').val());
+        console.log("valor do avagroup_id:"+$('#avagroup_id').val());
+        console.log("valor do avatask:"+$('#avatask').val());
+        console.log("valor do action:"+$('#action').val());
+        console.log("valor do id_curso:"+$('#id_curso').val());
+    });
+    */
 });

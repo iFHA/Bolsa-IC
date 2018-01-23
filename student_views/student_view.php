@@ -28,6 +28,7 @@ if(count($group->sessions) > 0){
 }
 
 $myprofile = get_user($USER->id);
+// TODO: falta alterar aqui
 $myprofile->unknown_words = $DB->get_record("problem_unknown_words", array("problem_group" => $group->problemgroup->id, "userid" => $USER->id));
 
 $problem->features = get_features();
@@ -379,12 +380,12 @@ if(problem_is_enrolled($context, "student")){
                   </div>
                   <hr />
                   <div class="input-group">
-                   <button id="button2id" name="button2id" class="btn btn-success"><span class="glyphicon glyphicon-floppy-disk"></span> Salvar dados</button>
+                    <button id="button2id" name="button2id" class="btn btn-success"><span class="glyphicon glyphicon-floppy-disk"></span> Salvar dados</button>
                   </div>
                 </form>
               </div>
             </div>
-             
+            
             <div class="panel panel-info">
               <div class="panel-heading">
                 <h3 class="panel-title">Características</h3>

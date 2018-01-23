@@ -50,7 +50,7 @@ switch($action){
 		$uf->userid = $USER->id;
 		
 		//SALVA OS DADOS DO OBJETO CARACTERÍSTICA NO BANCO DE DADOS
-		invertclass_save('fp_user_features', $uf);
+		problem_save('fp_user_features', $uf);
 
 		$url_fp = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 		echo '<br /><br /><a href="'.$url_fp.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
@@ -61,7 +61,7 @@ switch($action){
 
 		//DELETA A CARACTERÍSTICA DO BANCO DE DADOS
 		$params->featureid = required_param('featureid', PARAM_INT);
-		invertclass_delete('fp_user_features', $params->featureid);
+		problem_delete('fp_user_features', $params->featureid);
 
 		$url_invertclass = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 		echo '<br /><br /><a href="'.$url_invertclass.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
@@ -73,7 +73,7 @@ switch($action){
 		//CRIA UM OBJETO PERFIL
 		$user_prefered_times = new stdClass();
 		//VERIFICA SE PERFIL JÁ EXISTE, SE SIM PEGA O ID
-		if($pid = $DB->get_record('fp_user_prefered_times', array("userid" => $USER->id))->id)
+		if($pid = $DB->get_record('problem_user_prefered_times', array("userid" => $USER->id))->id)
 			$user_prefered_times->id = $pid;
 
 		$user_prefered_times->sunday = optional_param('sun_m', 0, PARAM_TEXT) . optional_param('sun_t', 0, PARAM_TEXT) . optional_param('sun_n', 0, PARAM_TEXT);
@@ -86,7 +86,7 @@ switch($action){
 		$user_prefered_times->userid = $USER->id;
 
 		//SALVA OS DADOS DO OBJETO PERFIL NO BANCO DE DADOS
-		invertclass_save('fp_user_prefered_times', $user_prefered_times);
+		problem_save('problem_user_prefered_times', $user_prefered_times);
 
 		$url_invertclass = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 		echo '<br /><br /><a href="'.$url_invertclass.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
