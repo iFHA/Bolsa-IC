@@ -482,12 +482,14 @@ function get_group($groupid, $problemid){
 			$group_user->prefered_times = $DB->get_record("problem_user_prefered_times", array("userid" => $member->userid));
 			$group_user->features = $DB->get_records("problem_user_features", array("userid" => $member->userid));
 			$group_user->unknown_words = $DB->get_record("problem_unknown_words", array("problem_group" => $group->problemgroup->id, "userid" => $member->userid));
+			/* 
 			$group_user->evaluations = $DB->get_records("problem_pair_evaluation", array("problem_group" => $group->problemgroup->id));
 			foreach ($group_user->evaluations as $key_gu => $evaluation) {
 				$evaluation->description = $DB->get_record("problem_features", array("id" => $evaluation->feature), 'description')->description;
 				$evaluation->measured =  $DB->get_record("user", array("id" => $evaluation->measured), 'id, CONCAT(firstname, " ", lastname) as name');
 				$group_user->evaluations[$key_gu] = $evaluation; 
 			}
+			 */
 			$members[$key] = $group_user;
 		}
 	} else {
