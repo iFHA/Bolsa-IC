@@ -11,22 +11,6 @@ require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
 require_once(dirname(dirname(__FILE__)).'/lib.php');
 require_once(dirname(dirname(__FILE__)).'/locallib.php');
 
-$nivel = ['b'=>'Baixo',
-'m'=>'Médio',
-'a'=>'Alto'
-];
-$importancia = ['0.1'=>'Irrelevante',
-'0.2'=>'Dispensável',
-'0.3'=>'Extremamente Baixa',
-'0.4'=>'Muito Baixa',
-'0.5'=>'Baixa',
-'0.6'=>'Média',
-'0.7'=>'Alta',
-'0.8'=>'Muito Alta',
-'0.9'=>'Extremamente Alta',
-'1.0'=>'Indispensável'
-];
-
 // TODO: VERIFICAR SE EXISTE UM PROBLEM COM ESSE $invertclass->id, se não houver, criar um
 $there_is_problem = $DB->get_record("problem", array("id" => $invertclass->id));
 
@@ -72,11 +56,11 @@ foreach ($invertclass->features as $feature) {
       <div role="tabpanel">
         <ul class="nav nav-tabs" role="tablist">
           <li role="presentation" class="active"><a href="#problem" aria-controls="problem" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-home"></i>TAREFA</a></li>
-          <li role="presentation"><a href="#lgroups" aria-controls="lgroups" role="tab" data-toggle="tab">LISTAGEM DE GRUPOS</a></li>
+          <!-- <li role="presentation"><a href="#lgroups" aria-controls="lgroups" role="tab" data-toggle="tab">LISTAGEM DE GRUPOS</a></li> -->
           <!-- <li role="presentation"><a href="#tarefas" aria-controls="tarefas" role="tab" data-toggle="tab">TAREFA</a></li> -->
           <li role="presentation"><a href="#referencias" aria-controls="referencias" role="tab" data-toggle="tab">REFERÊNCIAS</a></li>
           <!-- <li role="presentation"><a href="#area" aria-controls="area" role="tab" data-toggle="tab">ÁREAS DE CONHECIMENTO</a></li> -->
-          <!-- <li role="presentation"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab">GRUPOS</a></li> -->
+          <li role="presentation"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab">GRUPOS</a></li>
           <li role="presentation"><a href="#aproveitamento" aria-controls="aproveitamento" role="tab" data-toggle="tab">APROVEITAMENTO</a></li>
           <li role="presentation"><a href="#avaliar" aria-controls="avaliar" role="tab" data-toggle="tab">AVALIAR</a></li>
           <li role="presentation"><a href="#feedback" aria-controls="feedback" role="tab" data-toggle="tab">FEEDBACK</a></li>
@@ -174,7 +158,7 @@ foreach ($invertclass->features as $feature) {
 
             <div class="panel panel-info">
               <div class="panel-heading">
-                <h3 class="panel-title"><span class="glyphicon glyphicon-envelope"></span> Metas de aprendizagem</h3>
+                <h3 class="panel-title"><span class="glyphicon glyphicon-envelope"></span> REQUISITOS DA TAREFA</h3>
               </div>
               <div class="panel-body">
                 <table class="table table-bordered table-condensed table-hover">
@@ -203,7 +187,7 @@ foreach ($invertclass->features as $feature) {
                     <label>Descrição</label>
                     <input id="goal_description" name="goal_description" class="form-control" />
                   </div>
-                  <button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...'; this.disabled='disabled'; this.form.submit();"><span class="glyphicon glyphicon-floppy-disk"></span> Adicionar meta de aprendizagem</button>
+                  <button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...'; this.disabled='disabled'; this.form.submit();"><span class="glyphicon glyphicon-floppy-disk"></span> ADICIONAR REQUISITO</button>
                 </form>
 
               </div>
@@ -212,7 +196,8 @@ foreach ($invertclass->features as $feature) {
 
 
 
-
+            <!-- REQUISITOS DA TAREFA -->
+            <!--
             <div class="panel panel-info">
               <div class="panel-heading">
                 <h3 class="panel-title"><span class="glyphicon glyphicon-envelope"></span> Requisitos da tarefa</h3>
@@ -228,7 +213,8 @@ foreach ($invertclass->features as $feature) {
                     </tr>
                   </thead>
                   <tbody>
-                    <?php 
+                    <?php
+                    /*
                         foreach ($invertclass->requirements as $requirement) {
                           echo '<tr>';
                           echo '<td>'.$requirement->feature->descricao.'</td>';
@@ -264,6 +250,7 @@ foreach ($invertclass->features as $feature) {
                           echo '<td><a href="teacher_views/teacheractions.php?id='.$cm->id.'&requirementid='.$requirement->id.'&action=delete_problem_requirement&url_local='.urlencode($PAGE->url).'" id="btn-del-cloned-input" name="btn-del-cloned-input" class="btn btn-danger btn-xs" onclick="return confirm(\'Deseja realmente excluir esse requisito?\');"><span class="glyphicon glyphicon-minus"></span> Remover</a></td>';
                           echo '</tr>';
                         }
+                        
                     ?>
                   </tbody>
                 </table>
@@ -271,7 +258,7 @@ foreach ($invertclass->features as $feature) {
                 <form class="form-horizontal" action="teacher_views/teacheractions.php" method="POST">
                   <input id="id" name="id" type="hidden" value="<?php echo $cm->id; ?>">
                   <input id="action" name="action" type="hidden" value="<?php echo 'add_problem_requirement'; ?>">
-                  <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">
+                  <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; FECHA COMENTÁRIO DA LINHA 233*/?>">
                   <fieldset>
                     <div class="form-group">
                       <label class="col-md-4 control-label">Descrição</label>  
@@ -321,7 +308,7 @@ foreach ($invertclass->features as $feature) {
 
               </div>
             </div>
-
+            FECHA COMENTÁRIO DA LINHA 216--> 
           </div>
           <!-- ################################################################## -->
 
