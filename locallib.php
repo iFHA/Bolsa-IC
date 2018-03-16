@@ -29,6 +29,22 @@
 date_default_timezone_set('America/Fortaleza');
 defined('MOODLE_INTERNAL') || die();
 
+$nivel = ['b'=>'Baixo',
+'m'=>'Médio',
+'a'=>'Alto'
+];
+$importancia = ['0.1'=>'Irrelevante',
+'0.2'=>'Dispensável',
+'0.3'=>'Extremamente Baixa',
+'0.4'=>'Muito Baixa',
+'0.5'=>'Baixa',
+'0.6'=>'Média',
+'0.7'=>'Alta',
+'0.8'=>'Muito Alta',
+'0.9'=>'Extremamente Alta',
+'1.0'=>'Indispensável'
+];
+
 function problem_is_enrolled($context, $rolename, $userid=0){
 	global $USER;
     $userid = ($userid==0) ? $USER->id : $userid ;
@@ -548,6 +564,53 @@ function get_user($userid){
 		$this_user->features[$key]->description = $DB->get_record("problem_features", array("id" => $feature->featureid))->description;
 	}
 	return $this_user;
+}
+
+function update_user_feature($userId, $featureId, $featureValue){
+	global $DB;
+	$isValidValue = ($featureValue >= 0 && $featureValue <= 10);
+	if($isValidValue)
+		return $DB->update_record('problem_user_features', array('userid' => $userId, 'featureid' => $featureId, 'value' => $featureValue));
+	else
+		return -1;
+}
+// TODO: terminar esse método
+function solveFeaturesInconsistences($invertclassGoals, $userid, $moduleid){
+	global $DB;
+	$userFeatures = $DB->get_records_sql('SELECT f.id, f.value, f.featureid, f.userid FROM mdl_problem_user_features as f, mdl_fpmembers as m, mdl_fpgroups as g WHERE f.userid = m.id_user AND m.id_group = g.id AND g.moduleid = '.$moduleid.' AND f.userid = '.$userid.';');
+	//$userFeatures = $DB->get_records("problem_user_features", array('userid' => $userid));
+	$caracteristica = new stdClass();
+	$qtdinvertclassGoals = count($invertclassGoals);
+	$qtdProfileFeatures = count($userFeatures);
+	$featuresIds = '';
+	foreach ($invertclassGoals as $key => $value){
+		$featuresIds[$key] = $value->feature->id;
+	}
+	$featuresIds = implode(', ', $featuresIds);  // POG, VULGO PROGRAMAÇÃO ORIENTADA A GAMBIARRA
+	echo 'qtdinvertclassGoals: '.$qtdinvertclassGoals;
+	echo 'qtdProfileFeatures '.$qtdProfileFeatures;
+	$shouldAddProfileFeatures = $qtdinvertclassGoals - $qtdProfileFeatures;
+	// Se should > 0, então deve - se acrescentar, se menor, então deve remover, senão, tudo ok -->
+	if($shouldAddProfileFeatures < 0) {
+		// remover os requisitos que estão sobrando
+		//$DB->delete_records_sql('DELETE FROM mdl_problem_user_features AS uf WHERE featureid NOT IN (SELECT id FROM mdl_problem_features AS pf WHERE pf.id = uf.featureid AND uf.userid = '.$userid.');');
+		echo 'entrou no $shouldAddProfileFeatures < 0';
+		echo $shouldAddProfileFeatures;
+	} else if ($shouldAddProfileFeatures > 0) {
+		// adicionar os novos requisitos
+		echo 'Adicionando os novos requisitos: ';
+		$problemFeatures = $DB->get_records_sql('SELECT id FROM mdl_problem_features AS pf WHERE pf.id IN ('.$featuresIds.') AND pf.id NOT IN (SELECT featureid FROM mdl_problem_user_features AS uf WHERE pf.id = uf.featureid AND uf.userid = '.$userid.');');
+		$caracteristica->userid = $userid;
+		//$caracteristica->moduleid = $moduleid;
+		foreach ($problemFeatures as $problemFeature){
+			echo ' '.$problemFeature->id;
+			$caracteristica->value = 5;
+			$caracteristica->featureid = $problemFeature->id;
+			//$DB->execute('INSERT INTO mdl_problem_user_features VALUES (default, 5, '.$problemFeature->id.', '.$userid.');');
+			$DB->insert_record('problem_user_features', $caracteristica);
+		}
+		echo ' Adicionados. ';
+	}
 }
 
 function get_requirements($problemid){
