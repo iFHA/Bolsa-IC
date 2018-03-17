@@ -802,7 +802,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                                   <input type="number" data-featureid="<?php echo $feature->featureid; ?>" min="0" max="10" value="<?php echo $feature->value; ?>">
                                 </td>
                                 <td>
-                                  <a href="" id="btn-del-cloned-input" name="btn-del-cloned-input" class="btn btn-success btn-xs"  onclick="updateFeature(this)">
+                                  <a href="#perfil" id="btn-del-cloned-input" name="btn-del-cloned-input" class="btn btn-success btn-xs"  onclick="updateFeature(this)">
                                     <span class="glyphicon glyphicon-floppy-save"></span> 
                                     Atualizar
                                   </a>
