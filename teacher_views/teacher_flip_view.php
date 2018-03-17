@@ -172,7 +172,7 @@ foreach ($invertclass->features as $feature) {
                         foreach ($invertclass->goals as $goal) {
                           echo '<tr>';
                           echo '<td>'.$goal->feature->description;
-                          echo '<a href="teacher_views/teacheractions.php?id='.$cm->id.'&goalid='.$goal->id.'&featureid='.$goal->featureid.'&action=delete_problem_goal&url_local='.urlencode($PAGE->url).'" id="btn-del-cloned-input" name="btn-del-cloned-input" class="btn btn-danger btn-xs pull-right" onclick="return confirm(\'Deseja realmente excluir essa meta de aprendizagem?\');"><span class="glyphicon glyphicon-minus"></span> Remover</a></td>';
+                          echo '<a href="teacher_views/teacheractions.php?id='.$cm->id.'&goalid='.$goal->id.'&featureid='.$goal->featureid.'&action=delete_problem_goal&url_local='.urlencode($PAGE->url).'" id="btn-del-cloned-input" name="btn-del-cloned-input" class="btn btn-danger btn-xs pull-right" onclick="return confirm(\'Deseja realmente excluir esse requisito?\');"><span class="glyphicon glyphicon-minus"></span> Remover</a></td>';
                           echo '</tr>';
                         }
                     ?>

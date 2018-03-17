@@ -594,7 +594,7 @@ function solveFeaturesInconsistences($invertclassGoals, $userid, $moduleid){
 	if($shouldAddProfileFeatures < 0) {
 		// remover os requisitos que estão sobrando
 		//$DB->delete_records_sql('DELETE FROM mdl_problem_user_features AS uf WHERE featureid NOT IN (SELECT id FROM mdl_problem_features AS pf WHERE pf.id = uf.featureid AND uf.userid = '.$userid.');');
-		echo ' entrou no $shouldAddProfileFeatures < 0 ';
+		//echo ' entrou no $shouldAddProfileFeatures < 0 ';
 	} else if ($shouldAddProfileFeatures > 0) {
 		// adicionar os novos requisitos
 		//echo 'Adicionando os novos requisitos: ';
@@ -635,7 +635,7 @@ function get_sessions_by_group($groupid, $problemid){
 	if($groupid)
 	  $pg = $DB->get_record('fpgroups', array('problemid' => $problemid, 'groupid' => $groupid), '*');
 	else
-	  die("Não foi possível encontrar o grupo");
+		die("Não foi possível encontrar o grupo");
 
 	return $DB->get_records('fp_group_session', array('fp_group' => $pg->id), 'timestart');
 }

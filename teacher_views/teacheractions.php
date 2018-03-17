@@ -284,7 +284,7 @@ if(problem_is_enrolled($context, "editingteacher")){
 			$featureid = required_param('featureid', PARAM_INT);
 			problem_delete('problem_goals', $params->goalid);
 			// deletar o requisito para cada usuario
-			$DB->execute('DELETE FROM problem_user_features WHERE featureid = '.$featureid);
+			$DB->execute('DELETE FROM mdl_problem_user_features WHERE featureid = '.$featureid);
 
 			$url_problem = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 			echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
