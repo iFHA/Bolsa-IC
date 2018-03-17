@@ -14,13 +14,12 @@ global $DB;
 switch($action){
 
 	case 'update_feature':
-		$feature = new stdClass();
-		$feature->userid = required_param('userid', PARAM_INT);
-		$feature->featureid = required_param('featureid', PARAM_INT);
-		$feature->value = required_param('featurevalue', PARAM_INT);
-		$DB->execute('UPDATE mdl_problem_user_features SET value='.$featurevalue.' WHERE userid='.$userid.' and featureid='.$featureid.';');
+		$userid = required_param('userid', PARAM_INT);
+		$featureid = required_param('featureid', PARAM_INT);
+		$featurevalue = required_param('featurevalue', PARAM_INT);
+		$DB->execute('UPDATE mdl_problem_user_features as f SET f.value='.$featurevalue.' WHERE f.userid='.$userid.' and f.featureid='.$featureid);
 		$url_local = required_param('url_local', PARAM_TEXT);
-		header("Location: {$url_local}");
+		header('Location: '.$url_local.'#perfil');
 	break;
 
 	case 'upload':
@@ -99,9 +98,9 @@ switch($action){
 		//SALVA OS DADOS DO OBJETO PERFIL NO BANCO DE DADOS
 		problem_save('problem_user_prefered_times', $user_prefered_times);
 
-		$url_invertclass = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
-		echo '<br /><br /><a href="'.$url_invertclass.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
-		
+		$url_invertclass = new moodle_url('/mod/invertclass/view.php', array('id' => required_param('id', PARAM_INT)));
+		//echo '<br /><br /><a href="'.$url_invertclass.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
+		header('Location: '.$url_invertclass.'#perfil');
 		break;
 		
 }
