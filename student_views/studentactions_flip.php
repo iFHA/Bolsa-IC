@@ -12,6 +12,17 @@ echo "Testando..";
 global $DB;
 
 switch($action){
+
+	case 'update_feature':
+		$feature = new stdClass();
+		$feature->userid = required_param('userid', PARAM_INT);
+		$feature->featureid = required_param('featureid', PARAM_INT);
+		$feature->value = required_param('featurevalue', PARAM_INT);
+		$DB->execute('UPDATE mdl_problem_user_features SET value='.$featurevalue.' WHERE userid='.$userid.' and featureid='.$featureid.';');
+		$url_local = required_param('url_local', PARAM_TEXT);
+		header("Location: {$url_local}");
+	break;
+
 	case 'upload':
 		
 		$nomeArq = upload_arquivo('../arquivos/anexos_grupos');
