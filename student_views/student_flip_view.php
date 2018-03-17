@@ -785,7 +785,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                               <tr>
                                 <th>Requisito da Tarefa</th>
                                 <th>Nível de Conhecimento(0 a 10)</th>
-                                <th>Atualizar</th>
+                                <th>Ação</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -795,9 +795,18 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                             $myprofile = get_user($USER->id);
                             foreach ($myprofile->features as $feature) { ?>
                               <tr>
-                              <td><?php echo $feature->description; ?></td>
-                              <td><?php echo $feature->value; ?></td>
-                              <!-- // TODO: somente opção de atualizar... <td><a href="student_views/studentactions.php?id='.$cm->id.'&featureid='.$goal->feature->id.'&action=delete_feature&url_local='.urlencode($PAGE->url).'" id="btn-del-cloned-input" name="btn-del-cloned-input" class="btn btn-danger btn-xs"  onclick="return confirm(\'Deseja realmente excluir esse conhecimento?\');"><span class="glyphicon glyphicon-minus"></span> Remover</a></td> -->
+                                <td>
+                                  <?php echo $feature->description; ?>
+                                </td>
+                                <td>
+                                  <input type="number" data-featureid="<?php echo $feature->featureid; ?>" min="0" max="10" value="<?php echo $feature->value; ?>">
+                                </td>
+                                <td>
+                                  <a href="" id="btn-del-cloned-input" name="btn-del-cloned-input" class="btn btn-success btn-xs"  onclick="updateFeature(this)">
+                                    <span class="glyphicon glyphicon-floppy-save"></span> 
+                                    Atualizar
+                                  </a>
+                                </td>
                               </tr>
                             <?php
                             }
@@ -873,7 +882,20 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
         new Awesomplete(requirement, {
             list: [<?php echo $features_description; ?>]
         });
+        // Shorthand for $( document ).ready()
+        //$(function() {
 
+          function updateFeature(elemento){
+            var $inputzin = $(elemento).parent().prev().children();
+            var featureId = $inputzin.attr("data-featureid");
+            var featureValue = $inputzin.val();
+            var url="student_views/studentactions_flip.php?userid=<?php echo $USER->id; ?>&featureid="+ featureId +"&featurevalue="+ featureValue +"&action=update_feature&url_local=<?php echo urlencode($PAGE->url)?>";
+            //console.log("featureValue: "+ featureValue +" feature id: "+ featureId);
+            location.href = url;
+          }
+
+        //});
+        
     </script>
 <?php
 }
