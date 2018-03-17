@@ -273,7 +273,7 @@ if(problem_is_enrolled($context, "editingteacher")){
 
 			$url_problem = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 			echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
-		
+			
 			break;
 		
 		case 'delete_problem_goal':
@@ -281,7 +281,10 @@ if(problem_is_enrolled($context, "editingteacher")){
 			//DELETA O META DO BANCO DE DADOS
 			$id = required_param('id', PARAM_INT);
 			$params->goalid = required_param('goalid', PARAM_INT);
+			$featureid = required_param('featureid', PARAM_INT);
 			problem_delete('problem_goals', $params->goalid);
+			// deletar o requisito para cada usuario
+			$DB->execute('DELETE FROM problem_user_features WHERE featureid = '.$featureid);
 
 			$url_problem = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 			echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
