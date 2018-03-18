@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <XMLDB PATH="mod/invertclass/db" VERSION="20140924" COMMENT="XMLDB file for Moodle mod/invertclass" 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
-  <!-- TODO: ALTERAR A ESTRUTURA DO BANCO DE ACORDO COM A DO SQL, POIS FOI ALTERADO SOMENTE LÁ POR ENQUANTO -->
+  <!-- TODO: ALTERAR A ESTRUTURA DO BANCO DE ACORDO COM A DO SQL, POIS FOI ALTERADO SOMENTE LÁ POR ENQUANTO
+  -->
   <TABLES>
     <TABLE NAME="invertclass" COMMENT="Stores Wiki activity configuration">
       <FIELDS>
@@ -18,6 +19,7 @@
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="arquivo" TYPE="text" LENGTH="80" NOTNULL="false" SEQUENCE="false" COMMENT="Wiki activity"/>
+        <FIELD NAME="arquivoid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Wiki activity"/>
         <FIELD NAME="data_inicio" TYPE="text" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Wiki activity"/>
         <FIELD NAME="data_fim" TYPE="text" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Wiki activity"/>
         <FIELD NAME="descricao" LENGTH="512" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
@@ -28,6 +30,31 @@
       <INDEXES>
         <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
       </INDEXES>
+    </TABLE>
+    <TABLE NAME="invertclass_group_steps" COMMENT="">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="resposta" TYPE="text" LENGTH="200" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="etapaid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="arquivoid" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="groupid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="invertclass_steps" COMMENT="">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="descricao" TYPE="text" LENGTH="200" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="moduleid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="prazo" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="tipo" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="ultima" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
     </TABLE>
     <TABLE NAME="fpanexos" COMMENT="Manages page locks">
       <FIELDS>
@@ -45,6 +72,7 @@
         <FIELD NAME="nome" TYPE="text" LENGTH="80" NOTNULL="true" SEQUENCE="false" COMMENT="Wiki activity"/>
         <FIELD NAME="moduleid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Group that owns this wiki"/>
         <FIELD NAME="anexoid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Group that owns this wiki"/>
+        <FIELD NAME="etapaatual" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Group that owns this wiki"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -71,6 +99,7 @@
         <FIELD NAME="descricao" TYPE="text" LENGTH="512" NOTNULL="true" SEQUENCE="false" COMMENT="Wiki activity"/>
         <FIELD NAME="moduleid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Subwiki instance"/>
         <FIELD NAME="arquivo" TYPE="text" LENGTH="80" NOTNULL="false" SEQUENCE="false" COMMENT="Wiki activity"/>
+        <FIELD NAME="arquivoid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Wiki activity"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -305,6 +334,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
+
     <TABLE NAME="problem_group" COMMENT="">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>

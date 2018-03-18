@@ -109,7 +109,7 @@ switch($action){
         $teste->descricao = $_POST['descricao'];
         $teste->ultima=0;
         //$teste->knowledge_area = $_POST['knowledge_area'];
-        $teste->not_related_words = $_POST['not_related_words'];
+        //$teste->not_related_words = $_POST['not_related_words'];
         echo var_dump($teste);
         $DB->update_record('invertclass',$teste);
         $DB->update_record('problem', array('id' => $teste->id, 'not_related_words' => $teste->not_related_words));

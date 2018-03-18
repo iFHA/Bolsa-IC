@@ -23,7 +23,7 @@ if(!$there_is_problem){
   $probleminha->chat = $invertclass->chat;
   $probleminha->name = $invertclass->name;
   $probleminha->timecreated = $invertclass->timecreated;
-  $probleminha->not_related_words = $invertclass->not_related_words;
+  $probleminha->not_related_words = '';//$invertclass->not_related_words;
   $DB->insert_record("problem", $probleminha);
 } else {
   //exibirMensagem("problem já criado!"); somente debug
@@ -61,10 +61,10 @@ foreach ($invertclass->features as $feature) {
           <li role="presentation"><a href="#referencias" aria-controls="referencias" role="tab" data-toggle="tab">REFERÊNCIAS</a></li>
           <!-- <li role="presentation"><a href="#area" aria-controls="area" role="tab" data-toggle="tab">ÁREAS DE CONHECIMENTO</a></li> -->
           <li role="presentation"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab">GRUPOS</a></li>
-          <li role="presentation"><a href="#aproveitamento" aria-controls="aproveitamento" role="tab" data-toggle="tab">APROVEITAMENTO</a></li>
+          <!-- <li role="presentation"><a href="#aproveitamento" aria-controls="aproveitamento" role="tab" data-toggle="tab">APROVEITAMENTO</a></li> -->
           <li role="presentation"><a href="#avaliar" aria-controls="avaliar" role="tab" data-toggle="tab">AVALIAR</a></li>
           <li role="presentation"><a href="#feedback" aria-controls="feedback" role="tab" data-toggle="tab">FEEDBACK</a></li>
-          <li role="presentation"><a href="#sessoes" aria-controls="sessoes" role="tab" data-toggle="tab">SESSÕES</a></li>
+          <!-- <li role="presentation"><a href="#sessoes" aria-controls="sessoes" role="tab" data-toggle="tab">SESSÕES</a></li> -->
         </ul>
 
         <br />
@@ -134,17 +134,15 @@ foreach ($invertclass->features as $feature) {
                 <form action="teacher_views/teacheractions_flip.php" method="POST" enctype="multipart/form-data">
                   <div id="add_task"><!-- style="display: none" -->
                     <table class="table table-bordered table-condensed table-hover">
-                      <tr><td>NOME DA TAREFA</td><td><input id="nome" type="text" size=67 name="nome" value="<?=$modulo->name?>"></td></tr>
-                      <tr><td colspan="3">DESCRIÇÃO</td></tr>
+                      <tr><td>NOME DA TAREFA:</td><td><input id="nome" type="text" size=67 name="nome" value="<?=$modulo->name?>"></td></tr>
+                      <tr><td colspan="3">DESCRIÇÃO:</td></tr>
                       <tr><td colspan="3"><textarea name="descricao" style="width:100%; height: 80px"><?=$modulo->descricao?></textarea></td></tr>
                       <!--<td><input id="descricao" type="text" size=80 name="descricao" value="descricao"></td>-->
-                      <tr><td>ARQUIVO</td><td><input id="arq" type="file" name="arq"></td></tr> 
+                      <tr><td>ARQUIVO:</td><td><input id="arq" type="file" name="arq"></td></tr> 
                       <!--<tr><td>DATA INÍCIO</td><td><input id="data_inicio" type="date" style="height:30px" name="data_inicio" value=""></td></tr>-->
-                      <!--<tr><td>DATA FIM</td><td><input id="data_fim" type="date" style="height:30px" name="data_fim" value=""></td></tr>-->
-                      <!-- <tr><th colspan="3">METAS DE APRENDIZAGEM</th></tr> -->
-                      <!-- <tr><td colspan="3"><textarea id="metas" name="knowledge_area" style="width:100%; height: 80px"><?=$modulo->knowledge_area?></textarea></td></tr> -->
+                      <!--<tr><td>DATA FIM</td><td><input id="data_fim" type="date" style="height:30px" name="data_fim" value=""></td></tr>
                       <tr><th colspan="3">PALAVRAS NÃO RELACIONADAS</th></tr>
-                      <tr><td colspan="3"><textarea id="naorelacionadas" name="not_related_words" style="width:100%; height: 80px"><?=$modulo->not_related_words?></textarea></td></tr> <!-- placeholder="DIGITE AQUI AS PALAVRAS NÃO RELACIONADAS À TAREFA SEPARADAS POR VÍRGULA (PALAVRA 1, PALAVRA 2)"  -->
+                      <tr><td colspan="3"><textarea id="naorelacionadas" name="not_related_words" style="width:100%; height: 80px"><?php //$modulo->not_related_words?></textarea></td></tr> -->
                     </table>
                     <input id="action" name="action" type="hidden" value="up_task"/>
                     <input id="id" name="id" type="hidden" value="<?=$modulo->id ?>"/>
@@ -161,6 +159,8 @@ foreach ($invertclass->features as $feature) {
                 <h3 class="panel-title"><span class="glyphicon glyphicon-envelope"></span> REQUISITOS DA TAREFA</h3>
               </div>
               <div class="panel-body">
+                <?php
+                if(!empty($invertclass->goals)){ ?>
                 <table class="table table-bordered table-condensed table-hover">
                   <thead>
                     <tr>
@@ -178,7 +178,9 @@ foreach ($invertclass->features as $feature) {
                     ?>
                   </tbody>
                 </table>
-
+                <?php
+                }
+                ?>
                 <form action="teacher_views/teacheractions.php" method="POST" class="col-md-12">
                   <input id="id" name="id" type="hidden" value="<?php echo $cm->id; ?>">
                   <input id="action" name="action" type="hidden" value="<?php echo 'add_problem_goal'; ?>">
