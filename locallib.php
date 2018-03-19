@@ -655,3 +655,8 @@ function get_features(){
 	global $DB;
 	return $DB->get_records("problem_features");
 }
+
+function get_etapas($id){
+	global $DB;
+	return $DB->get_records('invertclass_steps', array('moduleid' => $id));
+}

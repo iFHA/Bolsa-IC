@@ -120,7 +120,7 @@ class mod_invertclass_mod_form extends moodleform_mod {
 
         $mform->addElement('header', 'general', 'CRIAR NOVA AULA');
 
-        $mform->addElement('textarea', 'name', 'T&Iacute;TULO DA AULA:', 'wrap="virtual" rows="3" cols="80"');
+        $mform->addElement('textarea', 'name', 'T&Iacute;TULO:', 'wrap="virtual" rows="3" cols="80"');
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
         } else {
@@ -138,14 +138,6 @@ class mod_invertclass_mod_form extends moodleform_mod {
             $mform->setType('descricao', PARAM_CLEAN);
         }
         $mform->addRule('descricao', null, 'required', null, 'client');
-
-        $mform->addElement('textarea', 'not_related_words', 'Palavras não relacionadas:', 'wrap="virtual" rows="5" cols="80"');
-        if (!empty($CFG->formatstringstriptags)) {
-            $mform->setType('not_related_words', PARAM_TEXT);
-        } else {
-            $mform->setType('not_related_words', PARAM_CLEAN);
-        }
-        $mform->addRule('not_related_words', null, 'required', null, 'client');
     
         $this->standard_hidden_coursemodule_elements();
         $mform->addElement('hidden', 'groupmode', 1);

@@ -13,6 +13,19 @@ $caminhoTarefas = "../arquivos/tarefas";
 $caminhoReferencias = "../arquivos/referencias";
 
 switch($action){
+    case 'add_invertclass_step':
+    $step = new stdClass();
+    $step->descricao = required_param('descricao', PARAM_TEXT);
+    $step->moduleid = required_param('moduleid', PARAM_INT);
+    $step->prazo = required_param('prazo', PARAM_INT);
+    $step->tipo = required_param('tipo', PARAM_INT);
+    $step->ultima = required_param('last',PARAM_INT);
+    
+    $DB->insert_record('invertclass_step', $step);
+    $url_local = required_param('url_local', PARAM_TEXT);
+    header("Location: ".$url_local."#tarefas");
+
+    break;
     case 'ad_group':
         $grupo = new stdClass();
         $grupo->nome = required_param('gp_name', PARAM_TEXT);
@@ -112,7 +125,7 @@ switch($action){
         //$teste->not_related_words = $_POST['not_related_words'];
         echo var_dump($teste);
         $DB->update_record('invertclass',$teste);
-        $DB->update_record('problem', array('id' => $teste->id, 'not_related_words' => $teste->not_related_words));
+        //$DB->update_record('problem', array('id' => $teste->id, 'not_related_words' => $teste->not_related_words));
         
         $url_local = required_param('url_local', PARAM_TEXT);
 		header("Location: ".$url_local."#tarefas");

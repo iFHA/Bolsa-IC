@@ -35,9 +35,9 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="resposta" TYPE="text" LENGTH="200" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="etapaid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="etapaid" TYPE="int" LENGTH="10" NOTNULL="true"  SEQUENCE="false"/>
         <FIELD NAME="arquivoid" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="groupid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="groupid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -72,7 +72,7 @@
         <FIELD NAME="nome" TYPE="text" LENGTH="80" NOTNULL="true" SEQUENCE="false" COMMENT="Wiki activity"/>
         <FIELD NAME="moduleid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Group that owns this wiki"/>
         <FIELD NAME="anexoid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Group that owns this wiki"/>
-        <FIELD NAME="etapaatual" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Group that owns this wiki"/>
+        <FIELD NAME="etapaatual" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Group that owns this wiki"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

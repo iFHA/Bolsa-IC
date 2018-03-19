@@ -39,6 +39,8 @@ $invertclass->requirements = get_requirements($cm->id); // TODO: tem que ver se 
 $invertclass->goals = get_goals($cm->id);
 $invertclass->features = get_features();
 
+//$invertclass->etapas = get_etapas($cm->id);
+
 
 $sep = "";
 $features_description = "";
@@ -134,11 +136,11 @@ foreach ($invertclass->features as $feature) {
                 <form action="teacher_views/teacheractions_flip.php" method="POST" enctype="multipart/form-data">
                   <div id="add_task"><!-- style="display: none" -->
                     <table class="table table-bordered table-condensed table-hover">
-                      <tr><td>NOME DA TAREFA:</td><td><input id="nome" type="text" size=67 name="nome" value="<?=$modulo->name?>"></td></tr>
-                      <tr><td colspan="3">DESCRIÇÃO:</td></tr>
+                      <tr><th>NOME DA TAREFA:</th><td><input id="nome" type="text" size=67 name="nome" value="<?=$modulo->name?>"></td></tr>
+                      <tr><th colspan="3">DESCRIÇÃO:</th></tr>
                       <tr><td colspan="3"><textarea name="descricao" style="width:100%; height: 80px"><?=$modulo->descricao?></textarea></td></tr>
                       <!--<td><input id="descricao" type="text" size=80 name="descricao" value="descricao"></td>-->
-                      <tr><td>ARQUIVO:</td><td><input id="arq" type="file" name="arq"></td></tr> 
+                      <tr><th>ARQUIVO:</th><td><input id="arq" type="file" name="arq"></td></tr> 
                       <!--<tr><td>DATA INÍCIO</td><td><input id="data_inicio" type="date" style="height:30px" name="data_inicio" value=""></td></tr>-->
                       <!--<tr><td>DATA FIM</td><td><input id="data_fim" type="date" style="height:30px" name="data_fim" value=""></td></tr>
                       <tr><th colspan="3">PALAVRAS NÃO RELACIONADAS</th></tr>
@@ -156,7 +158,7 @@ foreach ($invertclass->features as $feature) {
 
             <div class="panel panel-info">
               <div class="panel-heading">
-                <h3 class="panel-title"><span class="glyphicon glyphicon-envelope"></span> REQUISITOS DA TAREFA</h3>
+                <h3 class="panel-title"> REQUISITOS DA TAREFA</h3>
               </div>
               <div class="panel-body">
                 <?php
@@ -189,7 +191,77 @@ foreach ($invertclass->features as $feature) {
                     <label>Descrição</label>
                     <input id="goal_description" name="goal_description" class="form-control" />
                   </div>
-                  <button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...'; this.disabled='disabled'; this.form.submit();"><span class="glyphicon glyphicon-floppy-disk"></span> ADICIONAR REQUISITO</button>
+                  <button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...'; this.disabled='disabled'; this.form.submit();"><span class="glyphicon glyphicon-plus"></span> ADICIONAR REQUISITO</button>
+                </form>
+
+              </div>
+            </div>
+
+
+
+
+            <div class="panel panel-info">
+              <div class="panel-heading">
+                <h3 class="panel-title">ETAPAS DA TAREFA</h3>
+              </div>
+              <div class="panel-body">
+                <?php
+                if(!empty($invertclass->etapas)){ ?>
+                <table class="table table-bordered table-condensed table-hover">
+                  <thead>
+                    <tr>
+                      <th>Descrição</th>
+                      <th>Prazo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php 
+                        foreach ($invertclass->etapas as $etapa) {
+                          echo '<tr>';
+                          echo '<td>'.$etapa->descricao.'</td>';
+                          echo '<td>'.$etapa->prazo.' dias';
+                          echo '<a href="teacher_views/teacheractions_flip.php?moduleid='.$cm->id.'&etapaid='.$etapa->id.'&action=delete_invertclass_step&url_local='.urlencode($PAGE->url).'" id="btn-del-cloned-input" name="btn-del-cloned-input" class="btn btn-danger btn-xs pull-right" onclick="return confirm(\'Deseja realmente excluir essa etapa?\');"><span class="glyphicon glyphicon-minus"></span> Remover</a></td>';
+                          echo '</tr>';
+                        }
+                    ?>
+                  </tbody>
+                </table>
+                <?php
+                }
+                ?>
+                <form action="teacher_views/teacheractions_flip.php" method="POST" class="col-md-12">
+                  <input id="id" name="id" type="hidden" value="<?php echo $cm->id; ?>">
+                  <input id="action" name="action" type="hidden" value="add_invertclass_step">
+                  <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">
+                  <div class="form-group">
+                    <label>Descrição</label>
+                    <input class="form-control" name="descricao" />
+                  </div>
+                  <div class="form-group">
+                    <label>Prazo:</label>
+                    <input type="number" name="prazo" min="1" placeholder="X dias" />
+                  </div>
+                  <dl>
+                    <dt>Tipo: </dt>
+                    <dd>
+                      <div class="radio">
+                        <label> <input type="radio" name="tipo" id="tipo_1" value="1" checked > Subjetiva </label>
+                      </div>
+                      <div class="radio">
+                        <label> <input type="radio" name="tipo" id="tipo_2" value="0" > Necessário enviar arquivo </label>
+                      </div>
+                    </dd>
+                    <dt>Última etapa? </dt>
+                    <dd>
+                      <div class="radio">
+                        <label> <input type="radio" name="last" id="last_1" value="1" > Sim </label>
+                      </div>
+                      <div class="radio">
+                        <label> <input type="radio" name="last" id="last_2" value="0" checked > Não </label>
+                      </div>
+                    </dd>
+                  </dl>
+                  <button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...'; this.disabled='disabled'; this.form.submit();"><span class="glyphicon glyphicon-plus"></span> ADICIONAR ETAPA</button>
                 </form>
 
               </div>
@@ -1001,15 +1073,15 @@ foreach ($invertclass->features as $feature) {
 <script src="js/ajax.js"></script>
 <script type="text/javascript">
 
-var goal = document.getElementById("goal_description");
+/* var goal = document.getElementById("goal_description");
 new Awesomplete(goal, {
-  list: [<?php echo $features_description; ?>]
+  list: [<?php //echo $features_description; ?>]
 });
 var requirement = document.getElementById("requirement_description");
 new Awesomplete(requirement, {
-  list: [<?php echo $features_description; ?>]
+  list: [<?php //echo $features_description; ?>]
 });
-
+ */
 </script>
 <?php
 function exibirMensagem($msg) { ?>
