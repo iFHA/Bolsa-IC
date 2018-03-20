@@ -18,13 +18,22 @@ switch($action){
 		$ultima = required_param('ultima', PARAM_INT);
 		$groupSteps->groupid = required_param('grupoid', PARAM_INT);
 		$etapatipo = required_param('etapatipo', PARAM_INT);
-		$nomeArquivo;
+		$groupSteps->arquivoid;
+		$nome_original = '';
+		$nome_final = '';
 
 		if($etapatipo){
 			$groupSteps->resposta = required_param('resposta', PARAM_TEXT);
 		} else {
 			// tratar upload
+			$nome_final = upload_arquivo('../arquivos/anexos_grupos');
+			$nome_original = ($nome_final != '') ? $_FILES['arq']['name'] : '';
 		}
+
+		if ($nome_final != '' && $nome_original != ''){
+			$groupSteps->arquivoid = $DB->insert_record('fpanexos', array('nome_original' => $nome_original, 'nome_final' => $nome_final));
+		}
+
 		$DB->insert_record('invertclass_group_steps', $groupSteps);
 		if(!$ultima){
 			$proximaEtapa = $DB->get_record_sql('SELECT etapa.id FROM mdl_invertclass_steps AS etapa WHERE etapa.id > '.$groupSteps->etapaid.' LIMIT 1;');
@@ -163,7 +172,6 @@ function upload_arquivo($pathzin){
         return $nomeArq;
     }
     return "";
-    
 }
 
 function tratar_arquivo_upload($string) {

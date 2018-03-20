@@ -51,6 +51,8 @@
         <FIELD NAME="prazo" TYPE="int" LENGTH="5" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="tipo" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="ultima" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="data_inicio" TYPE="text" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Wiki activity"/>
+        <FIELD NAME="data_fim" TYPE="text" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Wiki activity"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
