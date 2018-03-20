@@ -484,6 +484,29 @@ function in_array_field($needle, $needle_field, $haystack, $strict = false) {
     return false; 
 }
 
+function get_grupo($userid){
+	global $DB;
+	$grupo = $DB->get_record_sql('SELECT grupo.id, grupo.nome, grupo.moduleid, grupo.anexoid, grupo.etapaatual, grupo.finalizado FROM mdl_fpgroups as grupo, mdl_fpmembers as membro WHERE grupo.id = membro.id_group AND membro.id_user ='.$userid.';');
+	$grupo->membros = $DB->get_records_sql("SELECT
+                    u.firstname AS nome,
+                    u.id
+                    FROM 
+                    mdl_role_assignments ra 
+                    JOIN mdl_user u ON u.id = ra.userid
+                    JOIN mdl_role r ON r.id = ra.roleid
+                    JOIN mdl_context cxt ON cxt.id = ra.contextid
+                    JOIN mdl_course c ON c.id = cxt.instanceid
+					JOIN mdl_fpmembers membro ON membro.id_group = $grupo->id
+                    WHERE ra.userid = u.id
+                    AND ra.contextid = cxt.id
+                    AND cxt.contextlevel =50
+                    AND cxt.instanceid = c.id
+					AND roleid = 5
+					AND u.id = membro.id_user");
+	// = $DB->get_records('fpmembers', array('id_group' => $grupo->id));
+	return $grupo;
+}
+
 function get_group($groupid, $problemid){
 	global $DB;
 

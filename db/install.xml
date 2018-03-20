@@ -73,6 +73,7 @@
         <FIELD NAME="moduleid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Group that owns this wiki"/>
         <FIELD NAME="anexoid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Group that owns this wiki"/>
         <FIELD NAME="etapaatual" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Group that owns this wiki"/>
+        <FIELD NAME="finalizado" TYPE="int" LENGTH="1" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Group that owns this wiki"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

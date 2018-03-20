@@ -21,16 +21,29 @@ switch($action){
     $step->tipo = required_param('tipo', PARAM_INT);
     $step->ultima = required_param('last',PARAM_INT);
     
-    $DB->insert_record('invertclass_step', $step);
+    $DB->insert_record('invertclass_steps', $step);
     $url_local = required_param('url_local', PARAM_TEXT);
     header("Location: ".$url_local."#tarefas");
 
     break;
+
+    case 'delete_invertclass_step':
+    $stepid = required_param('etapaid', PARAM_INT);
+    
+    $DB->delete_records('invertclass_steps', array('id' => $stepid));
+    $url_local = required_param('url_local', PARAM_TEXT);
+    header("Location: ".$url_local."#tarefas");
+
+    break;
+
     case 'ad_group':
         $grupo = new stdClass();
         $grupo->nome = required_param('gp_name', PARAM_TEXT);
         $grupo->moduleid = required_param('moduleid',PARAM_INT);
-        $DB->execute("insert into mdl_fpgroups (nome, moduleid) values ('$grupo->nome',$grupo->moduleid)");
+        // inserir a etapa atual do grupo como sendo a primeira da tarefa
+        $grupo->etapaatual = $DB->get_record_sql('SELECT * FROM mdl_invertclass_steps WHERE moduleid = '.$grupo->moduleid.' LIMIT 1;')->id;
+        
+        $DB->insert_record('fpgroups', $grupo);
         //$gtemp = $DB->get_record('fpgroups', array("nome" => $grupo->nome));
         $gtemp = $DB->get_record_sql("select * from mdl_fpgroups where moduleid = {$grupo->moduleid} and nome = '{$grupo->nome}';");
         $_SESSION['idgroup']=$gtemp->id;
@@ -46,7 +59,7 @@ switch($action){
 
         //echo var_dump($temp_avalia);
         $url_local = required_param('url_local', PARAM_TEXT);
-		header("Location: ".$url_local."#grupos");
+		header("Location: ".$url_local."#groups");
         break;
     case 'ad_gmember':
         //$member = new stdClass();
@@ -56,7 +69,7 @@ switch($action){
         $DB->execute("insert into mdl_fpmembers values(NULL,".$member->id_user.",".$member->id_group.",".$member->moderador.")");
         $DB->execute("insert into mdl_fpgain values(NULL,".$member->id_user.",0)");
         $url_local = required_param('url_local', PARAM_TEXT);
-		header("Location: ".$url_local."#grupos");
+		header("Location: ".$url_local."#groups");
         break;
     case 'add_gmember':
         //$member = new stdClass();
@@ -66,7 +79,7 @@ switch($action){
         $DB->execute("insert into mdl_fpmembers values(NULL,".$member->id_user.",".$member->id_group.",".$member->moderador.")");
         $DB->execute("insert into mdl_fpgain values(NULL,".$member->id_user.",0)");
         $url_local = required_param('url_local', PARAM_TEXT);
-		header("Location: ".$url_local."#grupos");
+		header("Location: ".$url_local."#groups");
         break;
     case 'ad_mmember':
         //$member = new stdClass();
@@ -77,7 +90,7 @@ switch($action){
         $DB->execute("insert into mdl_fpmembers values(NULL,".$member->id_user.",".$member->id_group.",".$member->moderador.")");
         $DB->execute("insert into mdl_fpgain values(NULL,".$member->id_user.",0)");
         $url_local = required_param('url_local', PARAM_TEXT);
-		header("Location: ".$url_local."#grupos");
+		header("Location: ".$url_local."#groups");
         break;    
     case 'ad_task':
         

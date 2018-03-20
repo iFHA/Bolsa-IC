@@ -39,9 +39,6 @@ $invertclass->requirements = get_requirements($cm->id); // TODO: tem que ver se 
 $invertclass->goals = get_goals($cm->id);
 $invertclass->features = get_features();
 
-//$invertclass->etapas = get_etapas($cm->id);
-
-
 $sep = "";
 $features_description = "";
 foreach ($invertclass->features as $feature) {
@@ -206,6 +203,9 @@ foreach ($invertclass->features as $feature) {
               </div>
               <div class="panel-body">
                 <?php
+
+                $invertclass->etapas = get_etapas($cm->id);
+
                 if(!empty($invertclass->etapas)){ ?>
                 <table class="table table-bordered table-condensed table-hover">
                   <thead>
@@ -233,6 +233,7 @@ foreach ($invertclass->features as $feature) {
                   <input id="id" name="id" type="hidden" value="<?php echo $cm->id; ?>">
                   <input id="action" name="action" type="hidden" value="add_invertclass_step">
                   <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">
+                  <input name="moduleid" type="hidden" value="<?php echo $cm->id; ?>">
                   <div class="form-group">
                     <label>Descrição</label>
                     <input class="form-control" name="descricao" />
@@ -635,6 +636,7 @@ foreach ($invertclass->features as $feature) {
                 $resp_add = optional_param('op',null,PARAM_TEXT); 
                 if($resp_add == 'ok' && isset($_SESSION['idgroup'])){
                     unset($_SESSION['idgroup']);
+                    exibirMensagem('Grupo Criado!');
                 }
                 ?>
                 <?php

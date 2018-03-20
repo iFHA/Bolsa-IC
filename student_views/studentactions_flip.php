@@ -12,7 +12,37 @@ echo "Testando..";
 global $DB;
 
 switch($action){
+	case 'next_step':
+		$groupSteps = new stdClass();
+		$groupSteps->etapaid = required_param('etapaid', PARAM_INT);
+		$ultima = required_param('ultima', PARAM_INT);
+		$groupSteps->groupid = required_param('grupoid', PARAM_INT);
+		$etapatipo = required_param('etapatipo', PARAM_INT);
+		$nomeArquivo;
 
+		if($etapatipo){
+			$groupSteps->resposta = required_param('resposta', PARAM_TEXT);
+		} else {
+			// tratar upload
+		}
+		$DB->insert_record('invertclass_group_steps', $groupSteps);
+		if(!$ultima){
+			$proximaEtapa = $DB->get_record_sql('SELECT etapa.id FROM mdl_invertclass_steps AS etapa WHERE etapa.id > '.$groupSteps->etapaid.' LIMIT 1;');
+			$DB->update_record('fpgroups', array('id' => $groupSteps->groupid, 'etapaatual' => $proximaEtapa->id));
+		}else {
+			// fechando o grupo
+			$DB->update_record('fpgroups', array('id' => $groupSteps->groupid, 'finalizado' => 1));
+		}
+		
+		/* TODO: salvar a resposta do aluno criando o registro invertclass_group_steps
+		verificar se a etapa atual é a última etapa da tarefa, se sim, finaliza aí.
+		(SELECT FROM mdl_invertclass_steps WHERE id = '.$etapaatual.';');
+		if (etapa->ultima) envia e finaliza a atividade, senão, avança para a próxima
+		*/
+		$url_local = required_param('url_local', PARAM_TEXT);
+		header('Location: '.$url_local.'#etapas');
+
+	break;
 	case 'update_feature':
 		$userid = required_param('userid', PARAM_INT);
 		$featureid = required_param('featureid', PARAM_INT);
