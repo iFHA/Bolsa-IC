@@ -683,3 +683,8 @@ function get_etapas($id){
 	global $DB;
 	return $DB->get_records('invertclass_steps', array('moduleid' => $id));
 }
+
+function is_steps_finished($id){
+	global $DB;
+	return $DB->get_record_sql('SELECT * FROM mdl_invertclass_steps WHERE moduleid = '.$id.' AND ultima = 1 LIMIT 1;');
+}

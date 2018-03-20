@@ -23,11 +23,13 @@ switch($action){
 		$nome_final = '';
 
 		if($etapatipo){
-			$groupSteps->resposta = required_param('resposta', PARAM_TEXT);
+			$groupSteps->resposta = optional_param('resposta', 0, PARAM_TEXT);
 		} else {
 			// tratar upload
 			$nome_final = upload_arquivo('../arquivos/anexos_grupos');
 			$nome_original = ($nome_final != '') ? $_FILES['arq']['name'] : '';
+			echo 'nome final: '.$nome_final;
+			echo 'nome original: '.$nome_original;
 		}
 
 		if ($nome_final != '' && $nome_original != ''){

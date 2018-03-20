@@ -163,7 +163,7 @@ foreach ($invertclass->features as $feature) {
                 <table class="table table-bordered table-condensed table-hover">
                   <thead>
                     <tr>
-                      <th>Descrição</th>
+                      <th>Descrição do Requisito</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -210,7 +210,7 @@ foreach ($invertclass->features as $feature) {
                 <table class="table table-bordered table-condensed table-hover">
                   <thead>
                     <tr>
-                      <th>Descrição</th>
+                      <th>Descrição da Etapa</th>
                       <th>Prazo</th>
                     </tr>
                   </thead>
@@ -643,10 +643,18 @@ foreach ($invertclass->features as $feature) {
                 $temp_group = $_SESSION['idgroup'];
                 //echo var_dump($temp_group);
                 if(!isset($temp_group)){  
+                
+                  if(is_steps_finished($cm->id)){ // se existe alguma etapa considerada como ultima da tarefa
                 ?>
                 <div class="col-md-8">
                   <button class="btn btn-primary" onclick="document.getElementById('add_group').style.display = 'inherit';"><span class="glyphicon glyphicon-plus"></span> ADICIONAR GRUPO</button>
                 </div>
+                <?php 
+                  } else{ ?>
+                    <p>A tarefa não foi definida ainda por completo(sem última etapa definida ainda).</p>
+                <?php
+                  }
+                ?>
               </div>
               <div id="add_group" class="panel-body" style="display: <?php if(isset($_SESSION['idgroup'])) echo "inherit"; else echo "none";?>">
                 <form class="form-horizontal" action="teacher_views/teacheractions_flip.php" method="POST">
