@@ -128,10 +128,25 @@ switch($action){
         $teste->id = required_param('id', PARAM_INT);
         $teste->name = required_param('nome', PARAM_TEXT);
         // DELETAR ARQUIVO UNLINK(ARQUIVOPATH/required_param('task_arq', PARAM_TEXT));)
-        verificaArquivo($caminhoTarefas, 'task');
-        $teste->arquivo = upload_arquivo($caminhoTarefas);//upload_arquivo(caminhodoarquivo/required_param('task_arq', PARAM_TEXT)); :)
-        //$teste->data_inicio = required_param('data_inicio', PARAM_TEXT);
-        ///$teste->data_fim = required_param('data_fim', PARAM_TEXT);
+        $arquivoid = $DB->get_record('invertclass', array('id' => $teste->id))->arquivoid;
+        if(!empty($arquivoid) && !empty($_FILES['arq']['name']) ){
+            // já existe um arquivo upado, então o mesmo deve ser apagado caso o usuário tenha enviado outro
+            $arquivozin = $DB->get_record('fpanexos', array('id' => $arquivoid));
+            verificaArquivo($caminhoTarefas, $arquivozin->nome_final);
+            // deletar arquivo do bd
+            $DB->delete_records('fpanexos', array('id' => $arquivoid));
+        }
+        // tratar upload
+        $nome_final = upload_arquivo($caminhoTarefas);
+        $teste->arquivo = $nome_final;//upload_arquivo(caminhodoarquivo/required_param('task_arq', PARAM_TEXT)); :)
+        $nome_original = (!empty($nome_final)) ? $_FILES['arq']['name'] : '';
+        if (!empty($nome_final) && !empty($nome_original)){
+			$teste->arquivoid = $DB->insert_record('fpanexos', array('nome_original' => $nome_original, 'nome_final' => $nome_final));
+		}
+        echo 'nome final: '.$nome_final;
+        echo 'nome original: '.$nome_original;
+        $teste->data_inicio = required_param('data_inicio', PARAM_TEXT);
+        $teste->data_fim = required_param('data_fim', PARAM_TEXT);
         $teste->descricao = $_POST['descricao'];
         $teste->ultima=0;
         //$teste->knowledge_area = $_POST['knowledge_area'];
@@ -321,14 +336,22 @@ function tratar_arquivo_upload($string) {
 	return $nome;
  }
 
-function verificaArquivo($caminho, $reftask){
+function verificaArquivo($caminho, $fileName){
+    $fileTemp = $caminho.'/'.$fileName;
+    if (file_exists($fileTemp)){
+        unlink($fileTemp);
+    }
+}
+
+
+/* function verificaArquivo($caminho, $reftask){
     
     $fileTemp = $caminho."/".required_param($reftask.'_arq', PARAM_TEXT);
     if (file_exists($fileTemp)){
         unlink($fileTemp);
     }
 
-}
+} */
 
 ?>
 </div>

@@ -123,6 +123,11 @@ foreach ($invertclass->features as $feature) {
           
           <?php
             $modulo = $DB->get_record_sql('select * from mdl_invertclass where id in(select instance from mdl_course_modules as cm where cm.id = '.$cm->id.');');
+            $modulo->arquivoZin = $DB->get_record('fpanexos', array('id' => $modulo->arquivoid));
+            $thereIsFile = false;
+            if(!empty($modulo->arquivoZin)){
+              $thereIsFile = true;
+            }
           ?>
           <div role="tabpanel" class="tab-pane active" id="problem">
             <div class="panel panel-primary">
@@ -133,19 +138,19 @@ foreach ($invertclass->features as $feature) {
                 <form action="teacher_views/teacheractions_flip.php" method="POST" enctype="multipart/form-data">
                   <div id="add_task"><!-- style="display: none" -->
                     <table class="table table-bordered table-condensed table-hover">
-                      <tr><th>NOME DA TAREFA:</th><td><input id="nome" type="text" size=67 name="nome" value="<?=$modulo->name?>"></td></tr>
+                      <tr><th>NOME DA TAREFA:</th><td><input id="nome" type="text" size=67 name="nome" value="<?php echo $modulo->name?>"></td></tr>
                       <tr><th colspan="3">DESCRIÇÃO:</th></tr>
-                      <tr><td colspan="3"><textarea name="descricao" style="width:100%; height: 80px"><?=$modulo->descricao?></textarea></td></tr>
+                      <tr><td colspan="3"><textarea name="descricao" style="width:100%; height: 80px"><?php echo $modulo->descricao ?></textarea></td></tr>
                       <!--<td><input id="descricao" type="text" size=80 name="descricao" value="descricao"></td>-->
-                      <tr><th>ARQUIVO:</th><td><input id="arq" type="file" name="arq"></td></tr> 
-                      <!--<tr><td>DATA INÍCIO</td><td><input id="data_inicio" type="date" style="height:30px" name="data_inicio" value=""></td></tr>-->
-                      <!--<tr><td>DATA FIM</td><td><input id="data_fim" type="date" style="height:30px" name="data_fim" value=""></td></tr>
-                      <tr><th colspan="3">PALAVRAS NÃO RELACIONADAS</th></tr>
+                      <tr><th>ARQUIVO:</th><?php if($thereIsFile){ ?><td><?php echo $modulo->arquivoZin->nome_original; ?> <a href=arquivos/tarefas/<?=$modulo->arquivoZin->nome_final?> target=_blank class='btn btn-primary'>Baixar</a></td><?php } ?><td><input id="arq" type="file" name="arq"></td></tr> 
+                      <tr><td>DATA INÍCIO</td><td><input id="data_inicio" type="date" style="height:30px" name="data_inicio" value="<?php echo $modulo->data_inicio ?>"></td></tr>-->
+                      <tr><td>DATA FIM</td><td><input id="data_fim" type="date" style="height:30px" name="data_fim" value="<?php echo $modulo->data_fim ?>"></td></tr>
+                      <!--<tr><th colspan="3">PALAVRAS NÃO RELACIONADAS</th></tr>
                       <tr><td colspan="3"><textarea id="naorelacionadas" name="not_related_words" style="width:100%; height: 80px"><?php //$modulo->not_related_words?></textarea></td></tr> -->
                     </table>
                     <input id="action" name="action" type="hidden" value="up_task"/>
-                    <input id="id" name="id" type="hidden" value="<?=$modulo->id ?>"/>
-                    <input id="tarq" name="task_arq" type="hidden" value="<?=empty($modulo->arquivo)?"":$modulo->arquivo ?>"/>
+                    <input id="id" name="id" type="hidden" value="<?php echo $modulo->id ?>"/>
+                    <input id="tarq" name="task_arq" type="hidden" value="<?php echo empty($modulo->arquivo)?"":$modulo->arquivo ?>"/>
                     <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">
                     <button name="send" class="btn btn-success" onclick="document.getElementById('add_task').style.display = 'inherit'; this.form.submit();"><span class="glyphicon glyphicon-floppy-disk"></span>ATUALIZAR TAREFA</button>
                   </div>
@@ -215,8 +220,12 @@ foreach ($invertclass->features as $feature) {
                     </tr>
                   </thead>
                   <tbody>
-                    <?php 
+                    <?php
+                      $isUltimaEtapaCriada = false;
                         foreach ($invertclass->etapas as $etapa) {
+                          if($etapa->ultima == 1){
+                            $isUltimaEtapaCriada = true;
+                          }
                           echo '<tr>';
                           echo '<td>'.$etapa->descricao.'</td>';
                           echo '<td>'.$etapa->prazo.' dias';
@@ -228,6 +237,7 @@ foreach ($invertclass->features as $feature) {
                 </table>
                 <?php
                 }
+                if(!$isUltimaEtapaCriada){
                 ?>
                 <form action="teacher_views/teacheractions_flip.php" method="POST" class="col-md-12">
                   <input id="id" name="id" type="hidden" value="<?php echo $cm->id; ?>">
@@ -264,7 +274,9 @@ foreach ($invertclass->features as $feature) {
                   </dl>
                   <button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...'; this.disabled='disabled'; this.form.submit();"><span class="glyphicon glyphicon-plus"></span> ADICIONAR ETAPA</button>
                 </form>
-
+                <?php 
+                }
+                ?>
               </div>
             </div>
 
