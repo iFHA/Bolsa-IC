@@ -487,7 +487,8 @@ function in_array_field($needle, $needle_field, $haystack, $strict = false) {
 function get_grupo($userid){
 	global $DB;
 	$grupo = $DB->get_record_sql('SELECT grupo.id, grupo.nome, grupo.moduleid, grupo.anexoid, grupo.etapaatual, grupo.finalizado FROM mdl_fpgroups as grupo, mdl_fpmembers as membro WHERE grupo.id = membro.id_group AND membro.id_user ='.$userid.';');
-	$grupo->membros = $DB->get_records_sql("SELECT
+	if(!empty($grupo)){
+		$grupo->membros = $DB->get_records_sql("SELECT
                     u.firstname AS nome,
                     u.id
                     FROM 
@@ -503,6 +504,7 @@ function get_grupo($userid){
                     AND cxt.instanceid = c.id
 					AND roleid = 5
 					AND u.id = membro.id_user");
+	}
 	// = $DB->get_records('fpmembers', array('id_group' => $grupo->id));
 	return $grupo;
 }

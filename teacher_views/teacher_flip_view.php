@@ -25,6 +25,7 @@ if(!$there_is_problem){
   $probleminha->timecreated = $invertclass->timecreated;
   $probleminha->not_related_words = '';//$invertclass->not_related_words;
   $DB->insert_record("problem", $probleminha);
+  $DB->update_records('invertclass', array('id' => $cm->instance, 'moduleid' => $cm->id));
 } else {
   //exibirMensagem("problem já criado!"); somente debug
 }
@@ -132,18 +133,18 @@ foreach ($invertclass->features as $feature) {
           <div role="tabpanel" class="tab-pane active" id="problem">
             <div class="panel panel-primary">
               <div class="panel-heading">
-                <h3 class="panel-title">DADOS DA TAREFA <?=$modulo->name?></h3>
+                <h3 class="panel-title">DADOS DA ATIVIDADE <?=$modulo->name?></h3>
               </div>
               <div class="panel-body">
                 <form action="teacher_views/teacheractions_flip.php" method="POST" enctype="multipart/form-data">
-                  <div id="add_task"><!-- style="display: none" -->
+                  <div id="add_task">
                     <table class="table table-bordered table-condensed table-hover">
                       <tr><th>NOME DA TAREFA:</th><td><input id="nome" type="text" size=67 name="nome" value="<?php echo $modulo->name?>"></td></tr>
                       <tr><th colspan="3">DESCRIÇÃO:</th></tr>
                       <tr><td colspan="3"><textarea name="descricao" style="width:100%; height: 80px"><?php echo $modulo->descricao ?></textarea></td></tr>
                       <!--<td><input id="descricao" type="text" size=80 name="descricao" value="descricao"></td>-->
                       <tr><th>ARQUIVO:</th><?php if($thereIsFile){ ?><td><?php echo $modulo->arquivoZin->nome_original; ?> <a href=arquivos/tarefas/<?=$modulo->arquivoZin->nome_final?> target=_blank class='btn btn-primary'>Baixar</a></td><?php } ?><td><input id="arq" type="file" name="arq"></td></tr> 
-                      <tr><td>DATA INÍCIO</td><td><input id="data_inicio" type="date" style="height:30px" name="data_inicio" value="<?php echo $modulo->data_inicio ?>"></td></tr>-->
+                      <tr><td>DATA INÍCIO</td><td><input id="data_inicio" type="date" style="height:30px" name="data_inicio" value="<?php echo $modulo->data_inicio ?>"></td></tr>
                       <tr><td>DATA FIM</td><td><input id="data_fim" type="date" style="height:30px" name="data_fim" value="<?php echo $modulo->data_fim ?>"></td></tr>
                       <!--<tr><th colspan="3">PALAVRAS NÃO RELACIONADAS</th></tr>
                       <tr><td colspan="3"><textarea id="naorelacionadas" name="not_related_words" style="width:100%; height: 80px"><?php //$modulo->not_related_words?></textarea></td></tr> -->
@@ -249,8 +250,12 @@ foreach ($invertclass->features as $feature) {
                     <input class="form-control" name="descricao" />
                   </div>
                   <div class="form-group">
-                    <label>Prazo:</label>
-                    <input type="number" name="prazo" min="1" placeholder="X dias" />
+                    <label>Data de Início: </label>
+                    <input type="date" style="height:30px" name="data_inicio"  />
+                  </div>
+                  <div class="form-group">
+                    <label>Data de Término: </label>
+                    <input type="date" style="height:30px" name="data_fim"  />
                   </div>
                   <dl>
                     <dt>Tipo: </dt>

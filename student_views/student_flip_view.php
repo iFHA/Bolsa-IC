@@ -48,7 +48,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
     <div class="col-md-12">
       <div role="tabpanel">
         <ul class="nav nav-tabs" role="tablist">
-          <?php if( 1 /* $group->id */){ ?>
+          <?php if( 1 /* !empty($grupo) */){ ?>
           <li role="presentation" class="active"><a href="#problem" aria-controls="problem" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-home"></i> ATIVIDADE</a></li>
           <?php } //Se estiver vinculado a algum grupo para eo problema ?>
           <!--<li role="presentation" <?php /* if(!$group->id){ echo 'class="active"'; } */ ?>><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-user"></i> Meu perfil</a></li>-->
@@ -162,7 +162,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                             </div>
                             <div class="panel-body">
                                 <?php
-                                $etapa = $DB->get_record_sql("SELECT etapa.id, etapa.descricao, etapa.prazo, etapa.tipo, etapa.ultima FROM mdl_invertclass_steps as etapa, mdl_fpgroups as grupin, mdl_fpmembers as membros WHERE grupin.id = membros.id_group and membros.id_user = ".$_SESSION["USER"]->id." and etapa.id = grupin.etapaatual");
+                                $etapa = $DB->get_record_sql("SELECT etapa.id, etapa.descricao, etapa.data_fim, etapa.tipo, etapa.ultima FROM mdl_invertclass_steps as etapa, mdl_fpgroups as grupin, mdl_fpmembers as membros WHERE grupin.id = membros.id_group and membros.id_user = ".$_SESSION["USER"]->id." and etapa.id = grupin.etapaatual");
                                 if(!empty($etapa)){
                                 ?>
                                 <table class="table table-bordered table-condensed table-hover">
@@ -183,7 +183,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                                                 <?php echo $etapa->descricao; ?>
                                             </td>
                                             <td>
-                                                <?php echo $etapa->prazo; ?> dias
+                                                <?php echo $etapa->data_fim; ?>
                                             </td>
                                         </tr>
                                     </tbody>

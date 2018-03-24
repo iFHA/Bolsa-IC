@@ -17,9 +17,11 @@ switch($action){
     $step = new stdClass();
     $step->descricao = required_param('descricao', PARAM_TEXT);
     $step->moduleid = required_param('moduleid', PARAM_INT);
-    $step->prazo = required_param('prazo', PARAM_INT);
+    $step->prazo = optional_param('prazo', null, PARAM_INT);
     $step->tipo = required_param('tipo', PARAM_INT);
     $step->ultima = required_param('last',PARAM_INT);
+    $step->data_inicio = required_param('data_inicio', PARAM_TEXT);
+    $step->data_fim = required_param('data_fim', PARAM_TEXT);
     
     $DB->insert_record('invertclass_steps', $step);
     $url_local = required_param('url_local', PARAM_TEXT);
