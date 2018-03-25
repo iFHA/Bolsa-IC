@@ -15,6 +15,26 @@ $caminhoReferencias = "../arquivos/referencias";
 switch($action){
 
     case 'gvinculation':
+    $groupIndex = required_param('groupindex', PARAM_INT);
+    $moduleid = required_param('moduleid', PARAM_INT);
+    $gruposRecomendados = $_SESSION['grupos_recomendados'];
+    $grupoRecomendado = $gruposRecomendados[$groupIndex];
+
+    $podeVincular = true;
+    foreach($grupoRecomendado->membros as $membro){
+        // verificar se algum membro já está na tabela fpmembers, se sim, não cadastra
+        $fpmember = $DB->get_record_sql('SELECT membro.id FROM mdl_fpmembers AS membro, mdl_fpgroups AS grupo WHERE membro.id_user = '.$membro->id.' AND membro.id_group = grupo.id AND grupo.moduleid = '.$moduleid);
+        if(!empty($fpmember))
+            $podeVincular = false;
+    }
+    if($podeVincular){
+        // vincula e remove o grupo e membros da tabela rgroups e rmembers
+    }
+
+    unset($_SESSION['grupos_recomendados']);
+    /* $url_local = required_param('url_local', PARAM_TEXT);
+    header("Location: ".$url_local."#groups"); */
+
     break;
 
     case 'add_invertclass_step':

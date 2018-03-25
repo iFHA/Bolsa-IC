@@ -770,44 +770,44 @@ foreach ($invertclass->features as $feature) {
                     <tbody>
                       <?php 
                       $grupos_recomendados = get_grupos_recomendados($cm->id);
-                        foreach($grupos_recomendados as $group){ ?>
-                          <tr>
-                            <td>
-                              <?php echo $group->nome;?>
-                            </td>
-                            <td>
-                              <?php
-                              $tempIndex = 0;
-                              foreach ($group->membros as $membro) {
-                                if($tempIndex + 1 < count($group->membros))
-                                  echo $membro->nome.', ';
-                                else 
-                                  echo $membro->nome.'.';
-                                $tempIndex++;
-                              }
-                              $tempIndex = 0;
-                              ?>
-                            </td>
+                      $_SESSION['grupos_recomendados'] = $grupos_recomendados;
+                      foreach($grupos_recomendados as $groupindex => $group){ ?>
+                        <tr>
                           <td>
-                          <form action="teacher_views/teacheractions_flip.php" method="POST">
-                            <input type="hidden" name="rgroupid" value="" />
-                            <input type="hidden" name="action" value="gvinculation" />
-                            <?php
-                            //$_SESSION['grupo_recomendado']
-                            ?>
-                            <!-- id='.$cm->id
-                            groupid='.$group->id.'&
-                            action=link_group&
-                            url_local='.urlencode($PAGE->url). -->
-                            <button class="btn btn-success" onclick="this.form.submit();">
-                              Vincular
-                            </button>
-                            </a>
-                          </form>
+                            <?php echo $group->nome;?>
                           </td>
-                          </tr>
-                        <?php
-                        }
+                          <td>
+                            <?php
+                            $tempIndex = 0;
+                            foreach ($group->membros as $membro) {
+                              if($tempIndex + 1 < count($group->membros))
+                                echo $membro->nome.', ';
+                              else 
+                                echo $membro->nome.'.';
+                              $tempIndex++;
+                            }
+                            $tempIndex = 0;
+                            ?>
+                          </td>
+                        <td>
+                        <form action="teacher_views/teacheractions_flip.php" method="POST">
+                          <input type="hidden" name="groupindex" value="<?php echo $groupindex; ?>" />
+                          <input type="hidden" name="moduleid" value="<?php echo $cm->id; ?>" />
+                          <input type="hidden" name="action" value="gvinculation" />
+                          <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">
+                          <!-- id='.$cm->id
+                          groupid='.$group->id.'&
+                          action=link_group&
+                          url_local='.urlencode($PAGE->url). -->
+                          <button class="btn btn-success" onclick="this.form.submit();">
+                            Vincular
+                          </button>
+                          </a>
+                        </form>
+                        </td>
+                        </tr>
+                      <?php
+                      }
                       ?>
                     </tbody>
                   </table>

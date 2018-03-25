@@ -535,9 +535,7 @@ function get_grupos_recomendados($moduleid){
 }
 
 function salvarGrupoRecomendado(){
-	// verificar se algum membro já está na tabela fpmembers, se sim, não cadastra
-
-	// se não, então salva e remove o grupo e membros da tabela rgroups e rmembers
+	
 }
 
 function get_group($groupid, $problemid){
