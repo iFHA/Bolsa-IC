@@ -505,8 +505,39 @@ function get_grupo($userid){
 					AND roleid = 5
 					AND u.id = membro.id_user");
 	}
-	// = $DB->get_records('fpmembers', array('id_group' => $grupo->id));
 	return $grupo;
+}
+
+function get_grupos_recomendados($moduleid){
+	global $DB;
+	$grupos_recomendados = $DB->get_records('invertclass_rgroups', array('moduleid' => $moduleid));
+	if(!empty($grupos_recomendados)){
+		foreach ($grupos_recomendados as $index => $grupo_recomendado){
+			$grupos_recomendados[$index]->membros = $DB->get_records_sql("SELECT
+			u.firstname AS nome,
+			u.id
+			FROM 
+			mdl_role_assignments ra 
+			JOIN mdl_user u ON u.id = ra.userid
+			JOIN mdl_role r ON r.id = ra.roleid
+			JOIN mdl_context cxt ON cxt.id = ra.contextid
+			JOIN mdl_course c ON c.id = cxt.instanceid
+			JOIN mdl_invertclass_rmembers membro ON membro.id_group = $grupo_recomendado->id
+			WHERE ra.userid = u.id
+			AND ra.contextid = cxt.id
+			AND cxt.contextlevel =50
+			AND cxt.instanceid = c.id
+			AND roleid = 5
+			AND u.id = membro.id_user");
+		}
+	}
+	return $grupos_recomendados;
+}
+
+function salvarGrupoRecomendado(){
+	// verificar se algum membro já está na tabela fpmembers, se sim, não cadastra
+
+	// se não, então salva e remove o grupo e membros da tabela rgroups e rmembers
 }
 
 function get_group($groupid, $problemid){

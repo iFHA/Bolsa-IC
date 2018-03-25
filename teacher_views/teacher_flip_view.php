@@ -25,7 +25,7 @@ if(!$there_is_problem){
   $probleminha->timecreated = $invertclass->timecreated;
   $probleminha->not_related_words = '';//$invertclass->not_related_words;
   $DB->insert_record("problem", $probleminha);
-  $DB->update_records('invertclass', array('id' => $cm->instance, 'moduleid' => $cm->id));
+  //$DB->update_record('invertclass', array('id' => $cm->instance, 'moduleid' => $cm->id));
 } else {
   //exibirMensagem("problem já criado!"); somente debug
 }
@@ -227,9 +227,10 @@ foreach ($invertclass->features as $feature) {
                           if($etapa->ultima == 1){
                             $isUltimaEtapaCriada = true;
                           }
+                          $datafim = explode('-', $etapa->data_fim);
                           echo '<tr>';
                           echo '<td>'.$etapa->descricao.'</td>';
-                          echo '<td>'.$etapa->prazo.' dias';
+                          echo '<td>'.$datafim[2].'/'.$datafim[1].'/'.$datafim[0];
                           echo '<a href="teacher_views/teacheractions_flip.php?moduleid='.$cm->id.'&etapaid='.$etapa->id.'&action=delete_invertclass_step&url_local='.urlencode($PAGE->url).'" id="btn-del-cloned-input" name="btn-del-cloned-input" class="btn btn-danger btn-xs pull-right" onclick="return confirm(\'Deseja realmente excluir essa etapa?\');"><span class="glyphicon glyphicon-minus"></span> Remover</a></td>';
                           echo '</tr>';
                         }
@@ -425,7 +426,7 @@ foreach ($invertclass->features as $feature) {
                       </tr>
                     </thead>
                     <tbody>
-                     <?php 
+                    <?php 
                       foreach($groups as $group){
                         $group = get_group($group->id, $invertclass->id); //TODO: ver se é pra ser esse id msm
                         if(in_array_field($group->id, 'groupid', $groups_enrolled)){
@@ -462,7 +463,7 @@ foreach ($invertclass->features as $feature) {
                 <div class="panel-body">
                   <table class="table table-hover">
                     <tbody>
-                     <?php 
+                    <?php 
                       foreach($groups as $group){
                         if(!in_array_field($group->id, 'groupid', $groups_enrolled)){
 
@@ -609,10 +610,17 @@ foreach ($invertclass->features as $feature) {
           <!--                        GRUPOS                                     -->
           <!-- ################################################################## -->
           <div role="tabpanel" class="tab-pane" id="groups">
+            <?php
+            global $DB;
+            $fpgroups = $DB->get_records_sql('select * from mdl_fpgroups where moduleid = '.$cm->id.';');
+            ?>
             <div class="panel panel-primary">
               <div class="panel-heading">
-                <h3 class="panel-title">GRUPOS</h3>
+                <h3 class="panel-title">GRUPOS CRIADOS</h3>
               </div>
+              <?php
+              if(!empty($fpgroups)) {
+              ?>
               <div class="panel-body">
                 <table class="table table-bordered table-condensed table-hover">
                   <thead>
@@ -623,12 +631,6 @@ foreach ($invertclass->features as $feature) {
                   </thead>
                   <tbody>
                     <?php
-                    global $DB;
-                    $fpgroups = new stdClass();
-                    //$fpgroups = $DB->get_records("fpgroups"); 
-                    $fpgroups = $DB->get_records_sql('select * from mdl_fpgroups where moduleid = '.$cm->id.';');
-                    //if(count($fpgroups)==0) echo ("Sem grupos<br>");
-                    //TODO: dica JAVASCRIPT PEGAR URL: var url_atual = window.location.href;;
                     foreach ($fpgroups as $group){?>
                         <tr>
                           <td><?=$group->nome?></td>
@@ -649,30 +651,43 @@ foreach ($invertclass->features as $feature) {
                     ?>
                   </tbody>
                 </table>
-                <?php 
-                $resp_add = optional_param('op',null,PARAM_TEXT); 
-                if($resp_add == 'ok' && isset($_SESSION['idgroup'])){
-                    unset($_SESSION['idgroup']);
-                    exibirMensagem('Grupo Criado!');
-                }
-                ?>
-                <?php
-                $temp_group = $_SESSION['idgroup'];
-                //echo var_dump($temp_group);
-                if(!isset($temp_group)){  
                 
-                  if(is_steps_finished($cm->id)){ // se existe alguma etapa considerada como ultima da tarefa
-                ?>
-                <div class="col-md-8">
-                  <button class="btn btn-primary" onclick="document.getElementById('add_group').style.display = 'inherit';"><span class="glyphicon glyphicon-plus"></span> ADICIONAR GRUPO</button>
-                </div>
-                <?php 
-                  } else{ ?>
-                    <p>A tarefa não foi definida ainda por completo(sem última etapa definida ainda).</p>
-                <?php
-                  }
-                ?>
               </div>
+              
+              <?php 
+                } else { ?>
+                  <br/>
+                  <div class="alert alert-danger" role="alert">
+                    Nenhum grupo foi encontrado!
+                  </div>
+                <?php 
+                }
+              ?>
+              <?php 
+              $resp_add = optional_param('op',null,PARAM_TEXT); 
+              if($resp_add == 'ok' && isset($_SESSION['idgroup'])){
+                  unset($_SESSION['idgroup']);
+                  exibirMensagem('Grupo Criado!');
+              }
+              ?>
+              <?php
+              //$temp_group = $_SESSION['idgroup'];
+              if(!isset($_SESSION['idgroup'])){  
+              
+                if(is_steps_finished($cm->id)){ // se existe alguma etapa considerada como ultima da tarefa
+              ?>
+              <div class="col-md-8">
+                <button class="btn btn-primary" onclick="document.getElementById('add_group').style.display = 'inherit';"><span class="glyphicon glyphicon-plus"></span> ADICIONAR GRUPO</button>
+              </div>
+              <br/><br/><br/>
+              <?php 
+                } else{ ?>
+                  <div class="alert alert-danger" role="alert">
+                    A tarefa não foi definida ainda por completo(sem última etapa definida ainda).
+                  </div>
+              <?php
+                }
+              ?>
               <div id="add_group" class="panel-body" style="display: <?php if(isset($_SESSION['idgroup'])) echo "inherit"; else echo "none";?>">
                 <form class="form-horizontal" action="teacher_views/teacheractions_flip.php" method="POST">
                   <table class="table table-bordered table-condensed table-hover">
@@ -693,7 +708,8 @@ foreach ($invertclass->features as $feature) {
                   </thead>
                   <tbody>
                     <?php
-                    // pegando alunos cadastrados no curso - eu acho
+                    // pegando alunos cadastrados no curso - eu acho, na verdade esta consulta
+                    // TODO: está pegando todos os alunos do moodle 
                     $students = $DB->get_records_sql("SELECT
                     u.firstname,
                     u.id
@@ -736,6 +752,69 @@ foreach ($invertclass->features as $feature) {
                 <?php } ?>
               </div>
             </div>
+            
+            
+            
+            <div class="col-md-12">
+              <div class="panel panel-info">
+                <div class="panel-heading">
+                  <h3 class="panel-title">GRUPOS RECOMENDADOS</h3>
+                </div>
+                <div class="panel-body">
+                  <table class="table table-hover">
+                    <thead>
+                    <th>NOME DO GRUPO</th>
+                    <th>INTEGRANTES</th>
+                    <th>AÇÃO</th>
+                    </thead>
+                    <tbody>
+                      <?php 
+                      $grupos_recomendados = get_grupos_recomendados($cm->id);
+                        foreach($grupos_recomendados as $group){ ?>
+                          <tr>
+                            <td>
+                              <?php echo $group->nome;?>
+                            </td>
+                            <td>
+                              <?php
+                              $tempIndex = 0;
+                              foreach ($group->membros as $membro) {
+                                if($tempIndex + 1 < count($group->membros))
+                                  echo $membro->nome.', ';
+                                else 
+                                  echo $membro->nome.'.';
+                                $tempIndex++;
+                              }
+                              $tempIndex = 0;
+                              ?>
+                            </td>
+                          <td>
+                          <form action="teacher_views/teacheractions_flip.php" method="POST">
+                            <input type="hidden" name="rgroupid" value="" />
+                            <input type="hidden" name="action" value="gvinculation" />
+                            <?php
+                            //$_SESSION['grupo_recomendado']
+                            ?>
+                            <!-- id='.$cm->id
+                            groupid='.$group->id.'&
+                            action=link_group&
+                            url_local='.urlencode($PAGE->url). -->
+                            <button class="btn btn-success" onclick="this.form.submit();">
+                              Vincular
+                            </button>
+                            </a>
+                          </form>
+                          </td>
+                          </tr>
+                        <?php
+                        }
+                      ?>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
           </div>
           <!-- ################################################################## -->
           <!-- ################################REFERÊNCIAS################################## -->
@@ -1060,12 +1139,6 @@ foreach ($invertclass->features as $feature) {
                   </thead>
                   <tbody>
                     <?php
-                    global $DB;
-                    $fpgroups = new stdClass();
-                    //$fpgroups = $DB->get_records("fpgroups"); 
-                    $fpgroups = $DB->get_records_sql('select * from mdl_fpgroups where moduleid = '.$cm->id.';');
-                    //if(count($fpgroups)==0) echo ("Sem grupos<br>");
-                    //TODO: dica JAVASCRIPT PEGAR URL: var url_atual = window.location.href;;
                     foreach ($fpgroups as $group){?>
                         <tr>
                           <td><?=$group->nome?></td>

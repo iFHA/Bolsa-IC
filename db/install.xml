@@ -23,7 +23,7 @@
         <FIELD NAME="data_inicio" TYPE="text" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Wiki activity"/>
         <FIELD NAME="data_fim" TYPE="text" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Wiki activity"/>
         <FIELD NAME="descricao" LENGTH="512" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="moduleid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <!-- <FIELD NAME="moduleid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/> -->
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -31,6 +31,30 @@
       <INDEXES>
         <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
       </INDEXES>
+    </TABLE>
+    <TABLE NAME="invertclass_rgroups" COMMENT="Armazena instancias dos grupos da sala de aula invertida">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="nome" TYPE="text" LENGTH="80" NOTNULL="true" SEQUENCE="false" COMMENT="Wiki activity"/>
+        <FIELD NAME="moduleid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Group that owns this wiki"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <!-- <KEY NAME="moduleidfk" TYPE="foreign" FIELDS="moduleid" REFTABLE="course_modules" REFFIELDS="id" COMMENT="Foreign key to wiki table"/> -->
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="invertclass_rmembers" COMMENT="Stores wiki page history">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id_user" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Page id"/>
+        <FIELD NAME="id_group" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Not parsed wiki content"/>
+        <FIELD NAME="moderador" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Markup used to write content"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <!-- <KEY NAME="id_userfk" TYPE="foreign" FIELDS="id_user" REFTABLE="user" REFFIELDS="id" COMMENT="Foreign key to wiki table"/> 
+        <KEY NAME="id_groupfk" TYPE="foreign" FIELDS="id_group" REFTABLE="fpgroups" REFFIELDS="id" COMMENT="Foreign key to wiki table"/> -->
+      </KEYS>
     </TABLE>
     <TABLE NAME="invertclass_group_steps" COMMENT="">
       <FIELDS>

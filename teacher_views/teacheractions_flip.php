@@ -13,6 +13,10 @@ $caminhoTarefas = "../arquivos/tarefas";
 $caminhoReferencias = "../arquivos/referencias";
 
 switch($action){
+
+    case 'gvinculation':
+    break;
+
     case 'add_invertclass_step':
     $step = new stdClass();
     $step->descricao = required_param('descricao', PARAM_TEXT);
