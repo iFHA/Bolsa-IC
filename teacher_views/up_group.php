@@ -82,7 +82,7 @@
       ?>
       </tbody>
       </table>
-      <div class="col-md-8">
+      <div class="alert alert-danger" role="alert">
         SEM ALUNOS DISPONÍVEIS PARA SEREM ADICIONADOS AO GRUPO
       </div>
       <?php
