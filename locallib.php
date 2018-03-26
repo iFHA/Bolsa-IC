@@ -508,6 +508,30 @@ function get_grupo($userid){
 	return $grupo;
 }
 
+function get_grupos_etapas($moduleid){
+	global $DB;
+	$grupos = $DB->get_records('fpgroups', array('moduleid' => $moduleid));
+	if(!empty($grupo)){
+		$grupo->membros = $DB->get_records_sql("SELECT
+                    u.firstname AS nome,
+                    u.id
+                    FROM 
+                    mdl_role_assignments ra 
+                    JOIN mdl_user u ON u.id = ra.userid
+                    JOIN mdl_role r ON r.id = ra.roleid
+                    JOIN mdl_context cxt ON cxt.id = ra.contextid
+                    JOIN mdl_course c ON c.id = cxt.instanceid
+					JOIN mdl_fpmembers membro ON membro.id_group = $grupo->id
+                    WHERE ra.userid = u.id
+                    AND ra.contextid = cxt.id
+                    AND cxt.contextlevel =50
+                    AND cxt.instanceid = c.id
+					AND roleid = 5
+					AND u.id = membro.id_user");
+	}
+	return $grupo;
+}
+
 function get_grupos_recomendados($moduleid){
 	global $DB;
 	$grupos_recomendados = $DB->get_records('invertclass_rgroups', array('moduleid' => $moduleid));

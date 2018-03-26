@@ -47,7 +47,7 @@
           $students = $DB->get_records_sql("SELECT
           u.firstname,
           u.id,
-          U.lastname,
+          u.lastname,
           u.email
           FROM 
           mdl_role_assignments ra 

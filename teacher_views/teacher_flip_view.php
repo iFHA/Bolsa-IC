@@ -611,6 +611,7 @@ foreach ($invertclass->features as $feature) {
           <!-- ################################################################## -->
           <div role="tabpanel" class="tab-pane" id="groups">
             <?php
+            if(is_steps_finished($cm->id)){ // se existe alguma etapa considerada como ultima da tarefa
             global $DB;
             $fpgroups = $DB->get_records_sql('select * from mdl_fpgroups where moduleid = '.$cm->id.';');
             ?>
@@ -678,22 +679,12 @@ foreach ($invertclass->features as $feature) {
               ?>
               <?php
               //$temp_group = $_SESSION['idgroup'];
-              if(!isset($_SESSION['idgroup'])){  
-              
-                if(is_steps_finished($cm->id)){ // se existe alguma etapa considerada como ultima da tarefa
+              if(!isset($_SESSION['idgroup'])){
               ?>
               <div class="col-md-8">
                 <button class="btn btn-primary" onclick="document.getElementById('add_group').style.display = 'inherit';"><span class="glyphicon glyphicon-plus"></span> ADICIONAR GRUPO</button>
               </div>
               <br/><br/><br/>
-              <?php 
-                } else{ ?>
-                  <div class="alert alert-danger" role="alert">
-                    A tarefa não foi definida ainda por completo(sem última etapa definida ainda).
-                  </div>
-              <?php
-                }
-              ?>
               <div id="add_group" class="panel-body" style="display: <?php if(isset($_SESSION['idgroup'])) echo "inherit"; else echo "none";?>">
                 <form class="form-horizontal" action="teacher_views/teacheractions_flip.php" method="POST">
                   <table class="table table-bordered table-condensed table-hover">
@@ -795,22 +786,26 @@ foreach ($invertclass->features as $feature) {
                             $tempIndex = 0;
                             ?>
                           </td>
-                        <td>
-                        <form action="teacher_views/teacheractions_flip.php" method="POST">
-                          <input type="hidden" name="groupindex" value="<?php echo $groupindex; ?>" />
-                          <input type="hidden" name="moduleid" value="<?php echo $cm->id; ?>" />
-                          <input type="hidden" name="action" value="gvinculation" />
-                          <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">
-                          <!-- id='.$cm->id
-                          groupid='.$group->id.'&
-                          action=link_group&
-                          url_local='.urlencode($PAGE->url). -->
-                          <button class="btn btn-success" onclick="this.form.submit();">
-                            Vincular
-                          </button>
-                          </a>
-                        </form>
-                        </td>
+                          <td><!-- if($group->vinculado == 0) {-->
+                            <form action="teacher_views/teacheractions_flip.php" method="POST">
+                              <input type="hidden" name="groupindex" value="<?php echo $groupindex; ?>" />
+                              <input type="hidden" name="moduleid" value="<?php echo $cm->id; ?>" />
+                              <input type="hidden" name="action" value="gvinculation" />
+                              <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">
+                              <!-- id='.$cm->id
+                              groupid='.$group->id.'&
+                              action=link_group&
+                              url_local='.urlencode($PAGE->url). -->
+                              <button class="btn btn-success" onclick="this.form.submit();">
+                                Vincular
+                              </button>
+                            </form>
+                            <!-- } else {
+                              <button class="btn btn-warning">
+                                Vinculado
+                              </button>
+                            } -->
+                          </td>
                         </tr>
                       <?php
                       }
@@ -820,7 +815,14 @@ foreach ($invertclass->features as $feature) {
                 </div>
               </div>
             </div>
-
+            <?php 
+                } else{ ?>
+                  <div class="alert alert-danger" role="alert">
+                    A tarefa não foi definida ainda por completo(sem última etapa definida ainda).
+                  </div>
+              <?php
+                }
+              ?>
           </div>
           <!-- ################################################################## -->
           <!-- ################################REFERÊNCIAS################################## -->

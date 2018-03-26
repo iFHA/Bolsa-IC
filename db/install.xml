@@ -37,6 +37,7 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="nome" TYPE="text" LENGTH="80" NOTNULL="true" SEQUENCE="false" COMMENT="Wiki activity"/>
         <FIELD NAME="moduleid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Group that owns this wiki"/>
+        <!-- <FIELD NAME="vinculado" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Group that owns this wiki"/> -->
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

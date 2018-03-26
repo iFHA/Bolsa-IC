@@ -57,7 +57,7 @@ switch($action){
         // remove o grupo e membros recomendados das tabelas rgroups e rmembers
         $DB->delete_records('invertclass_rmembers', array('id_group' => $grupoRecomendado->id));
         $DB->delete_records('invertclass_rgroups', array('id' => $grupoRecomendado->id));
-
+        // $DB->update_record('invertclass_rgroups', array('id' => $grupoRecomendado->id, 'vinculado' => 1));
     }
 
     unset($_SESSION['grupos_recomendados']);
