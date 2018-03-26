@@ -288,12 +288,18 @@ switch($action){
         $feedback = new stdClass();
         $feedback->id_user = $_POST['taskfb_idaluno'];
         //echo "alert(".$_POST['taskfb_name'].")";
-        $feedback->id_task = $_POST['taskfb_name'];
+        //$feedback->id_task = $_POST['taskfb_name'];
         $feedback->comentario = $_POST['comments'];
-        $feedback->id_course = required_param('id_curso',PARAM_INT);//$COURSE->id;
-        $DB->insert_record('fpfeedback',$feedback);
+        $feedback->moduleid = required_param('moduleid',PARAM_INT);//$COURSE->id;
+        $old_fb = $DB->get_record('fpfeedback', array('id_user' => $feedback->id_user, 'moduleid' => $feedback->moduleid));
+        if(!empty($old_fb)){
+            $feedback->id = $old_fb->id;
+            $DB->update_record('fpfeedback',$feedback);
+        }else{
+            $DB->insert_record('fpfeedback',$feedback);
+        }
         $url_local = required_param('url_local', PARAM_TEXT);
-        header("Location: ".$url_local."#referencias");
+        header("Location: ".$url_local."#feedback");
         break;
     case 'add_ava':
         $ava = new stdClass();
@@ -302,11 +308,10 @@ switch($action){
         $ava->nota = $_POST['nota'];
         $ava->situacao=1;
         $ava->feedback= $_POST['comments'];
-        $ava->id_task = $_POST['avatask'];
-        $ava->id_course = required_param('id_curso',PARAM_INT);//$COURSE->id;
+        $ava->moduleid = $_POST['moduleid'];
         $DB->update_record('fpavaliar',$ava);
         $url_local = required_param('url_local', PARAM_TEXT);
-        header("Location: ".$url_local."#referencias");
+        header("Location: ".$url_local."#avaliar");
         break;
     // NAO E MAIS UTILIZADO
     case 'download':
