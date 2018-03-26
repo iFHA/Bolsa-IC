@@ -508,28 +508,20 @@ function get_grupo($userid){
 	return $grupo;
 }
 
-function get_grupos_etapas($moduleid){
+function get_grupo_etapas($grupoid){
 	global $DB;
-	$grupos = $DB->get_records('fpgroups', array('moduleid' => $moduleid));
+	// invertclass_steps id = invertclass_group_steps.etapaid
+	$grupo = $DB->get_record('fpgroups', array('id' => $grupoid));
 	if(!empty($grupo)){
-		$grupo->membros = $DB->get_records_sql("SELECT
-                    u.firstname AS nome,
-                    u.id
-                    FROM 
-                    mdl_role_assignments ra 
-                    JOIN mdl_user u ON u.id = ra.userid
-                    JOIN mdl_role r ON r.id = ra.roleid
-                    JOIN mdl_context cxt ON cxt.id = ra.contextid
-                    JOIN mdl_course c ON c.id = cxt.instanceid
-					JOIN mdl_fpmembers membro ON membro.id_group = $grupo->id
-                    WHERE ra.userid = u.id
-                    AND ra.contextid = cxt.id
-                    AND cxt.contextlevel =50
-                    AND cxt.instanceid = c.id
-					AND roleid = 5
-					AND u.id = membro.id_user");
+		$grupo->etapas = $DB->get_records_sql('SELECT gs.resposta, gs.arquivoid, s.descricao, s.tipo, s.ultima FROM mdl_invertclass_group_steps AS gs, mdl_invertclass_steps AS s WHERE gs.groupid = '.$grupo->id.' AND gs.etapaid = s.id;');
 	}
 	return $grupo;
+}
+
+function get_arquivo($anexoid){
+	global $DB;
+	$arquivo = $DB->get_record('fpanexos', array('id' => $anexoid));
+	return $arquivo;
 }
 
 function get_grupos_recomendados($moduleid){
@@ -665,8 +657,8 @@ function solveFeaturesInconsistences($invertclassGoals, $userid, $moduleid){
 	$caracteristica = new stdClass();
 	$qtdinvertclassGoals = count($invertclassGoals);
 	$qtdProfileFeatures = count($userFeatures); 
-	echo 'qtdinvertclassGoals: '.$qtdinvertclassGoals;
-	echo ' qtdProfileFeatures '.$qtdProfileFeatures;
+	/* echo 'qtdinvertclassGoals: '.$qtdinvertclassGoals;
+	echo ' qtdProfileFeatures '.$qtdProfileFeatures; */
 	$shouldAddProfileFeatures = $qtdinvertclassGoals - $qtdProfileFeatures;
 	// Se should > 0, então deve - se acrescentar, se menor, então deve remover, senão, tudo ok -->
 	if($shouldAddProfileFeatures < 0) {
@@ -688,6 +680,11 @@ function solveFeaturesInconsistences($invertclassGoals, $userid, $moduleid){
 		}
 		//echo ' Adicionados. ';
 	}
+}
+
+function get_horarios_disponiveis($userid){
+	global $DB;
+	return $DB->get_record('problem_user_prefered_times', array('userid' => $userid));
 }
 
 function get_requirements($problemid){
