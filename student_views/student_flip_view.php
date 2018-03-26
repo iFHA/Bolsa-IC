@@ -48,18 +48,24 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
     <div class="col-md-12">
       <div role="tabpanel">
         <ul class="nav nav-tabs" role="tablist">
-          <?php if( 1 /* !empty($grupo) */){ ?>
-          <li role="presentation" class="active"><a href="#problem" aria-controls="problem" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-home"></i> ATIVIDADE</a></li>
-          <?php } //Se estiver vinculado a algum grupo para eo problema ?>
-          <!--<li role="presentation" <?php /* if(!$group->id){ echo 'class="active"'; } */ ?>><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-user"></i> Meu perfil</a></li>-->
-          <li role="presentation"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-home"></i>GRUPO</a></li>
-          <li role="presentation"><a href="#etapas" aria-controls="etapas" role="tab" data-toggle="tab">TAREFA</a></li>
+          <?php //if( 1 /* !empty($grupo) */)
+          if(!empty($myprofile->prefered_times)){ ?>
+          <li role="presentation"><a href="#problem" aria-controls="problem" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-home"></i> ATIVIDADE</a></li>
           <li role="presentation"><a href="#referencias" aria-controls="referencias" role="tab" data-toggle="tab">REFERÊNCIAS</a></li>
+          <!--<li role="presentation" <?php /* if(!$group->id){ echo 'class="active"'; } */ ?>><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-user"></i> Meu perfil</a></li>-->
+          <li role="presentation"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab">GRUPO</a></li>
+          <li role="presentation"><a href="#etapas" aria-controls="etapas" role="tab" data-toggle="tab">ETAPAS</a></li>
           <li role="presentation"><a href="#notas" aria-controls="notas" role="tab" data-toggle="tab">AVALIAÇÃO</a></li>
           <!--<li role="presentation"><a href="#aproveitamento" aria-controls="aproveitamento" role="tab" data-toggle="tab">APROVEITAMENTO</a></li> -->
           <!--<li role="presentation"><a href="#avaliar" aria-controls="avaliar" role="tab" data-toggle="tab">AVALIAÇÃO</a></li>-->
           <li role="presentation"><a href="#feedback" aria-controls="feedback" role="tab" data-toggle="tab">FEEDBACK</a></li>
           <li role="presentation"><a href="#perfil" aria-controls="perfil_usuario" role="tab" data-toggle="tab">MEU PERFIL</a></li>
+          <?php 
+          } else { ?>
+            <li role="presentation"><a href="#perfil" aria-controls="perfil_usuario" role="tab" data-toggle="tab">MEU PERFIL</a></li>
+          <?php
+          }
+          ?>
         </ul>
         <br />
         <?php
@@ -88,11 +94,13 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
             break;
         }
         ?>
-        <?php if( 1 /* $group->id */){ ?>
+        <?php
+        $invertclass->arquivozin = get_arquivo($invertclass->arquivoid);
+         if( 1 /* $group->id */){ ?>
         <!-- ################################################################## -->
         <!--                       EXIBIÇÃO DO PROBLEMA                         -->
         <!-- ################################################################## -->
-        <div role="tabpanel" class="tab-pane active" id="problem">
+        <div role="tabpanel" class="tab-pane <?php if(!empty($myprofile->prefered_times)) echo 'active'; ?>" id="problem">
           <div class="panel panel-primary">
             <div class="panel-heading">
               <h3 class="panel-title">Dados da Atividade</h3>
@@ -100,7 +108,10 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
             <div class="panel-body">
               <h3><?php echo $invertclass->name; ?></h3><br />
               <p><strong>Descrição:</strong> <?php echo $invertclass->descricao; ?></p><hr />
-              <p><strong>Produto final:</strong> <?php echo $invertclass->descricao; ?></p>
+              <p>
+                <strong>Arquivo enviado pelo professor:</strong> 
+                <?php echo $invertclass->arquivozin->nome_original; ?>  <a href="./arquivos/tarefas/<?php echo $invertclass->arquivozin->nome_final?>" target=_blank class='btn btn-primary'>Baixar</a>
+            </p>
             </div>
           </div>
         </div>
@@ -158,12 +169,13 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                     <div role="tabpanel" class="tab-pane" id="etapas">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
-                                <h3 class="panel-title">TAREFA</h3>
+                                <h3 class="panel-title">ETAPA</h3>
                             </div>
                             <div class="panel-body">
                                 <?php
                                 $etapa = $DB->get_record_sql("SELECT etapa.id, etapa.descricao, etapa.data_fim, etapa.tipo, etapa.ultima FROM mdl_invertclass_steps as etapa, mdl_fpgroups as grupin, mdl_fpmembers as membros WHERE grupin.id = membros.id_group and membros.id_user = ".$_SESSION["USER"]->id." and etapa.id = grupin.etapaatual");
                                 if(!empty($etapa)){
+                                    if($grupo->finalizado == 0){ /// se a última etapa não foi respondida ainda
                                 ?>
                                 <table class="table table-bordered table-condensed table-hover">
                                     <thead>
@@ -183,7 +195,9 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                                                 <?php echo $etapa->descricao; ?>
                                             </td>
                                             <td>
-                                                <?php echo $etapa->data_fim; ?>
+                                                <?php 
+                                                $datafim = explode('-', $etapa->data_fim);
+                                                echo $datafim[2].'/'.$datafim[1].'/'.$datafim[0]; ?>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -209,6 +223,12 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                                     <input type="submit" value="Enviar Resposta" class="btn btn-primary">
                                 </form>
                                 <?php 
+                                    }else{ ?>
+                                        <div class="alert alert-success" role="alert">
+                                            Todas as etapas foram realizadas.
+                                        </div>
+                                    <?php
+                                    }
                                 }
                                 ?>
                             </div>
@@ -379,7 +399,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                     <!-- ################################################################## -->
 
                     <!-- ###########################====PERFIL====######################### -->
-                    <div role="tabpanel" class="tab-pane" id="perfil">
+                    <div role="tabpanel" class="tab-pane <?php if(empty($myprofile->prefered_times)) echo 'active'; ?>" id="perfil">
                       <div class="panel panel-primary">
                         <div class="panel-heading">
                             <h3 class="panel-title">Horários disponíveis para estudo</h3>
