@@ -39,7 +39,7 @@
           foreach($students1 as $student){
             //echo var_dump($student->id);
               echo '<tr><td>'.$student->firstname.'</td><td>'.$student->lastname.'</td><td>'.$student->email.'</td><td>';
-              echo "<a href='./teacher_views/teacheractions_flip.php?action=rm_gmember&group_id=$idg&ids=$student->id&url_local=$PAGE->url'><button class='btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button></a>";
+              echo "<a href='./teacher_views/teacheractions_flip.php?action=rm_gmember&group_id=$idg&ids=$student->id&url_local=$PAGE->url'><button class='btn btn-danger'><span class='glyphicon glyphicon-remove'></span>Remover</button></a>";
               //echo "<a href='$PAGE->url&action=rm_gmember&group_id=".$idg."&id_user=".$student->id."'><button class='btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button></a>";
               echo '</td></tr>';
           }
@@ -69,7 +69,7 @@
           if(!empty($students)){
             foreach($students as $student){
               echo '<tr><td>'.$student->firstname.'</td><td>'.$student->lastname.'</td><td>'.$student->email.'</td><td>';
-              echo "<a href='./teacher_views/teacheractions_flip.php?action=add_gmember&idgroup=".$idg."&member_id=".$student->id."&url_local=".$PAGE->url."'><button class='btn btn-success'><span class='glyphicon glyphicon-plus'></span></button></a>";
+              echo "<a href='./teacher_views/teacheractions_flip.php?action=add_gmember&idgroup=".$idg."&member_id=".$student->id."&url_local=".$PAGE->url."'><button class='btn btn-success'><span class='glyphicon glyphicon-plus'></span>Adicionar</button></a>";
               //echo "<a href='$PAGE->url&action=ad_gmember&group_id=".$idg."&id_user=".$student->id."'><button class='btn btn-success'><span class='glyphicon glyphicon-plus'></span></button></a>";
               echo '</td></tr>';
             }

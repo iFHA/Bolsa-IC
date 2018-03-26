@@ -625,8 +625,8 @@ foreach ($invertclass->features as $feature) {
                 <table class="table table-bordered table-condensed table-hover">
                   <thead>
                     <tr>
-                      <th>GRUPO</th>
-                      <th></th>
+                      <th>NOME DO GRUPO</th>
+                      <th>AÇÃO</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -635,14 +635,20 @@ foreach ($invertclass->features as $feature) {
                         <tr>
                           <td><?=$group->nome?></td>
                           <td>
+                            <!--
                             <a href="<?=$PAGE->url?>&op=show_members&idg=<?=$group->id?>">
                               <button class='btn btn-info'><span class='glyphicon glyphicon-list'></span></button>
                             </a>
+                            -->
                             <a href="<?=$PAGE->url?>&moduleid=<?=$cm->id?>&id_curso=<?=$COURSE->id?>&op=up_group&idg=<?=$group->id?>">
-                              <button class='btn btn-success'><span class='glyphicon glyphicon-pencil'></span></button>
+                              <button class='btn btn-success'>
+                                <span class='glyphicon glyphicon-pencil'></span> Visualizar / Editar
+                              </button>
                             </a>
                             <a href="./teacher_views/teacheractions_flip.php?action=rm_group&group_id=<?=$group->id?>&url_local=<?=$PAGE->url?>">
-                              <button class='btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button>
+                              <button class='btn btn-danger'>
+                              <span class='glyphicon glyphicon-remove'></span> Remover
+                              </button>
                             </a>
                           </td>
                         </tr>
@@ -732,13 +738,13 @@ foreach ($invertclass->features as $feature) {
                       // tratando se não existem registros na tabela de membros
                       if(!$ismember){
                         echo '<tr><td>'.$student->firstname.'</td><td>';
-                        echo "<a href='./teacher_views/teacheractions_flip.php?action=ad_mmember&member_id=".$student->id."&url_local=".$PAGE->url."'><button class='btn btn-danger' onclick=''><span class='glyphicon glyphicon-bookmark'></span></button></a>";
+                        //echo "<a href='./teacher_views/teacheractions_flip.php?action=ad_mmember&member_id=".$student->id."&url_local=".$PAGE->url."'><button class='btn btn-danger' onclick=''><span class='glyphicon glyphicon-bookmark'></span></button></a>";
                         echo "<a href='./teacher_views/teacheractions_flip.php?action=ad_gmember&member_id=".$student->id."&url_local=".$PAGE->url."'><button class='btn btn-success' onclick=''><span class='glyphicon glyphicon-plus'></span></button></a>";
                         echo '</td></tr>';
                       }
                       else if($student->id!=$ismember->id_user){
                           echo '<tr><td>'.$student->firstname.'</td><td>';
-                          echo "<a href='./teacher_views/teacheractions_flip.php?action=ad_mmember&member_id=".$student->id."&url_local=".$PAGE->url."'><button class='btn btn-danger' onclick=''><span class='glyphicon glyphicon-bookmark'></span></button></a>";
+                          //echo "<a href='./teacher_views/teacheractions_flip.php?action=ad_mmember&member_id=".$student->id."&url_local=".$PAGE->url."'><button class='btn btn-danger' onclick=''><span class='glyphicon glyphicon-bookmark'></span></button></a>";
                           echo "<a href='./teacher_views/teacheractions_flip.php?action=ad_gmember&member_id=".$student->id."&url_local=".$PAGE->url."'><button class='btn btn-success' onclick=''><span class='glyphicon glyphicon-plus'></span></button></a>";
                           echo '</td></tr>';        
                       }

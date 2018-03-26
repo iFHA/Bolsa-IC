@@ -22,18 +22,47 @@ switch($action){
 
     $podeVincular = true;
     foreach($grupoRecomendado->membros as $membro){
-        // verificar se algum membro já está na tabela fpmembers, se sim, não cadastra
+        // verifica se algum membro recomendado já está na tabela fpmembers, se sim, não pode vincular
         $fpmember = $DB->get_record_sql('SELECT membro.id FROM mdl_fpmembers AS membro, mdl_fpgroups AS grupo WHERE membro.id_user = '.$membro->id.' AND membro.id_group = grupo.id AND grupo.moduleid = '.$moduleid);
         if(!empty($fpmember))
             $podeVincular = false;
     }
     if($podeVincular){
-        // vincula e remove o grupo e membros da tabela rgroups e rmembers
+        // vincula grupo e membros do mesmo
+
+        // TODO: entrar aqui somente se todas as etapas para essa tarefa foram definidas, ou seja, se a ultima
+        // etapa tem o campo ultima = 1;
+
+        $grupo = new stdClass();
+        $grupo->nome = $grupoRecomendado->nome;
+        $grupo->moduleid = $grupoRecomendado->moduleid;
+        // inserir a etapa atual do grupo como sendo a primeira da tarefa
+        $grupo->etapaatual = $DB->get_record_sql('SELECT * FROM mdl_invertclass_steps WHERE moduleid = '.$grupo->moduleid.' LIMIT 1;')->id;
+        
+        $fpGroupId = $DB->insert_record('fpgroups', $grupo);
+        // ======== populando tabela fp-avaliar ========
+        $DB->execute("insert into mdl_fpavaliar values (default, $fpGroupId, 0, 0, '', $grupoRecomendado->moduleid)");
+        // =============================================
+
+        foreach($grupoRecomendado->membros as $membro){
+            // adicionar cada membro na tabela fpmembers
+            $member = new stdClass();
+            $member->id_user = $membro->id;
+            $member->id_group = $fpGroupId;
+            $member->moderador = 1;
+            $DB->execute("insert into mdl_fpmembers values(NULL,".$member->id_user.",".$member->id_group.",".$member->moderador.")");
+            $DB->execute("insert into mdl_fpgain values(NULL,".$member->id_user.",0)");
+        }
+
+        // remove o grupo e membros recomendados das tabelas rgroups e rmembers
+        $DB->delete_records('invertclass_rmembers', array('id_group' => $grupoRecomendado->id));
+        $DB->delete_records('invertclass_rgroups', array('id' => $grupoRecomendado->id));
+
     }
 
     unset($_SESSION['grupos_recomendados']);
-    /* $url_local = required_param('url_local', PARAM_TEXT);
-    header("Location: ".$url_local."#groups"); */
+    $url_local = required_param('url_local', PARAM_TEXT);
+    header("Location: ".$url_local."#groups");
 
     break;
 
@@ -74,16 +103,12 @@ switch($action){
         $gtemp = $DB->get_record_sql("select * from mdl_fpgroups where moduleid = {$grupo->moduleid} and nome = '{$grupo->nome}';");
         $_SESSION['idgroup']=$gtemp->id;
         $_SESSION['ntgroup']=$gtemp->nome;
-        //echo var_dump($gtemp);
-
         // ======== populando tabela fp-avaliar ========
-        //$group_id = $DB->get_field_sql("select id from mdl_fpgroups where nome='{$grupo->nome}' and id_curso = '{$grupo->id_curso}'");
         $group_id = $gtemp->id;
         
         $DB->execute("insert into mdl_fpavaliar values (default, $group_id, 0, 0, '', $grupo->moduleid)");
         // =============================================
 
-        //echo var_dump($temp_avalia);
         $url_local = required_param('url_local', PARAM_TEXT);
 		header("Location: ".$url_local."#groups");
         break;
