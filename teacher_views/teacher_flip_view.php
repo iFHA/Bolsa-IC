@@ -30,7 +30,7 @@ if(!$there_is_problem){
   //exibirMensagem("problem já criado!"); somente debug
 }
 
-$groups = $DB->get_records('groups', array('courseid' => $course->id), '', '*') ;
+$groups = $DB->get_records('groups', array('courseid' => $cm->course), '', '*') ;
 $groups_enrolled = $DB->get_records('problem_group', array('problemid' => $invertclass->id), '', '*') ;
 
 $qtn_groups_enrolled = count($groups_enrolled);
@@ -47,6 +47,7 @@ foreach ($invertclass->features as $feature) {
   $sep = ', ';
 }
 
+global $DB;
 
 ?>
 
@@ -71,6 +72,12 @@ foreach ($invertclass->features as $feature) {
         <?php
           $op = optional_param('op',null,PARAM_TEXT);
           switch($op){
+            case 'show_etapas':
+              echo "<div>";
+              include(dirname(dirname(__FILE__)).'/teacher_views/show_etapas.php'); 
+              echo "</div>";
+              echo "<div class='tab-content' style='display: none'>";
+            break;
             case 'show_sessionsss':
               echo "<div>";
               include(dirname(dirname(__FILE__)).'/teacher_views/show_sessions.php'); 
@@ -138,14 +145,14 @@ foreach ($invertclass->features as $feature) {
               <div class="panel-body">
                 <form action="teacher_views/teacheractions_flip.php" method="POST" enctype="multipart/form-data">
                   <div id="add_task">
-                    <table class="table table-bordered table-condensed table-hover">
-                      <tr><th>NOME DA TAREFA:</th><td><input id="nome" type="text" size=67 name="nome" value="<?php echo $modulo->name?>"></td></tr>
+                    <table class="table table-hover">
+                      <tr><th>NOME DA TAREFA:</th><td><input id="nome" type="text" size=67 name="nome" value="<?php echo $modulo->name; ?>"></td></tr>
                       <tr><th colspan="3">DESCRIÇÃO:</th></tr>
-                      <tr><td colspan="3"><textarea name="descricao" style="width:100%; height: 80px"><?php echo $modulo->descricao ?></textarea></td></tr>
+                      <tr><td colspan="3"><textarea name="descricao" style="width:100%; height: 80px"><?php echo $modulo->descricao; ?></textarea></td></tr>
                       <!--<td><input id="descricao" type="text" size=80 name="descricao" value="descricao"></td>-->
                       <tr><th>ARQUIVO:</th><?php if($thereIsFile){ ?><td><?php echo $modulo->arquivoZin->nome_original; ?> <a href=arquivos/tarefas/<?=$modulo->arquivoZin->nome_final?> target=_blank class='btn btn-primary'>Baixar</a></td><?php } ?><td><input id="arq" type="file" name="arq"></td></tr> 
-                      <tr><td>DATA INÍCIO</td><td><input id="data_inicio" type="date" style="height:30px" name="data_inicio" value="<?php echo $modulo->data_inicio ?>"></td></tr>
-                      <tr><td>DATA FIM</td><td><input id="data_fim" type="date" style="height:30px" name="data_fim" value="<?php echo $modulo->data_fim ?>"></td></tr>
+                      <tr><th>DATA INÍCIO</th><td><input id="data_inicio" type="date" style="height:30px" name="data_inicio" value="<?php echo $modulo->data_inicio ?>"></td></tr>
+                      <tr><th>DATA FIM</th><td><input id="data_fim" type="date" style="height:30px" name="data_fim" value="<?php echo $modulo->data_fim ?>"></td></tr>
                       <!--<tr><th colspan="3">PALAVRAS NÃO RELACIONADAS</th></tr>
                       <tr><td colspan="3"><textarea id="naorelacionadas" name="not_related_words" style="width:100%; height: 80px"><?php //$modulo->not_related_words?></textarea></td></tr> -->
                     </table>
@@ -612,7 +619,6 @@ foreach ($invertclass->features as $feature) {
           <div role="tabpanel" class="tab-pane" id="groups">
             <?php
             if(is_steps_finished($cm->id)){ // se existe alguma etapa considerada como ultima da tarefa
-            global $DB;
             $fpgroups = $DB->get_records_sql('select * from mdl_fpgroups where moduleid = '.$cm->id.';');
             ?>
             <div class="panel panel-primary">
@@ -641,7 +647,7 @@ foreach ($invertclass->features as $feature) {
                               <button class='btn btn-info'><span class='glyphicon glyphicon-list'></span></button>
                             </a>
                             -->
-                            <a href="<?=$PAGE->url?>&moduleid=<?=$cm->id?>&id_curso=<?=$COURSE->id?>&op=up_group&idg=<?=$group->id?>">
+                            <a href="<?=$PAGE->url?>&moduleid=<?=$cm->id?>&id_curso=<?=$cm->course?>&op=up_group&idg=<?=$group->id?>">
                               <button class='btn btn-success'>
                                 <span class='glyphicon glyphicon-pencil'></span> Visualizar / Editar
                               </button>
@@ -842,18 +848,19 @@ foreach ($invertclass->features as $feature) {
                   <tbody>
                     <?php
                     //TODO: VERIFICAR SE ESTA CONSULTA ESTÁ CORRETA
-                      $ref = $DB->get_record_sql('select r.id,r.descricao, r.moduleid, r.arquivo, i.name 
+                      $refs = $DB->get_records_sql('select r.id,r.descricao, r.moduleid, r.arquivo, i.name 
                       from mdl_fpref r inner join mdl_course_modules m on r.moduleid=m.id inner join mdl_invertclass i on i.id=m.instance where moduleid = '.$cm->id.';');
-                      if($ref){
+                      if(!empty($refs)){
+                        foreach ($refs as $ref){
                     ?>
                     <tr>
                       <td><?=$ref->descricao?></td>
-                      <td>
-                        <a href="<?=$PAGE->url?>&op=up_ref&moduleid=<?=$cm->id?>&idr=<?=$ref->id?>">
+                      <td> <!--
+                        <a href="<?php //echo $PAGE->url?>&op=up_ref&moduleid=<?php //echo $cm->id?>&idr=<?php //echo $ref->id?>">
                           <button class='btn btn-success'>
                             <span class='glyphicon glyphicon-pencil'></span>
                           </button>
-                        </a>
+                        </a> -->
                         <a href='./teacher_views/teacheractions_flip.php?action=rm_ref&ref_arquivo=<?=$ref->arquivo?>&ref_id=<?=$ref->id?>&url_local=<?=$PAGE->url?>'>
                           <button class='btn btn-danger'>
                             <span class='glyphicon glyphicon-remove'></span>
@@ -863,6 +870,7 @@ foreach ($invertclass->features as $feature) {
                     </tr>
                     <?php
                       }
+                    }
                     ?>
                   </tbody>
                 </table>
@@ -880,7 +888,7 @@ foreach ($invertclass->features as $feature) {
                 </table>
                     <div class="col-md-8">
                       <input id="action" name="action" type="hidden" value="ad_ref"/>
-                      <input id="id_curso" name="id_curso" type="hidden" value="<?php echo $COURSE->id ?>"/>
+                      <input id="id_curso" name="id_curso" type="hidden" value="<?php echo $cm->course ?>"/>
                       <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; ?>">
                       <input name="moduleid" type="hidden" value="<?php echo $cm->id; ?>">
                       <!--<button name="send" class="btn btn-success" onclick="javascript:this.value='Enviando...'; this.disabled='disabled'; this.form.submit();"><span class="glyphicon glyphicon-plus"></span> ADICIONAR</button>-->
@@ -922,7 +930,7 @@ foreach ($invertclass->features as $feature) {
                         AND cxt.contextlevel =50
                         AND cxt.instanceid = c.id
                         AND  roleid = 5
-                        AND c.id = {$COURSE->id}");
+                        AND c.id = {$cm->course}");
                         // mostrar o aproveitamento apenas se houver grupos criados
                         if (!empty($students)) {
                           foreach ($students as $student) {
@@ -956,18 +964,18 @@ foreach ($invertclass->features as $feature) {
               </div>
               <div class="panel-body">
                 <form action="teacher_views/teacheractions_flip.php" method="POST">
-                  <div id="avalia_grupo" style="display:none">
+                  <div id="avalia_grupo" style="display: none">
                     <table class="table table-bordered table-condensed table-hover">
                       <tr><th>CONSIDERAÇÕES SOBRE A TAREFA</th><th><span id="avagroup_name">GRUPO 1</span></th></tr>
                       <tr><td colspan="2"><textarea id="comments" name="comments" style="width:100%; height: 200px"></textarea></td></tr>
-                      <tr><td>NOTA <input id="nota" name="nota" type="text" size=30></td></tr>
+                      <!-- <input type="number" data-featureid="<?php echo $feature->featureid; ?>" min="0" max="10" value="<?php echo $feature->value; ?>"> -->
+                      <tr><td>NOTA <input name="nota" type="number" min="0" max="10" value="0" ></td></tr>
                       <tr><td><button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...';  this.form.submit();"><span class="glyphicon glyphicon-ok"></span> ENVIAR</button></td></tr>
                     </table>
                     <input type="hidden" id="aval_id" name="aval_id"/>
                     <input type="hidden" id="avagroup_id" name="avagroup_id"/>
-                    <input type="hidden" id="avatask" name="avatask"/>
                     <input type="hidden" id="action" name="action" value="add_ava"/>
-                    <input id="id_curso" name="id_curso" type="hidden" value="<?php echo $COURSE->id ?>"/>
+                    <input id="moduleid" name="moduleid" type="hidden" value="<?php echo $cm->id ?>"/>
                     <input type="hidden" name="url_local" value="<?php echo $PAGE->url ?>"/>
                   </div>
                 </form>
@@ -978,10 +986,10 @@ foreach ($invertclass->features as $feature) {
                     <tr>
                       <th>GRUPO</th>
                       <th>NOTA</th>
-                      <th>RESPOSTA</th>
-                      <th style="text-align:center;">BAIXAR ANEXO</th>
+                      <!-- <th>RESPOSTA</th>
+                      <th style="text-align:center;">BAIXAR ANEXO</th> -->
                       <th>SITUAÇÃO</th>
-                      <th>TAREFA</th>
+                      <!-- <th>TAREFA</th> -->
                       <th>AÇÃO</th>
                     </tr>
                   </thead>
@@ -991,38 +999,47 @@ foreach ($invertclass->features as $feature) {
                     $avagroups = $DB->get_records_sql('SELECT a.id, a.id_group, a.nota, a.feedback, a.situacao, a.moduleid,g.nome,i.name as task_name 
                     from mdl_fpavaliar a inner join mdl_fpgroups g on a.id_group=g.id inner join mdl_course_modules m on m.id=a.moduleid inner join mdl_invertclass i on i.id=m.instance
                     where m.id= '.$cm->id.';');
-                    foreach($avagroups as $aval){?>
+                    foreach($avagroups as $aval){ ?>
                     <tr>
-                      <td><?=$aval->nome?></td>
-                      <td><?=$aval->nota?></td>
+                      <td><?php echo $aval->nome; ?></td>
+                      <td><?php echo $aval->nota; ?></td>
                       <?php
+                      /*
                       $anexo_grupo = $DB->get_record_sql('SELECT nome_original from mdl_fpanexos a inner join mdl_fpgroups g on g.anexoid=a.id where g.id = '.$aval->id_group.';');
                       if($anexo_grupo == null){?>
                       <td>Sem Anexo</td>
                       <td></td>
                       <?php
                       }else{?>
-                      <td><?=$anexo_grupo->nome_anexo?></td>
-                      <td style=text-align:center;><a href=arquivos/anexos_grupos/<?=$anexo_grupo->nome_anexo?> target=_blank class='btn btn-primary'>Baixar</a></td>
+                      <td><?php echo $anexo_grupo->nome_anexo; ?></td>
+                      <td style=text-align:center;><a href=arquivos/anexos_grupos/<?php echo $anexo_grupo->nome_anexo; ?> target=_blank class='btn btn-primary'>Baixar</a></td>
                       <?php
-                      }
-                      if($aval->situacao==0){?>
+                      } ?> <?php 
+                      */ if($aval->situacao==0){?>
                       <td><span class='btn btn-warning'>PENDENTE</span></td>
-                      <td><?=$aval->task_name?></td>
+                      <!-- <td><?php // echo $aval->task_name; ?></td> -->
                       <td>
-                        <button class='btn btn-primary btn-avaliar' onclick="document.getElementById('avagroup_name').innerHTML='<?=$aval->nome?>'; document.getElementById('avagroup_id').value='<?=$aval->id_group?>'; document.getElementById('aval_id').value='<?=$aval->id?>'; document.getElementById('avatask').value='<?=$aval->id_task?>'; document.getElementById('avalia_grupo').style.display = 'inherit';">
+                        <button class='btn btn-primary' onclick="document.getElementById('avalia_grupo').style.display = 'inherit'; document.getElementById('avagroup_name').innerHTML='<?php echo $aval->nome;?>'; document.getElementById('avagroup_id').value='<?php echo $aval->id_group; ?>'; document.getElementById('aval_id').value='<?php echo $aval->id; ?>';">
                           <span class='glyphicon glyphicon-pencil'>
                           </span> 
                           AVALIAR
                         </button>
+                        <a href="<?php echo $PAGE->url; ?>&op=show_etapas&idg=<?=$aval->id_group?>&gnome=<?=$aval->nome?>">
+                          <button class='btn btn-info'><span class='glyphicon glyphicon-list'></span> VISUALIZAR RESPOSTAS</button>
+                        </a>
                       </td>
                     </tr>
                       <?php
                       }else{?>
                       <td>
                         <span class='btn btn-success'>AVALIADO</span>
+                        <td>
+                          <a href="<?php echo $PAGE->url; ?>&op=show_etapas&idg=<?=$aval->id_group?>&gnome=<?=$aval->nome?>">
+                            <button class='btn btn-info'><span class='glyphicon glyphicon-list'></span> VISUALIZAR RESPOSTAS</button>
+                          </a>
+                        </td>
                       </td>
-                      <td><?=$aval->task_name?></td>
+                      <!-- <td><?php //echo $aval->task_name; ?></td> -->
                       <td></td>
                     </tr>
                     <?php
@@ -1075,7 +1092,7 @@ foreach ($invertclass->features as $feature) {
                         <td colspan="3">
                           <input type="hidden" id="taskfb_idaluno" name="taskfb_idaluno"/>
                           <input type="hidden" id="action" name="action" value="add_feedback"/>
-                          <input id="id_curso" name="id_curso" type="hidden" value="<?php echo $COURSE->id ?>"/>
+                          <input name="moduleid" type="hidden" value="<?php echo $cm->id ?>"/>
                           <input type="hidden" name="url_local" value="<?php echo $PAGE->url ?>"/>
                           <button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...'; this.display:'none'; this.form.submit();">
                             <span class="glyphicon glyphicon-ok">
