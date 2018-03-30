@@ -255,15 +255,15 @@ global $DB;
                   <input name="moduleid" type="hidden" value="<?php echo $cm->id; ?>">
                   <div class="form-group">
                     <label>Descrição</label>
-                    <input class="form-control" name="descricao" />
+                    <input class="form-control" name="descricao" required/>
                   </div>
                   <div class="form-group">
                     <label>Data de Início: </label>
-                    <input type="date" style="height:30px" name="data_inicio"  />
+                    <input type="date" style="height:30px" name="data_inicio"  required/>
                   </div>
                   <div class="form-group">
                     <label>Data de Término: </label>
-                    <input type="date" style="height:30px" name="data_fim"  />
+                    <input type="date" style="height:30px" name="data_fim"  required/>
                   </div>
                   <dl>
                     <dt>Tipo: </dt>
@@ -285,7 +285,7 @@ global $DB;
                       </div>
                     </dd>
                   </dl>
-                  <button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...'; this.disabled='disabled'; this.form.submit();"><span class="glyphicon glyphicon-plus"></span> ADICIONAR ETAPA</button>
+                  <input type="submit" class="btn btn-success" value="ADICIONAR ETAPA">
                 </form>
                 <?php 
                 }
@@ -970,7 +970,7 @@ global $DB;
                       <tr><td colspan="2"><textarea id="comments" name="comments" style="width:100%; height: 200px"></textarea></td></tr>
                       <!-- <input type="number" data-featureid="<?php echo $feature->featureid; ?>" min="0" max="10" value="<?php echo $feature->value; ?>"> -->
                       <tr><td>NOTA <input name="nota" type="number" min="0" max="10" value="0" ></td></tr>
-                      <tr><td><button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...';  this.form.submit();"><span class="glyphicon glyphicon-ok"></span> ENVIAR</button></td></tr>
+                      <tr><td><button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...';  this.form.submit();"><span class="glyphicon glyphicon-ok"></span> ENVIAR</i></td></tr>
                     </table>
                     <input type="hidden" id="aval_id" name="aval_id"/>
                     <input type="hidden" id="avagroup_id" name="avagroup_id"/>

@@ -202,7 +202,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                                         </tr>
                                     </tbody>
                                 </table>
-                                <form action=student_views/studentactions_flip.php method='POST' enctype=multipart/form-data>
+                                <form action=student_views/studentactions_flip.php method='POST' enctype="multipart/form-data">
                                     <input type="hidden" name="action" value="next_step">
                                     <input name="url_local" type="hidden" value="<?php echo $PAGE->url?>">
                                     <input type="hidden" name="etapaid" value="<?php echo $etapa->id ?>">

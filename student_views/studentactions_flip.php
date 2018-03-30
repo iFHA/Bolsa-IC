@@ -13,6 +13,7 @@ global $DB;
 
 switch($action){
 	case 'next_step':
+		
 		$groupSteps = new stdClass();
 		$groupSteps->etapaid = required_param('etapaid', PARAM_INT);
 		$ultima = required_param('ultima', PARAM_INT);

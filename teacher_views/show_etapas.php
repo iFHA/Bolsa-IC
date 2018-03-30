@@ -7,6 +7,7 @@
         $gnome = required_param('gnome',PARAM_TEXT);
         $groupid = required_param('idg',PARAM_INT);
         $grupo = get_grupo_etapas($groupid);
+        var_dump($grupo->etapas);
     ?>
     <div class="panel panel-primary">
         <div class="panel-heading">
@@ -46,7 +47,7 @@
                                 <td><?php echo $etapa->arquivoZin->nome_original; ?> </td>
                                 <th style="text-align:center;">BAIXAR ANEXO</th>
                                 <td>
-                                    <a href="../arquivos/anexos_grupos/<?=$etapa->arquivoZin->nome_final?>" target=_blank class='btn btn-primary'>Baixar</a>
+                                    <a href="./arquivos/anexos_grupos/<?=$etapa->arquivoZin->nome_final?>" target=_blank class='btn btn-primary'>Baixar</a>
                                 </td>
                             </tr>
                             <?php 
