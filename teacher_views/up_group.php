@@ -11,13 +11,19 @@
   $group_id = optional_param('group_id', null, PARAM_INT);
   */
   $id_curso = optional_param('id_curso', null, PARAM_INT);
+  $moduleid = optional_param('moduleid', null, PARAM_INT);
 
   // teste para caso não seja passado o id do curso
   if(!empty($id_curso)){
     $_SESSION['idcursin'] = $id_curso;
   }
 
+  if(!empty($moduleid)){
+    $_SESSION['modulezinid'] = $moduleid;
+  }
+
   $id_curso = $_SESSION['idcursin'];
+  $moduleid = $_SESSION['modulezinid'];
   ?>
   <div class="panel panel-primary">
     <div class="panel-heading">
@@ -34,8 +40,16 @@
           </tr>
         </thead>
         <?php
+        // COMO EU SEI QUE O ID É DE UM GRUPO QUE PERTECENTE AO MÓDULO ATUAL, ESSA CONSULTA PODE SER USADA, SENÃO TERIA QUE UTILIZAR O MODULEID
           $idg = required_param('idg',PARAM_TEXT);
-          $students1 = $DB->get_records_sql("SELECT u.id, u.firstname,u.lastname, u.email FROM mdl_role_assignments rs INNER JOIN mdl_user u ON u.id=rs.userid INNER JOIN mdl_context e ON rs.contextid=e.id INNER JOIN mdl_fpmembers fpm ON u.id=fpm.id_user WHERE e.contextlevel=50 AND rs.roleid=5 AND e.instanceid=2 AND fpm.id_group=".$idg.";");
+          $students1 = $DB->get_records_sql("SELECT u.id, u.firstname,u.lastname, u.email 
+          FROM mdl_role_assignments rs INNER JOIN mdl_user u ON u.id=rs.userid 
+          INNER JOIN mdl_context e ON rs.contextid=e.id 
+          INNER JOIN mdl_fpmembers fpm ON u.id=fpm.id_user 
+          WHERE e.contextlevel=50 
+          AND rs.roleid=5 
+          AND e.instanceid=2 
+          AND fpm.id_group=".$idg.";");
           foreach($students1 as $student){
             //echo var_dump($student->id);
               echo '<tr><td>'.$student->firstname.'</td><td>'.$student->lastname.'</td><td>'.$student->email.'</td><td>';
@@ -63,9 +77,9 @@
           AND  roleid = 5
           AND c.id = $id_curso
           AND NOT EXISTS (
-            SELECT * FROM mdl_fpmembers fpm WHERE fpm.id_user = u.id
-          )
-          ");
+            SELECT m.id FROM mdl_fpmembers as m, mdl_fpgroups as g WHERE g.id = m.id_group AND m.id_user = u.id AND g.moduleid =$moduleid)");
+          /*AND NOT EXISTS (
+            SELECT * FROM mdl_fpmembers fpm WHERE fpm.id_user = u.id */
           if(!empty($students)){
             foreach($students as $student){
               echo '<tr><td>'.$student->firstname.'</td><td>'.$student->lastname.'</td><td>'.$student->email.'</td><td>';
