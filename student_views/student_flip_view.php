@@ -14,7 +14,7 @@ foreach($groups as $g){
 }
 
 $group = get_group($groupid,$invertclass->id);
-$grupo = get_grupo($USER->id);
+$grupo = get_grupo($USER->id, $cm->id);
 //$final_evaluation = get_evaluationByMeasured($group->problemgroup, $USER->id);
 if(count($group->sessions) > 0){
 
@@ -44,28 +44,31 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
 
 ?>
 <div class="container-fluid">
-  <div class="row"><!-- INÍCIO DA EXIBIÇÃO DO GRUPO -->
+    <div class="row"><!-- INÍCIO DA EXIBIÇÃO DO GRUPO -->
     <div class="col-md-12">
-      <div role="tabpanel">
+        <div role="tabpanel">
         <ul class="nav nav-tabs" role="tablist">
-          <?php //if( 1 /* !empty($grupo) */)
-          if(!empty($myprofile->prefered_times)){ ?>
-          <li role="presentation"><a href="#problem" aria-controls="problem" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-home"></i> ATIVIDADE</a></li>
-          <li role="presentation"><a href="#referencias" aria-controls="referencias" role="tab" data-toggle="tab">REFERÊNCIAS</a></li>
-          <!--<li role="presentation" <?php /* if(!$group->id){ echo 'class="active"'; } */ ?>><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-user"></i> Meu perfil</a></li>-->
-          <li role="presentation"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab">GRUPO</a></li>
-          <li role="presentation"><a href="#etapas" aria-controls="etapas" role="tab" data-toggle="tab">ETAPAS</a></li>
-          <li role="presentation"><a href="#notas" aria-controls="notas" role="tab" data-toggle="tab">AVALIAÇÃO</a></li>
-          <!--<li role="presentation"><a href="#aproveitamento" aria-controls="aproveitamento" role="tab" data-toggle="tab">APROVEITAMENTO</a></li> -->
-          <!--<li role="presentation"><a href="#avaliar" aria-controls="avaliar" role="tab" data-toggle="tab">AVALIAÇÃO</a></li>-->
-          <li role="presentation"><a href="#feedback" aria-controls="feedback" role="tab" data-toggle="tab">FEEDBACK</a></li>
-          <li role="presentation"><a href="#perfil" aria-controls="perfil_usuario" role="tab" data-toggle="tab">MEU PERFIL</a></li>
-          <?php 
-          } else { ?>
+            <?php //if( 1 /* !empty($grupo) */)
+            if(!empty($myprofile->prefered_times)){
+            if(!empty($grupo)){
+        ?>
+            <li role="presentation"><a href="#problem" aria-controls="problem" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-home"></i> ATIVIDADE</a></li>
+            <li role="presentation"><a href="#referencias" aria-controls="referencias" role="tab" data-toggle="tab">REFERÊNCIAS</a></li>
+            <!--<li role="presentation" <?php /* if(!$group->id){ echo 'class="active"'; } */ ?>><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab"><i class="glyphicon glyphicon-user"></i> Meu perfil</a></li>-->
+            <li role="presentation"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab">GRUPO</a></li>
+            <li role="presentation"><a href="#etapas" aria-controls="etapas" role="tab" data-toggle="tab">ETAPAS</a></li>
+            <li role="presentation"><a href="#notas" aria-controls="notas" role="tab" data-toggle="tab">AVALIAÇÃO</a></li>
+            <!--<li role="presentation"><a href="#aproveitamento" aria-controls="aproveitamento" role="tab" data-toggle="tab">APROVEITAMENTO</a></li> -->
+            <!--<li role="presentation"><a href="#avaliar" aria-controls="avaliar" role="tab" data-toggle="tab">AVALIAÇÃO</a></li>-->
+            <li role="presentation"><a href="#feedback" aria-controls="feedback" role="tab" data-toggle="tab">FEEDBACK</a></li>
             <li role="presentation"><a href="#perfil" aria-controls="perfil_usuario" role="tab" data-toggle="tab">MEU PERFIL</a></li>
-          <?php
-          }
-          ?>
+            <?php
+            }
+            } else { ?>
+            <li role="presentation"><a href="#perfil" aria-controls="perfil_usuario" role="tab" data-toggle="tab">MEU PERFIL</a></li>
+            <?php
+            }
+            ?>
         </ul>
         <br />
         <?php
@@ -100,7 +103,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
         <!-- ################################################################## -->
         <!--                       EXIBIÇÃO DO PROBLEMA                         -->
         <!-- ################################################################## -->
-        <div role="tabpanel" class="tab-pane <?php if(!empty($myprofile->prefered_times)) echo 'active'; ?>" id="problem">
+        <div role="tabpanel" class="tab-pane <?php if(!empty($grupo)) echo 'active'; ?>" id="problem">
           <div class="panel panel-primary">
             <div class="panel-heading">
               <h3 class="panel-title">Dados da Atividade</h3>
@@ -108,10 +111,12 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
             <div class="panel-body">
               <h3><?php echo $invertclass->name; ?></h3><br />
               <p><strong>Descrição:</strong> <?php echo $invertclass->descricao; ?></p><hr />
+              <?php if (!empty($invertclass->arquivozin)) {?>
               <p>
                 <strong>Arquivo enviado pelo professor:</strong> 
                 <?php echo $invertclass->arquivozin->nome_original; ?>  <a href="./arquivos/tarefas/<?php echo $invertclass->arquivozin->nome_final?>" target=_blank class='btn btn-primary'>Baixar</a>
-            </p>
+              </p>
+              <?php }?>
             </div>
           </div>
         </div>
@@ -400,7 +405,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                     <!-- ################################################################## -->
 
                     <!-- ###########################====PERFIL====######################### -->
-                    <div role="tabpanel" class="tab-pane <?php if(empty($myprofile->prefered_times)) echo 'active'; ?>" id="perfil">
+                    <div role="tabpanel" class="tab-pane <?php if(empty($myprofile->prefered_times) || empty($grupo) ) echo 'active'; ?>" id="perfil">
                       <div class="panel panel-primary">
                         <div class="panel-heading">
                             <h3 class="panel-title">Horários disponíveis para estudo</h3>

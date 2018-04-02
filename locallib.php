@@ -484,13 +484,13 @@ function in_array_field($needle, $needle_field, $haystack, $strict = false) {
     return false; 
 }
 
-function get_grupo($userid){
+function get_grupo($userid, $moduleid){
 	global $DB;
-	$grupo = $DB->get_record_sql('SELECT grupo.id, grupo.nome, grupo.moduleid, grupo.anexoid, grupo.etapaatual, grupo.finalizado FROM mdl_fpgroups as grupo, mdl_fpmembers as membro WHERE grupo.id = membro.id_group AND membro.id_user ='.$userid.';');
+	$grupo = $DB->get_record_sql('SELECT grupo.id, grupo.nome, grupo.moduleid, grupo.anexoid, grupo.etapaatual, grupo.finalizado FROM mdl_fpgroups as grupo, mdl_fpmembers as membro WHERE grupo.id = membro.id_group AND membro.id_user ='.$userid.' AND grupo.moduleid = '.$moduleid.';');
 	if(!empty($grupo)){
 		$grupo->membros = $DB->get_records_sql("SELECT
-                    u.firstname AS nome,
-                    u.id
+                    u.id, u.firstname AS nome,
+                    u.lastname
                     FROM 
                     mdl_role_assignments ra 
                     JOIN mdl_user u ON u.id = ra.userid
