@@ -15,6 +15,7 @@ switch($action){
 	case 'next_step':
 		
 		$groupSteps = new stdClass();
+		$moduleid = required_param('moduleid', PARAM_INT);
 		$groupSteps->etapaid = required_param('etapaid', PARAM_INT);
 		$ultima = required_param('ultima', PARAM_INT);
 		$groupSteps->groupid = required_param('grupoid', PARAM_INT);
@@ -39,7 +40,7 @@ switch($action){
 
 		$DB->insert_record('invertclass_group_steps', $groupSteps);
 		if(!$ultima){
-			$proximaEtapa = $DB->get_record_sql('SELECT etapa.id FROM mdl_invertclass_steps AS etapa WHERE etapa.id > '.$groupSteps->etapaid.' LIMIT 1;');
+			$proximaEtapa = $DB->get_record_sql('SELECT etapa.id FROM mdl_invertclass_steps AS etapa WHERE etapa.id > '.$groupSteps->etapaid.' AND moduleid = '.$moduleid.' LIMIT 1;');
 			$DB->update_record('fpgroups', array('id' => $groupSteps->groupid, 'etapaatual' => $proximaEtapa->id));
 		}else {
 			// fechando o grupo

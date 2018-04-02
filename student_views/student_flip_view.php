@@ -209,6 +209,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                                     <input type="hidden" name="etapatipo" value="<?php echo $etapa->tipo ?>">
                                     <input type="hidden" name="ultima" value="<?php echo $etapa->ultima ?>">
                                     <input type="hidden" name="grupoid" value="<?php echo $grupo->id ?>">
+                                    <input type="hidden" name="moduleid" value="<?php echo $cm->id ?>">
                                     <input type="hidden" name="send">
                                     <?php if($etapa->tipo){ ?>
                                     <div class="input-group">
