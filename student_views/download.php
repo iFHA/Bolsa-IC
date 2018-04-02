@@ -1,7 +1,7 @@
 <?php
 
 // pega o endereço do arquivo
-$nomeArquivo = $_POST['file'];
+$nomeArquivo = $_GET['file'];
 $endereco = '../arquivos/tarefas/'.$nomeArquivo;
 $file = $endereco;
 //var_dump($nomeArquivo);
