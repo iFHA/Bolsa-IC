@@ -257,7 +257,7 @@ if(problem_is_enrolled($context, "editingteacher")){
 			$feature->id = problem_save('problem_features', $feature);
 
 			$old_goal = $DB->get_record('problem_goals', array("featureid" => $feature->id));
-			if(!$old_goal->id){
+			//if(!$old_goal->id){
 				//CRIA UM OBJETO META
 				$goal = new stdClass();
 				$goal->problemid = $id;//$problem->id;
@@ -265,11 +265,11 @@ if(problem_is_enrolled($context, "editingteacher")){
 			
 				//SALVA OS DADOS DO OBJETO META NO BANCO DE DADOS
 				problem_save('problem_goals', $goal);
-			} else {
-				echo "Já existe uma meta com essa descrição, é necessário excluí-la para inserir outra!";
-				if($url != "") 
-					echo '<br /><br /><a href="'.$url.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
-			}
+			//} else {
+				//echo "Já existe uma meta com essa descrição, é necessário excluí-la para inserir outra!";
+				//if($url != "") 
+					//echo '<br /><br /><a href="'.$url.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
+			//}
 
 			$url_problem = new moodle_url('/mod/invertclass/view.php', array('id' => $id));
 			echo '<br /><br /><a href="'.$url_problem.'" class="btn btn-primary"> < VOLTAR > </a><br /><br />';
