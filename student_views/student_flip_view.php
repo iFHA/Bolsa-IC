@@ -213,11 +213,11 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                                     <?php if($etapa->tipo){ ?>
                                     <div class="input-group">
                                         <span class="input-group-addon">Resposta: </span>
-                                        <input type="text" class="form-control" name="resposta">
+                                        <input type="text" class="form-control" name="resposta" required>
                                     </div>
                                     <?php } else { ?>
                                     Arquivo:
-                                    <input type="file" name="arq">
+                                    <input type="file" name="arq" required>
                                     <?php } ?>
                                     <br/>
                                     <input type="submit" value="Enviar Resposta" class="btn btn-primary">
