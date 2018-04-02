@@ -513,7 +513,7 @@ function get_grupo_etapas($grupoid){
 	// invertclass_steps id = invertclass_group_steps.etapaid
 	$grupo = $DB->get_record('fpgroups', array('id' => $grupoid));
 	if(!empty($grupo)){
-		$grupo->etapas = $DB->get_records_sql('SELECT gs.resposta, gs.arquivoid, s.descricao, s.tipo, s.ultima FROM mdl_invertclass_group_steps AS gs, mdl_invertclass_steps AS s WHERE gs.groupid = '.$grupo->id.' AND gs.etapaid = s.id;');
+		$grupo->etapas = $DB->get_records_sql('SELECT s.descricao, gs.resposta, gs.arquivoid, s.tipo, s.ultima FROM mdl_invertclass_group_steps AS gs, mdl_invertclass_steps AS s WHERE gs.etapaid = s.id AND gs.groupid = '.$grupoid.';');
 	}
 	return $grupo;
 }
