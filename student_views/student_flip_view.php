@@ -3,7 +3,7 @@
  *
  * @package   mod_problem
  * @category  groups
- * @copyright 2014 Danilo Gomes Carlos
+ * @copyright 2018 Fernando Henrique Alves
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -523,7 +523,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                               <tr>
                                 <th>Requisito da Tarefa</th>
                                 <th>Nível de Conhecimento(0 a 10)</th>
-                                <th>Ação</th>
+                                <!-- <th>Ação</th> -->
                               </tr>
                             </thead>
                             <tbody>
@@ -531,24 +531,33 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                             solveFeaturesInconsistences($invertclass->goals, $USER->id, $cm->id);
                             // se houveram inconsistências, nesse momento já foram resolvidas
                             $myprofile = get_user($USER->id);
-                            foreach ($myprofile->features as $feature) { ?>
-                              <tr>
-                                <td>
-                                  <?php echo $feature->description; ?>
-                                </td>
-                                <td>
-                                  <input type="number" data-featureid="<?php echo $feature->featureid; ?>" min="0" max="10" value="<?php echo $feature->value; ?>">
-                                </td>
-                                <td>
-                                  <a href="#perfil" id="btn-del-cloned-input" name="btn-del-cloned-input" class="btn btn-success btn-xs"  onclick="updateFeature(this)">
-                                    <span class="glyphicon glyphicon-floppy-save"></span> 
-                                    Atualizar
-                                  </a>
-                                </td>
-                              </tr>
-                            <?php
-                            }
                             ?>
+                            <form id="formzin" action=student_views/studentactions_flip.php method='POST'">
+                                <input type="hidden" name="action" value="update_feature">
+                                <input name="url_local" type="hidden" value="<?php echo $PAGE->url?>">
+                                <input type="hidden" name="userid" value="<?php echo $USER->id ?>">
+                                <?php
+                                foreach ($myprofile->features as $feature) { ?>
+                                <tr>
+                                    <td>
+                                    <?php echo $feature->description; ?>
+                                    </td>
+                                    <td>
+                                    <input type="hidden" name="featureid[]" value="<?php echo $feature->featureid; ?>">
+                                    <input type="number" name="featurevalue[]" min="0" max="10" value="<?php echo $feature->value; ?>">
+                                    </td>
+                                </tr>
+                                <?php
+                                }
+                                ?>
+                                <tr>
+                                    <td colspan="2">
+                                        <button type="submit" class="btn btn-success btn-xs">
+                                            <span class="glyphicon glyphicon-floppy-save"></span> Atualizar
+                                        </button>
+                                    </td>
+                                </tr>
+                            </form>
                             </tbody>
                           </table>
                           <?php 
@@ -559,41 +568,7 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
                             <?php
                             }
                           ?>
-                          <!--
-                          <h4>Adicionar nova característica</h4>
-                          <hr />
-                          <form action="student_views/studentactions.php" method="POST" class="col-md-12">
-                            <input id="id" name="id" type="hidden" value="<?php /* echo $cm->id; ?>">
-                            <input id="action" name="action" type="hidden" value="<?php echo 'add_feature'; ?>">
-                            <input id="url_local" name="url_local" type="hidden" value="<?php echo $PAGE->url; */ ?>">
-                            <div class="form-group">
-                              <div class="col-xs-9">
-                                <label>Descrição</label>
-                                <input id="feature_description" name="feature_description" class="form-control" />
-                              </div>
-                              <div class="col-xs-3">
-                                <label>Valor</label>
-                                <select name="level" class="form-control">
-                                  <option value="0" selected>0</option>
-                                  <option value="1">1</option>
-                                  <option value="2">2</option>
-                                  <option value="3">3</option>
-                                  <option value="4">4</option>
-                                  <option value="5">5</option>
-                                  <option value="6">6</option>
-                                  <option value="7">7</option>
-                                  <option value="8">8</option>
-                                  <option value="9">9</option>
-                                  <option value="10">10</option>
-                                </select>
-                              </div>
-                            </div>
-                            <div class="col-xs-12">
-                              <hr />
-                            </div>
-                            <button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...'; this.disabled='disabled'; this.form.submit();"><span class="glyphicon glyphicon-floppy-disk"></span> Adicionar característica</button>
-                          </form>
-                          -->
+                          
                         </div>
                       </div>
                     </div>
@@ -611,28 +586,34 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
     <script src="https://leaverou.github.io/awesomplete/awesomplete.js"></script>
     <script src="js/ajax.js"></script>
     <script type="text/javascript">
-
-        var goal = document.getElementById("goal_description");
-        new Awesomplete(goal, {
-            list: [<?php echo $features_description; ?>]
+        function updateFeature(elemento){
+        var $inputzin = $(elemento).parent().prev().children();
+        var featureId = $inputzin.attr("data-featureid");
+        var featureValue = $inputzin.val();
+        var url="student_views/studentactions_flip.php?userid=<?php echo $USER->id; ?>&featureid="+ featureId +"&featurevalue="+ featureValue +"&action=update_feature&url_local=<?php echo urlencode($PAGE->url)?>";
+        //console.log("featureValue: "+ featureValue +" feature id: "+ featureId);
+        location.href = url;
+        }
+        (function(){
+            $( "#formzin" ).on( "submit", function( event ) {
+                event.preventDefault();
+                // console.log( $( this ).serialize() );
+                // realizar ajax
+                ajax($(this));
+            });
+        })();
+        function ajax($formulario){
+            $.ajax({
+            type: 'POST',
+            url: $formulario.attr( 'action' ),
+            beforeSend: function () {
+            },
+            data: $formulario.serialize(),
+            success: function (msg)
+            {
+                alert(msg);
+            }
         });
-        var requirement = document.getElementById("requirement_description");
-        new Awesomplete(requirement, {
-            list: [<?php echo $features_description; ?>]
-        });
-        // Shorthand for $( document ).ready()
-        //$(function() {
-
-          function updateFeature(elemento){
-            var $inputzin = $(elemento).parent().prev().children();
-            var featureId = $inputzin.attr("data-featureid");
-            var featureValue = $inputzin.val();
-            var url="student_views/studentactions_flip.php?userid=<?php echo $USER->id; ?>&featureid="+ featureId +"&featurevalue="+ featureValue +"&action=update_feature&url_local=<?php echo urlencode($PAGE->url)?>";
-            //console.log("featureValue: "+ featureValue +" feature id: "+ featureId);
-            location.href = url;
-          }
-
-        //});
-        
+        };
     </script>
 <?php

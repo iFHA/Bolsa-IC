@@ -1,4 +1,4 @@
-<div>
+
 <?php
 
 require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
@@ -8,7 +8,6 @@ require_once(dirname(dirname(__FILE__)).'/locallib.php');
 $action = optional_param('action',null,PARAM_TEXT);
 $tid = optional_param('task_id',null,PARAM_TEXT);
 $gid = optional_param('group_id',null,PARAM_TEXT);
-echo "Testando..";
 global $DB;
 
 switch($action){
@@ -60,9 +59,17 @@ switch($action){
 		$userid = required_param('userid', PARAM_INT);
 		$featureid = required_param('featureid', PARAM_INT);
 		$featurevalue = required_param('featurevalue', PARAM_INT);
-		$DB->execute('UPDATE mdl_problem_user_features as f SET f.value='.$featurevalue.' WHERE f.userid='.$userid.' and f.featureid='.$featureid);
+		try{
+			foreach($featureid as $index => $id){
+				$DB->execute('UPDATE mdl_problem_user_features as f SET f.value='.$featurevalue[$index].' WHERE f.userid='.$userid.' and f.featureid='.$id);
+			}
+			echo 'Atualização realizada com sucesso!';
+		}catch(Exception $erro){
+			echo 'exceção capturada: '.$erro->getMessage();
+		}
+		/* 
 		$url_local = required_param('url_local', PARAM_TEXT);
-		header('Location: '.$url_local.'#perfil');
+		header('Location: '.$url_local.'#perfil'); */
 	break;
 
 	case 'upload':
@@ -187,4 +194,3 @@ function tratar_arquivo_upload($string) {
 }
 
 ?>
-</div>
