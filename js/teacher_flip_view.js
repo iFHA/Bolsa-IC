@@ -1,7 +1,5 @@
 ($(() => {
   const $form = $('[data-js="form-update-step"]');
-  const $modal = $('[data-js="alert-modal"]');
-  const $ModalText = $('[data-js="modal2-text"]');
   $form.on('submit', (e) => {
     e.preventDefault();
     $.ajax({
@@ -14,12 +12,10 @@
       success: function (data) {
         const obj = JSON.parse(data);
         if (obj.msg == 1) {
-          $ModalText.text('Sucesso ao Atualizar!');
           $('[data-js="modal-update-step"]').modal('toggle');
-          $modal.modal();
+          alerta('Sucesso ao Atualizar!');
         } else {
-          $ModalText.text(data);
-          $modal.modal();
+          alerta(data);
         }
       }
     });

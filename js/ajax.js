@@ -1,3 +1,10 @@
+function alerta(msg, modalText = '[data-js="modal2-text"]', modal = '[data-js="alert-modal"]') {
+    const $modal = $(modal);
+    const $ModalText = $(modalText);
+    $ModalText.text(msg);
+    $modal.modal();
+}
+
 $(document).ready(function(){
     /*
     $('#buscar').click(function () {
