@@ -3,7 +3,7 @@
  *
  * @package   mod_invert_classroom
  * @category  groups
- * @copyright 2014 Alguém
+ * @copyright 2018 Fernando Henrique Alves
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -199,7 +199,7 @@ $invertclass->goals = get_goals($cm->id); // pega os 'goals' e requisitos do mó
                   <label>Descrição</label>
                   <input id="goal_description" name="goal_description" class="form-control" />
                 </div>
-                <button id="button2id" name="button2id" class="btn btn-success" onclick="javascript:this.value='Enviando...'; this.disabled='disabled'; this.form.submit();"><span class="glyphicon glyphicon-plus"></span> ADICIONAR REQUISITO</button>
+                <button id="button2id" name="button2id" class="btn btn-primary" onclick="javascript:this.value='Enviando...'; this.disabled='disabled'; this.form.submit();"><span class="glyphicon glyphicon-plus"></span> ADICIONAR REQUISITO</button>
               </form>
             </div>
           </div>
@@ -218,6 +218,7 @@ $invertclass->goals = get_goals($cm->id); // pega os 'goals' e requisitos do mó
                   <tr>
                     <th>Descrição da Etapa</th>
                     <th>Prazo</th>
+                    <th>Ação</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -231,8 +232,16 @@ $invertclass->goals = get_goals($cm->id); // pega os 'goals' e requisitos do mó
                   ?>
                     <tr>
                       <td><?php echo $etapa->descricao; ?></td>
-                      <td><?php echo $datafim[2]; ?>/<?php echo $datafim[1]; ?>/<?php echo $datafim[0]; ?>
-                        <a href="teacher_views/teacheractions_flip.php?moduleid='.$cm->id.'&etapaid='.$etapa->id.'&action=delete_invertclass_step&url_local='.urlencode($PAGE->url).'" id="btn-del-cloned-input" name="btn-del-cloned-input" class="btn btn-danger btn-xs pull-right" onclick="return confirm(\'Deseja realmente excluir essa etapa?\');">
+                      <td><?php echo $datafim[2]; ?>/<?php echo $datafim[1]; ?>/<?php echo $datafim[0]; ?></td>
+                      <td>
+                        <button class="btn btn-success" onClick="updateStep(this);">
+                          <input data-js="etapaid" type="hidden" value="<?php echo $etapa->id;?>" />
+                          <input data-js="descricao" type="hidden" value="<?php echo $etapa->descricao;?>" />
+                          <input data-js="dataFim" type="hidden" value="<?php echo $etapa->data_fim;?>" />
+                          <input data-js="ultima" type="hidden" value="<?php echo $etapa->ultima;?>" />
+                          <span class="glyphicon glyphicon-pencil"></span> Alterar
+                        </button>
+                        <a href="teacher_views/teacheractions_flip.php?moduleid=<?php echo $cm->id;?>&etapaid=<?php echo $etapa->id;?>&action=delete_invertclass_step&url_local=<?php echo urlencode($PAGE->url);?>" id="btn-del-cloned-input" name="btn-del-cloned-input" class="btn btn-danger btn-xs pull-right" onclick="return confirm(\'Deseja realmente excluir essa etapa?\');">
                           <span class="glyphicon glyphicon-minus"></span> Remover
                         </a>
                       </td>
@@ -267,10 +276,10 @@ $invertclass->goals = get_goals($cm->id); // pega os 'goals' e requisitos do mó
                   <dt>Tipo: </dt>
                   <dd>
                     <div class="radio">
-                      <label> <input type="radio" name="tipo" id="tipo_1" value="1" checked > Subjetiva </label>
+                      <label> <input type="radio" name="tipo" id="tipo_1" value="1" > Subjetiva </label>
                     </div>
                     <div class="radio">
-                      <label> <input type="radio" name="tipo" id="tipo_2" value="0" > Necessário enviar arquivo </label>
+                      <label> <input type="radio" name="tipo" id="tipo_2" value="0" checked > Necessário enviar arquivo </label>
                     </div>
                   </dd>
                   <dt>Última etapa? </dt>
@@ -296,7 +305,7 @@ $invertclass->goals = get_goals($cm->id); // pega os 'goals' e requisitos do mó
         <!-- ################################################################## -->
         <div role="tabpanel" class="tab-pane" id="groups">
           <?php
-          if(is_steps_finished($cm->id)){ // se existe alguma etapa considerada como ultima da tarefa
+          if(there_is_steps($cm->id)){ // se existe alguma etapa considerada como ultima da tarefa
           $fpgroups = $DB->get_records_sql('select * from mdl_fpgroups where moduleid = '.$cm->id.';');
           ?>
           <div class="panel panel-primary">
@@ -501,7 +510,7 @@ $invertclass->goals = get_goals($cm->id); // pega os 'goals' e requisitos do mó
           <?php 
               } else{ ?>
                 <div class="alert alert-danger" role="alert">
-                  A tarefa não foi definida ainda por completo(sem última etapa definida ainda).
+                  Crie pelo menos uma Etapa (na aba "Tarefa").
                 </div>
             <?php
               }
@@ -768,25 +777,75 @@ $invertclass->goals = get_goals($cm->id); // pega os 'goals' e requisitos do mó
 </div>
 </div>
 </div>
+<div class="container col-md-12">
+  <!-- Modal -->
+  <div class="modal fade" data-js="modal-update-step" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header" style="padding:35px 50px;">
+            <h4><span class="glyphicon glyphicon-lock"></span> Alterando Etapa</h4>
+        </div>
+        <div class="modal-body" style="padding:40px 50px;">
+          <form action="teacheractions_flip.php" data-js="form-update-step" method="POST">
+            <input name="etapaid" type="hidden" data-js="update-step-etapaid" />
+            <input name="url" type="hidden" data-js="update-step-url" value="<?php echo urlencode($PAGE->url); ?>"/>
+            <input name="action" type="hidden" value="update_invertclass_step" />
+            <div class="form-group">
+              <label>Descrição:</label>
+              <textarea class="form-control" name="descricao" data-js="update-step-description" rows="5" required></textarea>
+            </div>
+            <div class="form-group">
+              <label>Data de Término: </label>
+              <input type="date" data-js="update-step-date" style="height:30px" name="data_fim" required/>
+            </div>
+            <dl>
+              <dt>Última etapa? </dt>
+              <dd>
+                <div class="radio">
+                  <label> <input type="radio" data-js="update-step-last1" name="last" id="last_1" value="1" > Sim </label>
+                </div>
+                <div class="radio">
+                  <label> <input type="radio" name="last" data-js="update-step-last2" id="last_2" value="0" > Não </label>
+                </div>
+              </dd>
+            </dl>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-success">Concluir Alteração</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div> 
+</div>
+
+<!-- Modal -->
+<div data-js="alert-modal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Invertclass</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <p data-js="modal2-text">Modal body text goes here.</p>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
   <!-- FIM DA EXIBIÇÃO DO INVERTCLASS -->
 
   <br/>
 
-
-<script src="https://leaverou.github.io/awesomplete/awesomplete.js"></script>
 <script src="js/ajax.js"></script>
-<script type="text/javascript">
-
-/* var goal = document.getElementById("goal_description");
-new Awesomplete(goal, {
-  list: [<?php //echo $features_description; ?>]
-});
-var requirement = document.getElementById("requirement_description");
-new Awesomplete(requirement, {
-  list: [<?php //echo $features_description; ?>]
-});
- */
-</script>
+<script src="js/teacher_flip_view.js"></script>
 <?php
 function exibirMensagem($msg) { ?>
   <script type="text/javascript">alert('<?php echo $msg?>')</script>
