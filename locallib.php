@@ -22,7 +22,7 @@
  * logic, should go here. Never include this file from your lib.php!
  *
  * @package    mod_problem
- * @copyright  2011 Your Name
+ * @copyright  2018 Fernando Henrique Alves
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -736,7 +736,11 @@ function get_etapas($id){
 	return $DB->get_records('invertclass_steps', array('moduleid' => $id));
 }
 
-function is_steps_finished($id){
+function there_is_steps($id){ // verifica se existe pelo menos uma etapa criada no módulo
 	global $DB;
-	return $DB->get_record_sql('SELECT * FROM mdl_invertclass_steps WHERE moduleid = '.$id.' AND ultima = 1 LIMIT 1;');
+	return $DB->get_record_sql('SELECT id FROM mdl_invertclass_steps WHERE moduleid = '.$id.' LIMIT 1;');
+}
+function there_is_groups_step($etapaid){ // verifica se existe pelo menos uma etapa criada no módulo
+	global $DB;
+	return $DB->get_record_sql('SELECT id FROM mdl_fpgroups WHERE etapaatual = '.$etapaid.' LIMIT 1;');
 }
