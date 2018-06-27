@@ -1,4 +1,12 @@
 ($(() => {
+
+  function alerta(msg, modalText = '[data-js="modal2-text"]', modal = '[data-js="alert-modal"]') {
+    const $modal = $(modal);
+    const $ModalText = $(modalText);
+    $ModalText.text(msg);
+    $modal.modal();
+  }
+
   const $form = $('[data-js="form-update-step"]');
   $form.on('submit', (e) => {
     e.preventDefault();
