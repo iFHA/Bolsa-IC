@@ -1,4 +1,3 @@
-<div>
 <?php
 
 require_once(dirname(dirname(dirname(dirname(__FILE__)))).'/config.php');
@@ -84,11 +83,32 @@ switch($action){
 
     case 'delete_invertclass_step':
     $stepid = required_param('etapaid', PARAM_INT);
-    
-    $DB->delete_records('invertclass_steps', array('id' => $stepid));
+    if(empty(there_is_groups_step($stepid))){
+        $DB->delete_records('invertclass_steps', array('id' => $stepid));
+    }
     $url_local = required_param('url_local', PARAM_TEXT);
     header("Location: ".$url_local."#tarefas");
 
+    break;
+
+    case 'update_invertclass_step':
+        $obj = new stdClass();
+        $obj->stepid = $_POST['etapaid'];
+        $obj->last = $_POST['last'];
+        $obj->descricao = $_POST['descricao'];
+        $obj->datafim = $_POST['data_fim'];
+        $obj->msg = '0';
+        global $DB;
+        try {
+            $retorno = $DB->execute('UPDATE mdl_invertclass_steps SET descricao =\''.$obj->descricao.'\', data_fim =\''.$obj->datafim.'\', ultima = '.$obj->last.' WHERE id = '.$obj->stepid);
+            if($retorno){
+                $obj->msg = '1';
+            }
+        }catch(Exception $e){
+            $obj->msg = $e->getMessage();
+        }
+        $myJSON = json_encode($obj);
+        echo $myJSON;
     break;
 
     case 'ad_group':
@@ -398,22 +418,3 @@ function verificaArquivo($caminho, $fileName){
         unlink($fileTemp);
     }
 }
-
-
-/* function verificaArquivo($caminho, $reftask){
-    
-    $fileTemp = $caminho."/".required_param($reftask.'_arq', PARAM_TEXT);
-    if (file_exists($fileTemp)){
-        unlink($fileTemp);
-    }
-
-} */
-
-?>
-</div>
-<?php
-function exibirMensagem($msg) { ?>
-  <script type="text/javascript">alert('<?php echo $msg?>')</script>
-<?php 
-}
-?>
